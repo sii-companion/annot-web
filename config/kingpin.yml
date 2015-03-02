@@ -1,0 +1,14 @@
+development:
+  nextflowpath: "/Users/ss34/"
+  nextflowscript: "/Users/ss34/develop/annot-nf/annot.nf"
+  locationconfig : "/Users/ss34/develop/annot-nf/loc_docker.config"
+  dockerconf: "-with-docker satta/annot-nf"
+  rootdir: "/Users/ss34/develop/annot-nf/"
+  workdir: "/Users/ss34/develop/annot-nf/work"
+  tmpdir: "/tmp"
+
+production:
+  nextflow-path: /Users/ss34/
+
+test:
+  nextflow-path: /Users/ss34/

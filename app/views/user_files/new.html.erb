@@ -1,0 +1,75 @@
+<h1>My Sequences</h1>
+
+<table class="table table-striped" id="file-list">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Filename</th>
+                <th>Size</th>
+                <th>Link</th>
+            </tr>
+        </thead>
+        <tbody>
+  <% @user_files.each do |ufile| %>
+            <tr>
+                <td><%= ufile.name %></td>
+                <td><%= ufile.file_name %></td>
+                <td><%= number_to_human_size(ufile.file.size) %></td>
+                <td><%=  link_to "Link", ufile.file.url, target: '_blank' %></td>
+            </tr>
+  <% end %>
+  <tr id="nosequences" <% if @user_files.size > 0 then %> style="display: none;" <% end %>>
+    <td  colspan="3"> You do not have any sequence files at the moment. Use the form below to upload them. </td>
+ </tr>
+        </tbody>
+    </table>
+
+<%= form_for @user_file do |f| %>
+<%= render 'errors', object: @user_file %>
+  <div class="form-group">
+    <%= f.label :name %>
+    <%= f.text_field :name, class: 'form-control', required: true %>
+  </div>
+
+  <div class="form-group">
+    <%= f.label :file %>
+    <%= f.file_field :file, required: true %>
+  </div>
+
+<div class="progress-wrapper">
+  <div class="progress">
+    <div class="progress-bar" role="progressbar">
+      0%
+    </div>
+  </div>
+</div>
+<% end %>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+      var user_file_form = $('#new_user_file');
+      var wrapper = user_file_form.find('.progress-wrapper');
+      var nosequences = $('#nosequences');
+      var progress_bar = wrapper.find('.progress-bar');
+      var bitrate = wrapper.find('.bitrate');
+      wrapper.hide();
+
+      user_file_form.fileupload({dataType: 'script'});
+
+      user_file_form.on('fileuploadstart', function() {
+        wrapper.show();
+      });
+
+      user_file_form.on('fileuploaddone', function(e, data) {
+        alert(data.result);
+        wrapper.hide();
+        progress_bar.width(0);
+      });
+
+      user_file_form.on('fileuploadprogressall', function (e, data) {
+        bitrate.text((data.bitrate / 1024).toFixed(2) + 'Kb/s');
+        var progress = parseInt(data.loaded / data.total * 100, 10);
+        progress_bar.css('width', progress + '%').text(progress + '%');
+      });
+    });
+</script>

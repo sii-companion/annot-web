@@ -1,0 +1,14 @@
+<% if @job.errors.any? %>
+  <div class="alert alert-danger alert-dismissable">
+    <button type="button" class="close" data-dismiss="alert"
+      aria-hidden="true">
+      &times;
+   </button>
+      <b>Please address the following <%= pluralize(@job.errors.count, "error") %>.</b>
+    <ul>
+    <% @job.errors.full_messages.each do |msg| %>
+      <li> <%= msg %> </li>
+    <% end %>
+    </ul>
+  </div>
+<% end %>

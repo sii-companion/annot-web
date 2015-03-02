@@ -1,0 +1,16 @@
+   <div class="col-lg-5">
+        <div class="media">
+            <a class="pull-left" href="#">
+
+                <%= gravatar_for @user %>
+            </a>
+            <div class="media-body">
+                <h4 class="media-heading"> <%= @user.fullname %> <small> </small></h4>
+                <h5><%= @user.email %></h5>
+                <hr style="margin:8px auto">
+                <span class="label label-default">foo</span>
+                <span class="label label-default">bar</span>
+            </div>
+        </div>
+
+    </div>

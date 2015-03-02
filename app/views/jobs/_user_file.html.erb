@@ -1,0 +1,5 @@
+<tr>
+    <td> <%= radio_button :job, :user_file_id, user_file[:id] %>
+    <td><%= user_file.file_name %></td>
+    <td><%= number_to_human_size(user_file.file.size) %></td>
+</tr>

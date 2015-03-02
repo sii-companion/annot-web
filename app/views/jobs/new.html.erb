@@ -1,0 +1,132 @@
+<h1>Create a new annotation job</h1>
+
+<p>Please fill in the form below to specify the parameters for your annotation run.</p>
+
+<%= form_for @job do |f| %>
+<%= render 'errors', object: @job %>
+
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title">Step 1: Basic job properties</h3>
+  </div>
+  <div class="panel-body">
+    <div><p>First of all, please specify a <b>name</b> for your new job. It should reflect the purpose of your job, and should probably include the name of the organism you are annotating.</p>
+   <p> Example: <i>XXXX</i></p></div>
+  <div class="input-group">
+     <span class="input-group-addon" id="sizing-addon1">Job name</span>
+    <%= f.text_field :name, class: 'form-control', :placeholder => "XXXX", :aria => {:describedby => "sizing-addon1"}, required: true %>
+  </div>
+  <div style="padding-top: 20px;"><p> Please also give a <b>species prefix</b> that will be used to prefix entities (such as genes, pseudochromosomes, etc.) generated during the annotation run.</p>
+   <p> Example: <i>LFOO</i></p></div>
+  <div class="input-group">
+     <span class="input-group-addon" id="sizing-addon2">Species prefix</span>
+    <%= f.text_field :name, class: 'form-control', :placeholder => "LFOO", :aria => {:describedby => "sizing-addon2"}, required: true %>
+  </div>
+
+  </div>
+</div>
+
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title">Step 2: Sequence to annotate</h3>
+  </div>
+  <div class="panel-body">
+    <p>Please select a <b>sequence file</b> to be annotated. If you have already uploaded sequence files before, please select one from the list below. If this is your first annotation run, choose a FASTA, EMBL or GenBank sequence file from your local filesystem using the 'Add new file...' button below. The file can be gzip- or bzip2-compressed but must have a <tt>.gz</tt> or <tt>.bz2</tt> suffix.</p>
+    <table class="table table-striped" id="file-list">
+        <thead>
+            <tr>
+                <th></th>
+                <th>Filename</th>
+                <th>Size</th>
+            </tr>
+        </thead>
+        <tbody>
+  <% current_user.user_files.each do |ufile| %>
+            <tr>
+                <td> <%= f.radio_button :user_file_id, ufile[:id], required: true %>
+                <td><%= ufile.file_name %></td>
+                <td><%= number_to_human_size(ufile.file.size) %></td>
+            </tr>
+  <% end %>
+  <tr id="nosequences" <% if current_user.user_files.size > 0 then %> style="display: none;" <% end %>>
+    <td  colspan="3"> You do not have any sequence files at the moment. Use the form below to upload them. </td>
+ </tr>
+        </tbody>
+    </table>
+  <div class="form-group">
+   <span class="btn btn-default btn-file">
+     <i class="glyphicon glyphicon-plus"></i> Add new file... <input type="file" name="user_file[file]" id="selectuserfile">
+   </span>
+  </div>
+  <div id="progress-wrapper">
+    <div class="progress">
+      <div class="progress-bar" role="progressbar">
+        0%
+      </div>
+    </div>
+  </div>
+  </div>
+</div>
+
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title">Step 4: Reference organism</h3>
+  </div>
+  <div class="panel-body">
+   <div> <p>Please pick a <b>reference organism</b> for this annotation run. This organism will be used to specify the models for gene finding, functional annotation transfer and pseudochromosome contiguation.</p> </div>
+   <div class="form-group">
+    <%= f.collection_select :reference_id, Reference.all, :id, :name,  { :include_blank => '-- Select One --' }, {:class => "form-control", :required => true} %>
+   </div>
+  </div>
+</div>
+
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title">Step 5: Pseudochromosome contiguation</h3>
+  </div>
+  <div class="panel-body">
+   <div> <p>The contiguation step will try to orientate the sequences in your input file to align with the chromosomal sequences of the reference organism to build pseudochromosomes, which will then be used as the target sequences for gene annotation. This step is optional; if it is not desired then no modifications will be made to the input sequences.</p> </div>
+   <div class="form-group">
+     <div class="radio">
+       <label><%= f.radio_button :do_contiguate, :true, required: true %> Yes, contiguate pseudochromosomes.</label>
+     </div>
+     <div class="radio">
+       <label><%= f.radio_button :do_contiguate, :false, required: true %> No, do not modify my input sequences.</label>
+   </div>
+   </div>
+  </div>
+</div>
+
+<%= f.submit %>
+
+<% end %>
+
+
+<script type="text/javascript">
+    $(document).ready(function() {
+      var user_file_form = $('#selectuserfile');
+      var wrapper = $('#progress-wrapper');
+      var nosequences = $('#nosequences');
+      var progress_bar = wrapper.find('.progress-bar');
+      var bitrate = wrapper.find('.bitrate');
+      wrapper.hide();
+
+      user_file_form.fileupload({dataType: 'script',
+        url: '<%= jobs_new_user_file_path %>' });
+
+      user_file_form.on('fileuploadstart', function() {
+        wrapper.show();
+      });
+
+      user_file_form.on('fileuploaddone', function() {
+        wrapper.hide();
+        progress_bar.width(0);
+      });
+
+      user_file_form.on('fileuploadprogressall', function (e, data) {
+        bitrate.text((data.bitrate / 1024).toFixed(2) + 'Kb/s');
+        var progress = parseInt(data.loaded / data.total * 100, 10);
+        progress_bar.css('width', progress + '%').text(progress + '%');
+      });
+    });
+</script>
