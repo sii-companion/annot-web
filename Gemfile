@@ -69,4 +69,8 @@ gem 'jquery.fileupload-rails'
 gem 'omniauth', '~> 1.2.2'
 gem 'omniauth-google-oauth2'
 
+# for the reference definitions
 gem 'active_hash'
+
+# for data viz
+gem "d3-rails"
