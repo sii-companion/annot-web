@@ -37,7 +37,7 @@ group :development, :test do
   gem 'byebug'
 
   # Access an IRB console on exception pages or by using <%= console %> in views
-  gem 'web-console', '~> 2.0'
+  #gem 'web-console', '~> 2.0'
 
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
   gem 'spring', '1.2.0'
@@ -46,7 +46,7 @@ end
 # easier linking with highlights
 gem 'active_link_to'
 
-# for executing external jobs
+# for executing external processes
 gem 'open4'
 
 # for async processing of background jobs
@@ -54,6 +54,7 @@ gem 'sidekiq'
 gem 'sidekiq-status'
 gem 'sidekiq-limit_fetch'
 
+# upload/asset management (sequences, images, ...)
 gem 'dragonfly'
 group :production do
   gem 'rack-cache', :require => 'rack/cache'
@@ -62,15 +63,13 @@ gem 'bootstrap-sass'
 gem 'remotipart', '~> 1.2'
 gem 'autoprefixer-rails'
 
+# JQuery extensions
 gem 'jquery-ui-rails'
 gem 'jquery.fileupload-rails'
 
 # OAuth2 (e.g. Google)
-gem 'omniauth', '~> 1.2.2'
-gem 'omniauth-google-oauth2'
+#gem 'omniauth', '~> 1.2.2'
+#gem 'omniauth-google-oauth2'
 
 # for the reference definitions
 gem 'active_hash'
-
-# for data viz
-gem "d3-rails"
