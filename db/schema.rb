@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150227164955) do
+ActiveRecord::Schema.define(version: 20150303100946) do
 
   create_table "file_types", force: :cascade do |t|
     t.string   "name"
@@ -38,6 +38,11 @@ ActiveRecord::Schema.define(version: 20150227164955) do
     t.integer  "taxon_id"
     t.string   "db_id"
     t.integer  "reference_id"
+    t.string   "prefix"
+    t.string   "ratt_transfer_type"
+    t.string   "config_file"
+    t.text     "stdout"
+    t.text     "stderr"
   end
 
   create_table "user_files", force: :cascade do |t|
