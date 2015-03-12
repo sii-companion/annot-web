@@ -1,24 +1,43 @@
 class Reference < ActiveHash::Base
   self.data = [
     {:id => 1,
+     :name => "Leishmania major Friedlin chromosome 1 (demo)",
+     :abbr => "LmjF",
+     :ref_seq => "#{CONFIG['rootdir']}/example-data/L_major.fasta.1",
+     :ref_chr => "#{CONFIG['rootdir']}/example-data/L_major.fasta.1",
+     :ref_annot => "#{CONFIG['rootdir']}/example-data/Lmajor.gff3.1",
+     :ref_gaf => "#{CONFIG['rootdir']}/example-data/L_major.gaf.1",
+     :augustus_species => "leishmania_major_sampled",
+     :abacas_chr_pattern => 'LmjF.(%d+)',
+     :pepfile => "#{CONFIG['rootdir']}/example-data/L_major.pep.1"},
+    {:id => 4,
      :name => "Leishmania major Friedlin",
      :abbr => "LmjF",
-     :ref_seq => "#{CONFIG['rootdir']}/example-data/L_major.fasta.1",  ## FIXME
-     :ref_gaf => "#{CONFIG['rootdir']}/example-data/Lmajor.gff3.1",
-     :augustus_species => "leishmania_major_sampled"},
+     :ref_seq => "#{Rails.root}/lib/refs/L_major/L_major.fasta",
+     :ref_chr => "#{Rails.root}/lib/refs/L_major/L_major.fasta",
+     :ref_annot => "#{Rails.root}/lib/refs/L_major/Lmajor.gff3",
+     :ref_gaf => "#{Rails.root}/lib/refs/L_major/L_major.gaf",
+     :augustus_species => "leishmania_major_sampled",
+     :abacas_chr_pattern => 'LmjF.(%d+)',
+     :pepfile => "#{Rails.root}/lib/refs/L_major/L_major.pep.trunc"},
     {:id => 2,
      :name => "Trypanosoma brucei TREU927",
      :abbr => "Tb927",
-     :ref_seq => "#{CONFIG['rootdir']}/example-data/L_major.fasta.1",  ## FIXME
-     :ref_gaf => "#{CONFIG['rootdir']}/example-data/Lmajor.gff3.1",
-     :augustus_species => "leishmania_major_sampled"},
-     {:id => 3,
-     :name => "Leishmania braziliensis MHOM/BR/75/M2904",
-     :abbr => "LbrM",
-     :ref_seq => "#{CONFIG['rootdir']}/example-data/L_major.fasta.1",  ## FIXME
-     :ref_gaf => "#{CONFIG['rootdir']}/example-data/Lmajor.gff3.1",
-     :augustus_species => "leishmania_major_sampled"}
+     :ref_seq => "#{Rails.root}/lib/refs/T_brucei_927/Tbruceibrucei927.genome.fasta",
+     :ref_chr => "#{Rails.root}/lib/refs/T_brucei_927/Tbruceibrucei927.chrs.fasta",
+     :ref_annot => "#{Rails.root}/lib/refs/T_brucei_927/Tbruceibrucei927.gff3",
+     :ref_gaf => "#{Rails.root}/lib/refs/T_brucei_927/Tbruceibrucei927.gaf",
+     :augustus_species => "leishmania_major_sampled",       # FIXME
+     :abacas_chr_pattern => 'Tb927_(%d+)_v%d',
+     :pepfile => "#{Rails.root}/lib/refs/T_brucei_927/Tbruceibrucei927.pep.trunc"}
+  #   {:id => 3,
+  #   :name => "Leishmania braziliensis MHOM/BR/75/M2904",
+  #   :abbr => "LbrM",
+  #   :ref_seq => "#{CONFIG['rootdir']}/example-data/L_major.fasta.1",  ## FIXME
+  #   :ref_annot => "#{CONFIG['rootdir']}/example-data/Lmajor.gff3.1",
+  #   :ref_gaf => "#{CONFIG['rootdir']}/example-data/Lmajor.gaf.1",
+  #   :augustus_species => "leishmania_major_sampled",
+  #   :abacas_chr_pattern => 'LmjF.(%d+)',
+  #   :pepfile => "#{CONFIG['rootdir']}/example-data/L_major.pep.1"}
   ]
 end
-
-

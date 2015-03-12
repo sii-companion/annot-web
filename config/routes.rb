@@ -1,13 +1,5 @@
 Rails.application.routes.draw do
 
-  get 'user_files/index'
-
-  get 'user_files/new'
-
-  get 'user_files/create'
-
-  get 'user_files/destroy'
-
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
@@ -31,8 +23,13 @@ Rails.application.routes.draw do
   # jobs
   resources :jobs
   post 'jobs/new_user_file' => 'user_files#create_for_jobform'
+  get 'jobs/:id/orths' => 'jobs#orths'
 
   # uploaded files
+  get 'user_files/index'
+  get 'user_files/new'
+  get 'user_files/create'
+  get 'user_files/destroy'
   resources :user_files
 
   # session management

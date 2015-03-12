@@ -1,5 +1,5 @@
 <% if @user_file.new_record? %>
-alert('The file could not be uploaded: <%= j @user_file.errors.full_messages.join(', ').html_safe %>');
+alert('The file could not be uploaded for the following reasons:\n\n<% @user_file.errors.full_messages.each do |m| %>\t• <%= m.html_safe %>\n<% end %>');
 <% else %>
 $('#file-list').append('<%= j render @user_file %>');
 $('#nosequences').hide();

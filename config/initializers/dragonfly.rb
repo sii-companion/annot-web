@@ -4,7 +4,6 @@ class GFF3Analyser
   def call(content)
     path = content.path
     rval = system("gt gff3 -retainids -tidy -show no #{path}")
-#    puts "rval #{rval}"
     rval
   end
 end
@@ -13,7 +12,7 @@ class SequenceValidAnalyser
   def call(content)
     path = content.path
     rval = system("gt convertseq -noseq #{path}")
-#    puts "rval #{rval}"
+    puts rval
     rval
   end
 end
@@ -27,12 +26,12 @@ class SequenceNumberAnalyser
     if m then
       nof_contigs = m[1].to_i
     end
-#     puts "nof_contigs #{nof_contigs}"
     return nof_contigs
   end
 end
 
 Dragonfly.app.configure do
+  plugin :imagemagick
   secret "b2909acc0dbe34c4a88d89c8c465f0f45b4a7b1d4e0a957b3181e6ac1063e2d3"
 
   url_format "/media/:job/:name"
@@ -41,11 +40,15 @@ Dragonfly.app.configure do
     root_path: Rails.root.join('public/system/dragonfly', Rails.env),
     server_root: Rails.root.join('public')
 
-# do not forget dos2unix!
-
   processor :canonicalize_gff3 do |content|
     content.shell_update do |old_path, new_path|
-      "gt gff3 -retainids -fixregionboundaries -tidy -retainids #{old_path} > #{new_path}"
+      "gt gff3 -o #{new_path} -force -retainids -fixregionboundaries -tidy -retainids #{old_path}"
+    end
+  end
+
+  processor :canonicalize_seq do |content|
+    content.shell_update ext: 'fasta' do |old_path, new_path|
+      "gt convertseq -force -o #{new_path} #{old_path}"
     end
   end
 

@@ -1,21 +1,23 @@
 <h1>My Sequences</h1>
 
+
 <table class="table table-striped" id="file-list">
         <thead>
             <tr>
-                <th>Name</th>
                 <th>Filename</th>
                 <th>Size</th>
-                <th>Link</th>
+                <th></th>
             </tr>
         </thead>
         <tbody>
-  <% @user_files.each do |ufile| %>
+<% @user_files.each do |ufile| %>
             <tr>
-                <td><%= ufile.name %></td>
                 <td><%= ufile.file_name %></td>
                 <td><%= number_to_human_size(ufile.file.size) %></td>
-                <td><%=  link_to "Link", ufile.file.url, target: '_blank' %></td>
+                <td> <%= link_to user_file_path(id: ufile[:id]), method: :delete, data: { confirm: "Are you sure?" } do %>
+                       <i class="glyphicon glyphicon-trash"></i> Delete
+                     <% end %>&nbsp;
+                </td>
             </tr>
   <% end %>
   <tr id="nosequences" <% if @user_files.size > 0 then %> style="display: none;" <% end %>>
@@ -25,15 +27,10 @@
     </table>
 
 <%= form_for @user_file do |f| %>
-<%= render 'errors', object: @user_file %>
   <div class="form-group">
-    <%= f.label :name %>
-    <%= f.text_field :name, class: 'form-control', required: true %>
-  </div>
-
-  <div class="form-group">
-    <%= f.label :file %>
-    <%= f.file_field :file, required: true %>
+   <span class="btn btn-default btn-file">
+     <i class="glyphicon glyphicon-plus"></i> Add new file... <input type="file" name="user_file[file]" id="new_user_file">
+   </span>
   </div>
 
 <div class="progress-wrapper">
@@ -61,7 +58,6 @@
       });
 
       user_file_form.on('fileuploaddone', function(e, data) {
-        alert(data.result);
         wrapper.hide();
         progress_bar.width(0);
       });

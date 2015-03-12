@@ -11,12 +11,36 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150303100946) do
+ActiveRecord::Schema.define(version: 20150306164620) do
+
+  create_table "circos_images", force: :cascade do |t|
+    t.string   "file_uid"
+    t.string   "file_name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer  "job_id"
+  end
 
   create_table "file_types", force: :cascade do |t|
     t.string   "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "genome_stats", force: :cascade do |t|
+    t.integer  "nof_regions"
+    t.integer  "overall_length"
+    t.decimal  "gc_overall"
+    t.decimal  "gc_coding"
+    t.integer  "nof_genes"
+    t.decimal  "gene_density"
+    t.decimal  "avg_coding_length"
+    t.integer  "nof_coding_genes"
+    t.integer  "nof_genes_with_mult_cds"
+    t.integer  "nof_genes_with_function"
+    t.datetime "created_at",              null: false
+    t.datetime "updated_at",              null: false
+    t.integer  "job_id"
   end
 
   create_table "jobs", force: :cascade do |t|
@@ -43,6 +67,15 @@ ActiveRecord::Schema.define(version: 20150303100946) do
     t.string   "config_file"
     t.text     "stdout"
     t.text     "stderr"
+    t.integer  "genome_stat_id"
+  end
+
+  create_table "result_files", force: :cascade do |t|
+    t.string   "file_uid"
+    t.string   "file_name"
+    t.integer  "job_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "user_files", force: :cascade do |t|

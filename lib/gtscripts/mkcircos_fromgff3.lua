@@ -18,17 +18,17 @@
 ]]
 
 function usage()
-  io.stderr:write(string.format("Usage: %s <GFF annotation>\n" , arg[0]))
+  io.stderr:write(string.format("Usage: %s <ref GFF annotation> <target GFF annotation> outpath\n" , arg[0]))
   os.exit(1)
 end
 
-if #arg < 1 then
+if #arg < 3 then
   usage()
 end
 
-genes_out = io.open("genes.txt", "w+")
-gaps_out = io.open("gaps.txt", "w+")
-karyotype_out = io.open("karyotype.txt", "w+")
+genes_out = io.open(arg[3] .. "/genes.txt", "a+")
+gaps_out = io.open(arg[3] .. "/gaps.txt", "a+")
+karyotype_out = io.open(arg[3] .. "/karyotype.txt", "a+")
 
 visitor = gt.custom_visitor_new()
 function visitor:visit_feature(fn)
@@ -61,6 +61,12 @@ function visitor_stream:next_tree()
 end
 
 visitor_stream.instream = gt.gff3_in_stream_new_sorted(arg[1])
+visitor_stream.vis = visitor
+local gn = visitor_stream:next_tree()
+while (gn) do
+  gn = visitor_stream:next_tree()
+end
+visitor_stream.instream = gt.gff3_in_stream_new_sorted(arg[2])
 visitor_stream.vis = visitor
 local gn = visitor_stream:next_tree()
 while (gn) do

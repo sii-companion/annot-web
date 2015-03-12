@@ -1,0 +1,299 @@
+<style>
+  ul.circos {
+      padding:0 0 0 0;
+      margin:0 0 0 0;
+  }
+  ul.circos li {
+      list-style:none;
+      margin-bottom:25px;
+  }
+  ul.circos li img {
+      cursor: pointer;
+  }
+  .modal-body {
+      padding:5px !important;
+  }
+  .modal-content {
+      border-radius:0;
+  }
+  .modal-dialog img {
+      text-align:center;
+      margin:0 auto;
+  }
+  .controls{
+      width:50px;
+      display:block;
+      font-size:11px;
+      padding-top:8px;
+      font-weight:bold;
+  }
+  .next {
+      float:right;
+      text-align:right;
+  }
+</style>
+
+<h1><%= @job[:name] %><span class="small"> <%= @job[:job_id] %></span></h1>
+
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-body">
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+
+      <div class="row">
+        <p>This job was submitted <b><%= distance_of_time_in_words(Time.now,@job[:created_at]) %></b> ago and ran for <b><%= distance_of_time_in_words(@job[:started_at],@job[:finished_at])%></b>, finally finishing at <b><%= @job[:finished_at] %></b>.
+<span class="pull-right" style="font-size: 200%; margin-right: 30px;">
+<% if @queued then %>
+    <span class="label label-info">Queued</span>
+<% elsif @working then %>
+    <span class="label label-info">Working</span>
+<% elsif @failed then %>
+    <span class="label label-danger">Failed</span>
+<% elsif @complete then %>
+    <span class="label label-success">Completed</span>
+<% else %>
+    <span class="label label-default">No status available</span>
+<% end %></span>
+        </p>
+        <div style="margin-top:20px;">&nbsp;</div>
+        <div class="col-md-8">
+
+<% if @job.genome_stat then %>
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title">Genome statistics</h3>
+  </div>
+  <div class="panel-body">
+    <table class="table table-striped">
+         <tbody>
+            <tr>
+                <td>Number of annotated regions/sequences</td>
+                <td><%= @job.genome_stat[:nof_regions]%></td>
+            </tr>
+            <tr>
+                <td>Number of genes</td>
+                <td><%= @job.genome_stat[:nof_genes]%></td>
+            </tr>
+            <tr>
+                <td>Number of coding genes</td>
+                <td><%= @job.genome_stat[:nof_coding_genes]%></td>
+            </tr>
+            <tr>
+                <td>Number of genes with function</td>
+                <td><%= @job.genome_stat[:nof_genes_with_function]%></td>
+            </tr>
+            <tr>
+                <td>Number of non-coding genes</td>
+                <td><%= @job.genome_stat[:nof_genes].to_i - @job.genome_stat[:nof_coding_genes].to_i %></td>
+            </tr>
+            <tr>
+                <td>Number of genes with multiple CDSs</td>
+                <td><%= @job.genome_stat[:nof_genes_with_mult_cds]%></td>
+            </tr>
+            <tr>
+                <td>Overall GC%</td>
+                <td><%= @job.genome_stat[:gc_overall].round(2)%></td>
+            </tr>
+            <tr>
+                <td>Coding GC%</td>
+                <td><%= @job.genome_stat[:gc_coding].round(2)%></td>
+            </tr>
+        </tbody>
+    </table>
+  </div>
+</div>
+<% end %>
+
+<% if @job.result_files.size > 0 then %>
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title">Result files</h3>
+  </div>
+  <div class="panel-body">
+    Click on the file name to download.
+     <table class="table table-striped">
+        <thead>
+            <tr>
+                <th></th>
+                <th class="text-right">Size</th>
+            </tr>
+        </thead>
+        <tbody>
+          <% @job.result_files.each do |file| %>
+            <tr>
+                <td><%= link_to JobsHelper::file_description(file.file.name), file.file.url %></td>
+                <td class="text-right"><%= number_to_human_size(file.file.size) %></td>
+            </tr>
+          <% end %>
+        </tbody>
+    </table>
+  </div>
+</div>
+<% end %>
+
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title">Phylogeny</h3>
+  </div>
+  <div class="panel-body">
+    <div class="center=block">
+      <div id="svgCanvas"> </div>
+    </div>
+  </div>
+</div>
+
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title">Orthologous clusters</h3>
+  </div>
+  <div class="panel-body">
+    <div class="center=block">
+      <div id="jvenn-container"></div>
+    </div>
+  </div>
+</div>
+
+<% if @job[:do_contiguate] then %>
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title">Contiguation quality</h3>
+  </div>
+  <div class="panel-body">
+    <p>Each circle below represents a single target-reference pseudochromosome
+       alignment. Click on it to zoom in.</p>
+    <div class="container-fluid">
+      <ul class="circos row">
+        <% @job.circos_images.each do |image| %>
+            <li class="col-lg-2 col-md-2 col-sm-3">
+              <%= image_tag image.file.url, class: "img-responsive" %>
+            </li>
+        <% end %>
+      </ul>
+    </div>
+  </div>
+</div>
+<% end %>
+
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title">Pipeline output logs</h3>
+    <span class="pull-right clickable"><i class="glyphicon glyphicon-chevron-up"></i></span>
+  </div>
+  <div id="logs-panel" class="panel-body">
+    <h3>Standard output:</h3>
+    <pre><%= @job[:stdout] %></pre>
+    <h3>Standard error:</h3>
+    <pre><%= @job[:stderr] %></pre>
+  </div>
+</div>
+        </div>
+        <div class="col-md-4">
+
+          <div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title">Job parameters</h3>
+  </div>
+  <div class="panel-body">
+    <div style="text-align: center;">
+    <b><%= @file.file_name %></b><br />
+ vs.   <br /> <b><%= @ref.name %></b><br /><br />
+    </div>
+    <table class="table table-striped">
+          <tbody>
+            <tr>
+                <td>Pseudochromosomes</td>
+                <td>
+                    <% if @job[:do_contiguate] %>
+                      &#10003;
+                    <% else %>
+                      &#10007;
+                    <% end %>
+                </td>
+            </tr>
+            <tr>
+                <td>Protein evidence</td>
+                <td>
+                    <% if @job[:do_exonerate] %>
+                      &#10003;
+                    <% else %>
+                      &#10007;
+                    <% end %>
+                </td>
+            </tr>
+            <tr>
+                <td>RATT</td>
+                <td>
+                    <% if @job[:do_ratt] %>
+                      &#10003;
+                    <% else %>
+                      &#10007;
+                    <% end %>
+                </td>
+            </tr>
+            <tr>
+                <td>Max gene length</td>
+                <td><%= @job[:max_gene_length] %></td>
+            </tr>
+            <tr>
+                <td>Score threshold</td>
+                <td><%= @job[:augustus_score_threshold].round(2) %></td>
+            </tr>
+        </tbody>
+          </table>
+            </div>
+      </div>
+</div>
+
+<script>
+$(document).ready(function(){
+  $.getJSON( "<%= @job[:job_id] %>/orths", function(data) {
+    $('#jvenn-container').jvenn({
+      displayStat: false,
+      series: data
+    });
+  });
+  $('li img').on('click',function(){
+    var src = $(this).attr('src');
+    var img = '<img src="' + src + '" class="img-responsive"/>';
+    $('#myModal').modal();
+    $('#myModal').on('shown.bs.modal', function(){
+        $('#myModal .modal-body').html(img);
+    });
+    $('#myModal').on('hidden.bs.modal', function(){
+        $('#myModal .modal-body').html('');
+    });
+  });
+  $('#logs-panel').slideUp();
+  $('.panel-heading span.clickable').addClass('panel-collapsed');
+  $('.panel-heading span.clickable').find('i').removeClass('glyphicon-chevron-up').addClass('glyphicon-chevron-down');
+});
+
+jQuery(function ($) {
+  $('.panel-heading span.clickable').on("click", function (e) {
+    if ($(this).hasClass('panel-collapsed')) {
+      // expand the panel
+      $(this).parents('.panel').find('.panel-body').slideDown();
+      $(this).removeClass('panel-collapsed');
+      $(this).find('i').removeClass('glyphicon-chevron-down').addClass('glyphicon-chevron-up');
+    }
+    else {
+      // collapse the panel
+      $(this).parents('.panel').find('.panel-body').slideUp();
+      $(this).addClass('panel-collapsed');
+      $(this).find('i').removeClass('glyphicon-chevron-up').addClass('glyphicon-chevron-down');
+    }
+  });
+
+var dataObject = { newick: '(LmjF:0.01723,<%= @job[:prefix] %>:0.01011,((LinJ:0.00124,LdBPK:0.00123)1.000:0.01318,(LmxM:0.02567,(LbrM:0.06584,(TcCLB:0.20446,(TcIL3000:0.18874,(Tbg972:0.00181,Tb927:0.00161)1.000:0.15843)1.000:0.17104)1.000:0.60270)1.000:0.03596)1.000:0.00792)1.000:0.00522);' };
+phylocanvas = new Smits.PhyloCanvas(
+    dataObject,
+    'svgCanvas',
+    700, 500,
+    'rectangular');
+});
+
+</script>

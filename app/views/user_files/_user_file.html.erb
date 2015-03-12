@@ -1,6 +1,8 @@
 <tr>
-  <td><%= user_file.name %></td>
-  <td><%= user_file.file_name %></td>
-  <td><%= number_to_human_size(user_file.file.size) %></td>
-  <td><%=  link_to "Link", user_file.file.url, target: '_blank' %></td>
+<td><%= user_file.file_name %></td>
+<td><%= number_to_human_size(user_file.file.size) %></td>
+<td> <%= link_to user_file_path(id: user_file[:id]), method: :delete, data: { confirm: "Are you sure?" } do %>
+       <i class="glyphicon glyphicon-trash"></i> Delete
+     <% end %>&nbsp;
+</td>
 </tr>

@@ -1,106 +1,154 @@
-<h1>Create a new annotation job</h1>
+<h1>New annotation job</h1>
 
 <p>Please fill in the form below to specify the parameters for your annotation run.</p>
 
 <%= form_for @job do |f| %>
-<%= render 'errors', object: @job %>
+  <%= render 'errors', object: @job %>
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h3 class="panel-title">Step 1: Basic job properties</h3>
+    </div>
+    <div class="panel-body">
+      <div><p>First of all, please specify a free-text <b>name</b> for your new job. It should reflect the purpose of your job, and should probably include the name of the organism you are annotating.</p></div>
+    <div class="input-group">
+       <span class="input-group-addon" id="sizing-addon1">Job name</span>
+      <%= f.text_field :name, class: 'form-control', :aria => {:describedby => "sizing-addon1"}, required: true %>
+    </div>
+    <div style="padding-top: 20px;"><p> Please also give a short <b>species prefix</b> that will be used to name entities (such as genes, pseudochromosomes, etc.) generated during the annotation run. It should not contain spaces or special characters.</p>
+     <p> Example: <i>LFOO</i></p></div>
+    <div class="input-group">
+       <span class="input-group-addon" id="sizing-addon2">Species prefix</span>
+      <%= f.text_field :prefix, class: 'form-control', :placeholder => "LFOO", :aria => {:describedby => "sizing-addon2"}, required: true %>
+    </div>
 
-<div class="panel panel-default">
-  <div class="panel-heading">
-    <h3 class="panel-title">Step 1: Basic job properties</h3>
-  </div>
-  <div class="panel-body">
-    <div><p>First of all, please specify a <b>name</b> for your new job. It should reflect the purpose of your job, and should probably include the name of the organism you are annotating.</p>
-   <p> Example: <i>XXXX</i></p></div>
-  <div class="input-group">
-     <span class="input-group-addon" id="sizing-addon1">Job name</span>
-    <%= f.text_field :name, class: 'form-control', :placeholder => "XXXX", :aria => {:describedby => "sizing-addon1"}, required: true %>
-  </div>
-  <div style="padding-top: 20px;"><p> Please also give a <b>species prefix</b> that will be used to prefix entities (such as genes, pseudochromosomes, etc.) generated during the annotation run.</p>
-   <p> Example: <i>LFOO</i></p></div>
-  <div class="input-group">
-     <span class="input-group-addon" id="sizing-addon2">Species prefix</span>
-    <%= f.text_field :name, class: 'form-control', :placeholder => "LFOO", :aria => {:describedby => "sizing-addon2"}, required: true %>
+    </div>
   </div>
 
-  </div>
-</div>
-
-<div class="panel panel-default">
-  <div class="panel-heading">
-    <h3 class="panel-title">Step 2: Sequence to annotate</h3>
-  </div>
-  <div class="panel-body">
-    <p>Please select a <b>sequence file</b> to be annotated. If you have already uploaded sequence files before, please select one from the list below. If this is your first annotation run, choose a FASTA, EMBL or GenBank sequence file from your local filesystem using the 'Add new file...' button below. The file can be gzip- or bzip2-compressed but must have a <tt>.gz</tt> or <tt>.bz2</tt> suffix.</p>
-    <table class="table table-striped" id="file-list">
-        <thead>
-            <tr>
-                <th></th>
-                <th>Filename</th>
-                <th>Size</th>
-            </tr>
-        </thead>
-        <tbody>
-  <% current_user.user_files.each do |ufile| %>
-            <tr>
-                <td> <%= f.radio_button :user_file_id, ufile[:id], required: true %>
-                <td><%= ufile.file_name %></td>
-                <td><%= number_to_human_size(ufile.file.size) %></td>
-            </tr>
-  <% end %>
-  <tr id="nosequences" <% if current_user.user_files.size > 0 then %> style="display: none;" <% end %>>
-    <td  colspan="3"> You do not have any sequence files at the moment. Use the form below to upload them. </td>
- </tr>
-        </tbody>
-    </table>
-  <div class="form-group">
-   <span class="btn btn-default btn-file">
-     <i class="glyphicon glyphicon-plus"></i> Add new file... <input type="file" name="user_file[file]" id="selectuserfile">
-   </span>
-  </div>
-  <div id="progress-wrapper">
-    <div class="progress">
-      <div class="progress-bar" role="progressbar">
-        0%
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h3 class="panel-title">Step 2: Target sequence to annotate</h3>
+    </div>
+    <div class="panel-body">
+      <p>Please select a <b>target sequence file</b> to be annotated. If you have already uploaded sequence files before, please select one from the list below. If this is your first annotation run, choose a FASTA, EMBL or GenBank sequence file from your local filesystem using the 'Add new file...' button below, then select it after it has been added to the list. The file can be gzip- or bzip2-compressed, in this case it must have a <tt>.gz</tt> or <tt>.bz2</tt> suffix.</p>
+      <table class="table table-striped" id="file-list">
+          <thead>
+              <tr>
+                  <th></th>
+                  <th>Filename</th>
+                  <th>Size</th>
+              </tr>
+          </thead>
+          <tbody>
+    <% current_user.user_files.each do |ufile| %>
+              <tr>
+                  <td> <%= f.radio_button :user_file_id, ufile[:id], required: true %></td>
+                  <td><%= ufile.file_name %></td>
+                  <td><%= number_to_human_size(ufile.file.size) %></td>
+              </tr>
+    <% end %>
+    <tr id="nosequences" <% if current_user.user_files.size > 0 then %> style="display: none;" <% end %>>
+      <td  colspan="3"> You do not have any sequence files at the moment. Use the 'Add new file...' button below to upload one. </td>
+   </tr>
+          </tbody>
+      </table>
+    <div class="form-group">
+     <span class="btn btn-default btn-file">
+       <i class="glyphicon glyphicon-plus"></i> Add new file... <input type="file" name="user_file[file]" id="selectuserfile">
+     </span>
+    </div>
+    <div id="progress-wrapper">
+      <div class="progress">
+        <div class="progress-bar" role="progressbar">
+          0%
+        </div>
       </div>
+    </div>
+    </div>
+  </div>
+
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h3 class="panel-title">Step 4: Reference organism</h3>
+    </div>
+    <div class="panel-body">
+     <div> <p>Please pick a <b>reference organism</b> for this annotation run. This organism will be used to specify the models for gene finding, functional annotation transfer and pseudochromosome contiguation.</p> </div>
+     <div class="form-group">
+      <%= f.collection_select :reference_id, Reference.all, :id, :name,  { :include_blank => '-- Select One --' }, {:class => "form-control", :required => true} %>
+     </div>
+    </div>
+  </div>
+
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h3 class="panel-title">Step 5: Pseudochromosome contiguation</h3>
+    </div>
+    <div class="panel-body">
+     <div> <p>The contiguation step will try to orientate the sequences in your input file to align with the chromosomal sequences of the reference organism to build pseudochromosomes, which will then be used as the target sequences for gene annotation. This step is optional; if it is not desired then no modifications will be made to the input sequences.</p> </div>
+     <div class="form-group">
+       <div class="radio">
+         <label><%= f.radio_button :do_contiguate, true, required: true %> Yes, contiguate pseudochromosomes.</label>
+       </div>
+       <div class="radio">
+         <label><%= f.radio_button :do_contiguate, false, required: true %> No, do not modify my input sequences.</label>
+     </div>
+     </div>
+    </div>
+  </div>
+
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h3 class="panel-title">Step 6: Advanced settings (click chevron to the right to show/hide)</h3>
+      <span class="pull-right clickable"><i class="glyphicon glyphicon-chevron-up"></i></span>
+    </div>
+    <div id="advanced-panel" class="panel-body">
+     <div> <p>Do you want to use protein sequences from your reference organism aligned to your target sequence as additional evidence during gene finding? This can improve the accuracy of the gene prediction step but will severely increase your job's running time.</p> </div>
+     <div class="form-group">
+       <div class="radio">
+         <label><%= f.radio_button :do_exonerate, true, required: true %> Yes, align reference proteins to target sequence.</label>
+       </div>
+       <div class="radio">
+         <label><%= f.radio_button :do_exonerate, false, required: true %> No, do not use reference protein evidence.</label>
+       </div>
+     </div>
+     <div> <p>Do you want to use the <a href="http://nar.oxfordjournals.org/content/39/9/e57" target="_blank">Rapid Annotation Transfer Tool (RATT)</a> to directly map highly conserved genes from the reference to the target genome? This step can result in high quality gene models, but is not guaranteed to work for annotating genomes not closely related to the chosen reference.</p> </div>
+     <div class="form-group">
+       <div class="radio">
+         <label><%= f.radio_button :do_ratt, true, required: true %> Yes, use RATT with the
+          <%= f.collection_select :ratt_transfer_type, ['Species','Assembly','Strain'], :to_s, :to_s, include_blank: false %>
+          transfer type to transfer reference gene models.</label>
+       </div>
+       <div class="radio">
+         <label><%= f.radio_button :do_ratt, false, required: true %> No, only do <i>ab initio</i> gene finding.</label>
+       </div>
+     </div>
+     <div> <p>The value below determines the maximal length of an individual gene in the resulting annotation. All genes predicted by the pipeline longer than this value will be discarded from the result set.</p>
+      <p> Example: <i>20000</i></p></div>
+     <div class="input-group">
+       <span class="input-group-addon" id="sizing-addon2">Maximum gene length</span>
+      <%= f.number_field :max_gene_length, class: 'form-control', :aria => {:describedby => "sizing-addon2"}, required: true %>
+    </div>
+    <div style="padding-top: 20px;"><p>The value below sets the AUGUSTUS score inclusion threshold for a gene to be considered as predicted <i>de novo</i>. Lower this value to make gene prediction more sensitive.</p>
+     <p> Example: <i>0.8</i></p></div>
+    <div class="input-group">
+       <span class="input-group-addon" id="sizing-addon2">AUGUSTUS score threshold</span>
+      <%= f.number_field :augustus_score_threshold, class: 'form-control', :aria => {:describedby => "sizing-addon2"}, required: true %>
+    </div>
+    <div style="padding-top: 20px;"><p>Please set the following values which are required for valid GAF output.</p>
+     <p> Example: <i>5691 (for T. brucei)</i>, see <a href="http://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi" target="_blank">NCBI Taxonomy Browser</a>. The default is 5653 (Kinetoplastida).</p></div>
+    <div class="input-group">
+       <span class="input-group-addon" id="sizing-addon2">Taxon ID</span>
+      <%= f.number_field :taxon_id, class: 'form-control', :aria => {:describedby => "sizing-addon2"}, required: true %>
+    </div>
+    <p style="padding-top: 10px;"> Example: <i>Kingpin</i></p>
+    <div class="input-group">
+       <span class="input-group-addon" id="sizing-addon2">Database ID</span>
+      <%= f.text_field :db_id, class: 'form-control', :aria => {:describedby => "sizing-addon2"}, required: true %>
     </div>
   </div>
   </div>
-</div>
 
-<div class="panel panel-default">
-  <div class="panel-heading">
-    <h3 class="panel-title">Step 4: Reference organism</h3>
-  </div>
-  <div class="panel-body">
-   <div> <p>Please pick a <b>reference organism</b> for this annotation run. This organism will be used to specify the models for gene finding, functional annotation transfer and pseudochromosome contiguation.</p> </div>
-   <div class="form-group">
-    <%= f.collection_select :reference_id, Reference.all, :id, :name,  { :include_blank => '-- Select One --' }, {:class => "form-control", :required => true} %>
-   </div>
-  </div>
-</div>
-
-<div class="panel panel-default">
-  <div class="panel-heading">
-    <h3 class="panel-title">Step 5: Pseudochromosome contiguation</h3>
-  </div>
-  <div class="panel-body">
-   <div> <p>The contiguation step will try to orientate the sequences in your input file to align with the chromosomal sequences of the reference organism to build pseudochromosomes, which will then be used as the target sequences for gene annotation. This step is optional; if it is not desired then no modifications will be made to the input sequences.</p> </div>
-   <div class="form-group">
-     <div class="radio">
-       <label><%= f.radio_button :do_contiguate, :true, required: true %> Yes, contiguate pseudochromosomes.</label>
-     </div>
-     <div class="radio">
-       <label><%= f.radio_button :do_contiguate, :false, required: true %> No, do not modify my input sequences.</label>
-   </div>
-   </div>
-  </div>
-</div>
-
-<%= f.submit %>
-
+  <%= f.submit class: "btn btn-default" %>
 <% end %>
-
 
 <script type="text/javascript">
     $(document).ready(function() {
@@ -128,5 +176,26 @@
         var progress = parseInt(data.loaded / data.total * 100, 10);
         progress_bar.css('width', progress + '%').text(progress + '%');
       });
+
+      $('#advanced-panel').slideUp();
+      $('.panel-heading span.clickable').addClass('panel-collapsed');
+      $('.panel-heading span.clickable').find('i').removeClass('glyphicon-chevron-up').addClass('glyphicon-chevron-down');
+    });
+
+    jQuery(function ($) {
+        $('.panel-heading span.clickable').on("click", function (e) {
+            if ($(this).hasClass('panel-collapsed')) {
+                // expand the panel
+                $(this).parents('.panel').find('.panel-body').slideDown();
+                $(this).removeClass('panel-collapsed');
+                $(this).find('i').removeClass('glyphicon-chevron-down').addClass('glyphicon-chevron-up');
+            }
+            else {
+                // collapse the panel
+                $(this).parents('.panel').find('.panel-body').slideUp();
+                $(this).addClass('panel-collapsed');
+                $(this).find('i').removeClass('glyphicon-chevron-up').addClass('glyphicon-chevron-down');
+            }
+        });
     });
 </script>

@@ -14,8 +14,9 @@ class UserFilesController < ApplicationController
     respond_to do |format|
       @user_file = UserFile.new(file_params)
       @user_file.user = current_user
-      @user_file.save
-      puts @user_file.inspect
+      if @user_file.save then
+        @user_file.file.canonicalize_seq!
+      end
       format.js { render 'jobs/user_file_line'}
     end
   end
@@ -24,11 +25,20 @@ class UserFilesController < ApplicationController
     respond_to do |format|
       @user_file = UserFile.new(file_params)
       @user_file.user = current_user
-      @user_file.save
-      puts @user_file.inspect
+      if @user_file.save then
+        @user_file.file.canonicalize_seq!
+      end
       format.html { redirect_to new_user_file_path }
       format.js
     end
+  end
+
+  def destroy
+    thisfile = UserFile.find(params[:id])
+    if thisfile then
+      thisfile.destroy
+    end
+    redirect_to action: "new"
   end
 
   private
