@@ -1,0 +1,25 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  nof_regions: 1
+  overall_length: 1
+  gc_overall: 9.99
+  gc_coding: 9.99
+  nof_genes: 1
+  gene_density: 9.99
+  avg_coding_length: 9.99
+  nof_coding_genes: 1
+  nof_genes_with_mult_cds: 1
+  nof_genes_with_function: 1
+
+two:
+  nof_regions: 1
+  overall_length: 1
+  gc_overall: 9.99
+  gc_coding: 9.99
+  nof_genes: 1
+  gene_density: 9.99
+  avg_coding_length: 9.99
+  nof_coding_genes: 1
+  nof_genes_with_mult_cds: 1
+  nof_genes_with_function: 1
