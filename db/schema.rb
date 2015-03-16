@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150306164620) do
+ActiveRecord::Schema.define(version: 20150316160813) do
 
   create_table "circos_images", force: :cascade do |t|
     t.string   "file_uid"
@@ -68,6 +68,7 @@ ActiveRecord::Schema.define(version: 20150306164620) do
     t.text     "stdout"
     t.text     "stderr"
     t.integer  "genome_stat_id"
+    t.boolean  "no_resume"
   end
 
   create_table "result_files", force: :cascade do |t|

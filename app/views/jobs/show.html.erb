@@ -31,21 +31,52 @@
       float:right;
       text-align:right;
   }
+  .span3 {
+    height: 500px !important;
+    overflow: scroll;
+}
 </style>
 
-<h1><%= @job[:name] %><span class="small"> <%= @job[:job_id] %></span></h1>
+<h1><%= @job[:name] %><span class="small"> (<%= @job[:prefix] %>)</span></h1>
 
-<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-body">
-          </div>
-        </div><!-- /.modal-content -->
-      </div><!-- /.modal-dialog -->
-    </div><!-- /.modal -->
+<div class="modal fade" id="jvennmodal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="vtabledesc">Clusters</h4>
+      </div>
+      <div class="modal-body">
+        <div class="span3">
+          <table class="table table-striped" id="vtable">
+            <thead>
+              <tr>
+                <th data-field="id">Cluster</th>
+              </tr>
+            </thead>
+          </table>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="thumbmodal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-body">
+      </div>
+    </div>
+  </div>
+</div>
 
       <div class="row">
-        <p>This job was submitted <b><%= distance_of_time_in_words(Time.now,@job[:created_at]) %></b> ago and ran for <b><%= distance_of_time_in_words(@job[:started_at],@job[:finished_at])%></b>, finally finishing at <b><%= @job[:finished_at] %></b>.
+        <p>This job was submitted <b><%= distance_of_time_in_words(Time.now,@job[:created_at]) %></b> ago<% if @job[:finished_at] then %>
+            and ran for <b><%= distance_of_time_in_words(@job[:started_at],@job[:finished_at])%></b>, finally finishing at <b><%= @job[:finished_at] %></b>
+          <% end %>.
 <span class="pull-right" style="font-size: 200%; margin-right: 30px;">
 <% if @queued then %>
     <span class="label label-info">Queued</span>
@@ -109,58 +140,63 @@
 <% end %>
 
 <% if @job.result_files.size > 0 then %>
-<div class="panel panel-default">
-  <div class="panel-heading">
-    <h3 class="panel-title">Result files</h3>
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h3 class="panel-title">Result files</h3>
+    </div>
+    <div class="panel-body">
+      Click on the file name to download.
+       <table class="table table-striped">
+          <thead>
+              <tr>
+                  <th></th>
+                  <th class="text-right">Size</th>
+              </tr>
+          </thead>
+          <tbody>
+            <% @job.result_files.each do |file| %>
+              <tr>
+                  <td><%= link_to JobsHelper::file_description(file.file.name), file.file.url %></td>
+                  <td class="text-right"><%= number_to_human_size(file.file.size) %></td>
+              </tr>
+            <% end %>
+          </tbody>
+      </table>
+    </div>
   </div>
-  <div class="panel-body">
-    Click on the file name to download.
-     <table class="table table-striped">
-        <thead>
-            <tr>
-                <th></th>
-                <th class="text-right">Size</th>
-            </tr>
-        </thead>
-        <tbody>
-          <% @job.result_files.each do |file| %>
-            <tr>
-                <td><%= link_to JobsHelper::file_description(file.file.name), file.file.url %></td>
-                <td class="text-right"><%= number_to_human_size(file.file.size) %></td>
-            </tr>
-          <% end %>
-        </tbody>
-    </table>
-  </div>
-</div>
 <% end %>
 
-<div class="panel panel-default">
-  <div class="panel-heading">
-    <h3 class="panel-title">Phylogeny</h3>
-  </div>
-  <div class="panel-body">
-    <div class="center=block">
-      <div id="svgCanvas"> </div>
+<% if @job[:finished_at] then %>
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h3 class="panel-title">Orthologous clusters</h3>
+    </div>
+    <div class="panel-body">
+      <div class="center=block">
+        <div id="jvenn-container"></div>
+      </div>
+      <%= link_to "Download", clusters_url(id: @job[:job_id]) %> the clusters as OrthoMCL output file.
     </div>
   </div>
-</div>
+<% end %>
 
-<div class="panel panel-default">
-  <div class="panel-heading">
-    <h3 class="panel-title">Orthologous clusters</h3>
-  </div>
-  <div class="panel-body">
-    <div class="center=block">
-      <div id="jvenn-container"></div>
+<% if @job[:finished_at] then %>
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h3 class="panel-title">Phylogeny</h3>
+    </div>
+    <div class="panel-body">
+      <div class="center=block">
+        <div id="svgCanvas"> </div>
+      </div>
     </div>
   </div>
-</div>
+<% end %>
 
-<% if @job[:do_contiguate] then %>
+<% if @job[:do_contiguate] and @job.circos_images.size > 0 then %>
 <div class="panel panel-default">
   <div class="panel-heading">
-    <h3 class="panel-title">Contiguation quality</h3>
+    <h3 class="panel-title">Target-reference comparison</h3>
   </div>
   <div class="panel-body">
     <p>Each circle below represents a single target-reference pseudochromosome
@@ -253,18 +289,31 @@ $(document).ready(function(){
   $.getJSON( "<%= @job[:job_id] %>/orths", function(data) {
     $('#jvenn-container').jvenn({
       displayStat: false,
-      series: data
+      exporting: false,
+      series: data,
+      fnClickCallback: function() {
+        $('#vtable tbody').remove();
+        var value = "";
+        for (name in this.listnames) {
+          value += this.listnames[name] + " ";
+        }
+        $('#vtabledesc').text("Clusters in: " + value);
+        for (val in this.list) {
+          $("#vtable").append("<tr><td>" + this.list[val] + "</td></tr>");
+        }
+        $('#jvennmodal').modal()
+      }
     });
   });
   $('li img').on('click',function(){
     var src = $(this).attr('src');
     var img = '<img src="' + src + '" class="img-responsive"/>';
-    $('#myModal').modal();
-    $('#myModal').on('shown.bs.modal', function(){
-        $('#myModal .modal-body').html(img);
+    $('#thumbmodal').modal();
+    $('#thumbmodal').on('shown.bs.modal', function(){
+        $('#thumbmodal .modal-body').html(img);
     });
-    $('#myModal').on('hidden.bs.modal', function(){
-        $('#myModal .modal-body').html('');
+    $('#thumbmodal').on('hidden.bs.modal', function(){
+        $('#thumbmodal .modal-body').html('');
     });
   });
   $('#logs-panel').slideUp();
