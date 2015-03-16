@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+  </head>
+  <body>
+    <h1>Your job has failed!</h1>
+    <p>
+      Dear <%= @user[:fullname] %>, we are very sorry to tell you, but during the processing of your job "<%= @job[:name] %>" our system has encountered an error and had to stop. We have been notified of the issue and will look into the problem. <br>
+    </p>
+    <p>Sorry for the inconvenience!</p>
+  </body>
+</html>

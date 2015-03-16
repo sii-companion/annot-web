@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+  </head>
+  <body>
+    <h1>Your job has finished!</h1>
+    <p>
+      Dear <%= @user[:fullname] %>, your job "<%= @job[:name] %>" has just finished successfully!  <br>
+    </p>
+    <p>
+      To inspect your <%= @job.genome_stat[:nof_genes] %> genes just follow <%= link_to "this link", job_url(id: @job[:job_id]) %>.
+    </p>
+    <p>Thanks for using the software and have a great day!</p>
+  </body>
+</html>
