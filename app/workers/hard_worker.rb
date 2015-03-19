@@ -121,7 +121,7 @@ class HardWorker
         job.save!
       end
 
-      # Store circos images
+      # store circos images
       Dir.glob("#{job.job_directory}/chr*.png") do |f|
         img = CircosImage.new
         img.file = File.new(f)
@@ -135,9 +135,10 @@ class HardWorker
 
       # send finish notification email
       JobMailer.finish_success_job_email(job.user, job).deliver_later
-    rescue
+    rescue => e
       # send error notification email
       JobMailer.finish_failure_job_email(job.user, job).deliver_later
+      raise e
     end
 
   end
