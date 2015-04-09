@@ -5,6 +5,9 @@ class Job < ActiveRecord::Base
     has_one :genome_stat
     has_many :circos_images
     has_many :result_files
+    has_many :genes
+    has_many :clusters
+    has_one :tree
 
     def job_directory
       if not self[:job_id] then

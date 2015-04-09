@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150316160813) do
+ActiveRecord::Schema.define(version: 20150326172815) do
 
   create_table "circos_images", force: :cascade do |t|
     t.string   "file_uid"
@@ -21,11 +21,66 @@ ActiveRecord::Schema.define(version: 20150316160813) do
     t.integer  "job_id"
   end
 
+  create_table "clusters", force: :cascade do |t|
+    t.integer "job_id",     null: false
+    t.string  "cluster_id"
+  end
+
+  add_index "clusters", ["job_id"], name: "index_clusters_on_job_id"
+
+  create_table "clusters_genes", id: false, force: :cascade do |t|
+    t.integer "gene_id",    null: false
+    t.integer "cluster_id", null: false
+  end
+
+  add_index "clusters_genes", ["cluster_id"], name: "index_clusters_genes_on_cluster_id"
+  add_index "clusters_genes", ["gene_id"], name: "index_clusters_genes_on_gene_id"
+
+  create_table "clusters_trees", id: false, force: :cascade do |t|
+    t.integer "cluster_id", null: false
+    t.integer "tree_id",    null: false
+  end
+
+  add_index "clusters_trees", ["cluster_id"], name: "index_clusters_trees_on_cluster_id"
+  add_index "clusters_trees", ["tree_id"], name: "index_clusters_trees_on_tree_id"
+
   create_table "file_types", force: :cascade do |t|
     t.string   "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
+
+  create_table "genes", force: :cascade do |t|
+    t.string  "gene_id",   null: false
+    t.integer "loc_start", null: false
+    t.integer "loc_end",   null: false
+    t.integer "job_id"
+    t.string  "product",   null: false
+    t.string  "strand",    null: false
+    t.string  "seqid"
+    t.string  "gtype"
+    t.string  "species"
+    t.integer "tree_id"
+  end
+
+  add_index "genes", ["gene_id"], name: "index_genes_on_gene_id"
+  add_index "genes", ["job_id"], name: "index_genes_on_job_id"
+
+  create_table "genes_jobs", id: false, force: :cascade do |t|
+    t.integer "gene_id", null: false
+    t.integer "job_id",  null: false
+  end
+
+  add_index "genes_jobs", ["gene_id"], name: "index_genes_jobs_on_gene_id"
+  add_index "genes_jobs", ["job_id"], name: "index_genes_jobs_on_job_id"
+
+  create_table "genes_trees", id: false, force: :cascade do |t|
+    t.integer "gene_id", null: false
+    t.integer "tree_id", null: false
+  end
+
+  add_index "genes_trees", ["gene_id"], name: "index_genes_trees_on_gene_id"
+  add_index "genes_trees", ["tree_id"], name: "index_genes_trees_on_tree_id"
 
   create_table "genome_stats", force: :cascade do |t|
     t.integer  "nof_regions"
@@ -69,6 +124,7 @@ ActiveRecord::Schema.define(version: 20150316160813) do
     t.text     "stderr"
     t.integer  "genome_stat_id"
     t.boolean  "no_resume"
+    t.integer  "tree_id"
   end
 
   create_table "result_files", force: :cascade do |t|
@@ -77,6 +133,12 @@ ActiveRecord::Schema.define(version: 20150316160813) do
     t.integer  "job_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "trees", force: :cascade do |t|
+    t.string  "seq_uid"
+    t.string  "seq_name"
+    t.integer "job_id"
   end
 
   create_table "user_files", force: :cascade do |t|

@@ -1,43 +1,44 @@
-class Reference < ActiveHash::Base
-  self.data = [
-    {:id => 1,
-     :name => "Leishmania major Friedlin chromosome 1 (demo)",
-     :abbr => "LmjF",
-     :ref_seq => "#{CONFIG['rootdir']}/example-data/L_major.fasta.1",
-     :ref_chr => "#{CONFIG['rootdir']}/example-data/L_major.fasta.1",
-     :ref_annot => "#{CONFIG['rootdir']}/example-data/Lmajor.gff3.1",
-     :ref_gaf => "#{CONFIG['rootdir']}/example-data/L_major.gaf.1",
-     :augustus_species => "leishmania_major_sampled",
-     :abacas_chr_pattern => 'LmjF.(%d+)',
-     :pepfile => "#{CONFIG['rootdir']}/example-data/L_major.pep.1"},
-    {:id => 4,
-     :name => "Leishmania major Friedlin",
-     :abbr => "LmjF",
-     :ref_seq => "#{Rails.root}/lib/refs/L_major/L_major.fasta",
-     :ref_chr => "#{Rails.root}/lib/refs/L_major/L_major.fasta",
-     :ref_annot => "#{Rails.root}/lib/refs/L_major/Lmajor.gff3",
-     :ref_gaf => "#{Rails.root}/lib/refs/L_major/L_major.gaf",
-     :augustus_species => "leishmania_major_sampled",
-     :abacas_chr_pattern => 'LmjF.(%d+)',
-     :pepfile => "#{Rails.root}/lib/refs/L_major/L_major.pep.trunc"},
-    {:id => 2,
-     :name => "Trypanosoma brucei TREU927",
-     :abbr => "Tb927",
-     :ref_seq => "#{Rails.root}/lib/refs/T_brucei_927/Tbruceibrucei927.genome.fasta",
-     :ref_chr => "#{Rails.root}/lib/refs/T_brucei_927/Tbruceibrucei927.chrs.fasta",
-     :ref_annot => "#{Rails.root}/lib/refs/T_brucei_927/Tbruceibrucei927.gff3",
-     :ref_gaf => "#{Rails.root}/lib/refs/T_brucei_927/Tbruceibrucei927.gaf",
-     :augustus_species => "leishmania_major_sampled",       # FIXME
-     :abacas_chr_pattern => 'Tb927_(%d+)_v%d',
-     :pepfile => "#{Rails.root}/lib/refs/T_brucei_927/Tbruceibrucei927.pep.trunc"}
-  #   {:id => 3,
-  #   :name => "Leishmania braziliensis MHOM/BR/75/M2904",
-  #   :abbr => "LbrM",
-  #   :ref_seq => "#{CONFIG['rootdir']}/example-data/L_major.fasta.1",  ## FIXME
-  #   :ref_annot => "#{CONFIG['rootdir']}/example-data/Lmajor.gff3.1",
-  #   :ref_gaf => "#{CONFIG['rootdir']}/example-data/Lmajor.gaf.1",
-  #   :augustus_species => "leishmania_major_sampled",
-  #   :abacas_chr_pattern => 'LmjF.(%d+)',
-  #   :pepfile => "#{CONFIG['rootdir']}/example-data/L_major.pep.1"}
-  ]
+class Reference < ActiveFile::Base
+  extend ActiveHash::Associations::ActiveRecordExtensions
+  set_root_path CONFIG['referencedir']
+  set_filename "references.json"
+
+  class << self
+    def extension
+      ".json"
+    end
+
+    def load_file
+      ref_key_map = {"pep" => :pepfile, "genome" => :ref_seq, "gaf" => :ref_gaf,
+                     "chromosome_pattern" => :abacas_chr_pattern,
+                     "chromosomes" => :ref_chr, "gff" => :ref_annot}
+      # TODO make this configurable in the reference definition
+      augustus_ref = {"LmjF" => "leishmania_major_sampled",
+                      "LmjF.1" => "leishmania_major_sampled",
+                      "LbrM" => "leishmania_braziliensis_sampled",
+                      "Tb927" => "trypanosoma_brucei_927_sampled",
+                      "TcCLB" => "trypanosoma_cruzi_sampled"}
+      jsondata = File.open("#{CONFIG['referencedir']}/references.json").read
+      json = JSON.parse(jsondata)
+      out = []
+      i = 1
+      json["species"].keys.sort.each do |k|
+        v = json["species"][k]
+        newhash = {:id => i, :abbr => k}
+        v.each_pair do |k2,v2|
+          if ref_key_map.has_key?(k2) then
+            newhash[ref_key_map[k2]] = v2
+          else
+            newhash[k2] = v2
+          end
+        end
+        if augustus_ref.has_key?(newhash[:abbr]) then
+          newhash[:augustus_species] = augustus_ref[newhash[:abbr]]
+          out << newhash
+          i += 1
+        end
+      end
+      out
+    end
+  end
 end
