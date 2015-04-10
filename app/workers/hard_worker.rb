@@ -33,7 +33,6 @@ class HardWorker
     end
   end
 
-  # TODO: modularize this
   def perform(id)
     job = Job.find(id)
     store name: job[:name]
@@ -60,9 +59,13 @@ class HardWorker
       cf = JobsHelper::ConfigFactory.new
       uf = UserFile.find(job[:user_file_id])
       cf.use_target_seq(uf)
-      cf.use_reference(Reference.find(job[:reference_id]))
+      r = Reference.find(job[:reference_id])
+      cf.select_reference(r)
       cf.use_prefix(job[:prefix])
       cf.do_contiguation(job[:do_contiguate])
+      cf.make_embl()
+      cf.use_reference()
+      cf.do_circos()
       cf.do_exonerate(job[:do_exonerate])
       job[:config_file] = cf.get_file(job).path
       job.save!
@@ -99,18 +102,18 @@ class HardWorker
       add_result_file(job, "scaffold.out.gff3")
       add_result_file(job, "pseudo.scafs.agp")
       add_result_file(job, "out.gaf")
+      add_result_file(job, "proteins.fasta")
       job.save!
 
       if (not status) or status.exitstatus != 0 then
         raise "run failed at nextflow stage"
       end
 
-      # Stats gathering
+      # stats gathering
       if File.exist?("#{job.job_directory}/stats.txt") then
         gstat = GenomeStat.new
         File.open("#{job.job_directory}/stats.txt").read.each_line do |l|
           l.chomp!
-          puts l
           m = /^([^:]+):\s+(.+)$/.match(l)
           if m and gstat.has_attribute?(m[1].to_sym)
             gstat[m[1].to_sym] = m[2]
@@ -128,6 +131,59 @@ class HardWorker
         img.save!
         job.circos_images << img
         File.unlink(f)
+      end
+
+      # import genes
+      if File.exist?("#{job.job_directory}/genelist.csv") then
+        genes = []
+        File.open("#{job.job_directory}/genelist.csv").read.each_line do |l|
+          l.chomp!
+          id, type, product, seqid, start, stop, strand = l.split("\t")
+          g = Gene.new(:gene_id => id, :product => product, :loc_start => start,
+                       :loc_end => stop, :strand => strand, :job => job,
+                       :seqid => seqid, :gtype => type, :species => job[:prefix])
+          genes << g
+        end
+        Gene.import(genes)
+      end
+
+      # import clusters
+      if File.exist?("#{job.job_directory}/orthomcl_out") then
+        clusters = []
+        File.open("#{job.job_directory}/orthomcl_out").each_line do |l|
+          m = l.match(/^(ORTHOMCL[0-9]+)[^:]+:\s+(.+)/)
+          next unless m
+          c = Cluster.new(:cluster_id => m[1], :job => job)
+          r = m[2].scan(/([^ ()]+)\([^)]+\)/)
+          r.each do |memb|
+            # HACK! needs to be done correctly for all possible transcript namings!
+            memb_id = memb[0].gsub(/(:.+$|\.\d+$)/,"")
+            g = Gene.where(["gene_id LIKE ? AND (job_id = #{job[:id]} OR job_id IS NULL)", "#{memb_id}%"]).take
+            raise "#{memb[0]}: #{memb_id} (with job ID #{job[:id]}) not found!" unless g
+            c.genes << g
+          end
+          c.save!
+        end
+      end
+
+      # store tree files
+      if File.exist?("#{job.job_directory}/tree_selection.genes") and
+        File.exist?("#{job.job_directory}/tree.aln") then
+        genes = []
+        t = Tree.new(job: job)
+        t.seq = File.new("#{job.job_directory}/tree.aln")
+        t.save!
+        File.open("#{job.job_directory}/tree_selection.genes").each_line do |l|
+          l.chomp!
+          l.split(/\s+/).each do |memb|
+            # HACK! needs to be done correctly for all possible transcript namings!
+            memb_id = memb.gsub(/(:[^:]+$|\.\d+$)/,"")
+            g = Gene.where(["gene_id LIKE ? AND (job_id = #{job[:id]} OR job_id IS NULL)", "#{memb_id}%"]).take
+            raise "#{memb}: #{memb_id} (with job ID #{job[:id]}) not found!" unless g
+            t.genes << g
+          end
+          t.save!
+        end
       end
 
       job[:finished_at] = DateTime.now

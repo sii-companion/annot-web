@@ -13,7 +13,9 @@ class UsersController < ApplicationController
   end
 
   def create
-    @user = User.new(params.require(:user).permit(:name, :email, :password, :password_confirmation))
+    @user = User.new(params.require(:user).permit(:name, :email, :fullname,
+                                                  :institution, :password,
+                                                  :password_confirmation))
     puts params[:user].inspect
     if @user.save
       log_in @user

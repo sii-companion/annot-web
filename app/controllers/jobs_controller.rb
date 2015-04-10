@@ -73,67 +73,75 @@ class JobsController < ApplicationController
   end
 
   def show
-    @job = current_user.jobs.find_by(:job_id => params[:id])
-    @queued = Sidekiq::Status::queued?(params[:id])
-    @working = Sidekiq::Status::working?(params[:id])
-    @failed = Sidekiq::Status::failed?(params[:id])
-    @complete = Sidekiq::Status::complete?(params[:id])
-    @file = UserFile.find(@job[:user_file_id])
-    @ref = Reference.find(@job[:reference_id])
+    if not logged_in? then
+      redirect_to controller: "sessions", action: "new"
+    else
+      @job = current_user.jobs.find_by(:job_id => params[:id])
+      @queued = Sidekiq::Status::queued?(params[:id])
+      @working = Sidekiq::Status::working?(params[:id])
+      @failed = Sidekiq::Status::failed?(params[:id])
+      @complete = Sidekiq::Status::complete?(params[:id])
+      @file = UserFile.find(@job[:user_file_id])
+      @ref = Reference.find(@job[:reference_id])
+    end
   end
 
   def orths
     job = current_user.jobs.find_by(:job_id => params[:id])
-    ref = Reference.find(job[:reference_id])
-
-    nof_a = 0
-    nof_b = 0
-    nof_ab = 0
-    a = []
-    b = []
-    ab = []
-
-    File.open("#{job.job_directory}/orthomcl_out").each_line do |l|
-      m = l.match(/^(ORTHOMCL[0-9]+)/)
-      in_a = false
-      in_b = false
-      if m and l.match(/\(#{job[:prefix]}\)/) then
-        in_a = true
-      end
-      if m and l.match(/\(#{ref[:abbr]}\)/) then
-        in_b = true
-      end
-      if in_a and in_b then
-        nof_ab += 1
-        ab << m[1]
-      elsif in_a then
-        nof_a += 1
-        a << m[1]
-      elsif in_b then
-        nof_b += 1
-        b << m[1]
-      end
+    if not job then
+      render plain: "job #{params[:id]} not found or completed", status: 404
+    else
+      ref = Reference.find(job[:reference_id])
+      # XXX: this could be made more efficient
+      cl_a = job.clusters.joins(:genes).where(:genes => {:species => job[:prefix]}).distinct.collect {|c| c[:cluster_id]}
+      cl_b = job.clusters.joins(:genes).where(:genes => {:species => ref[:abbr]}).distinct.collect {|c| c[:cluster_id]}
+      a = cl_a - cl_b
+      b = cl_b - cl_a
+      ab = cl_a & cl_b
+      orths = [{:name => {:A => job[:prefix], :B => ref[:abbr]},
+                :data => {:A => a, :B => b, :AB => ab}}]
+      render json: orths
     end
-    orths = [{:name => {:A => job[:prefix], :B => ref[:abbr]},
-              :data => {:A => a, :B => b, :AB => ab}}]
-    render json: orths
   end
 
   def orths_for_cluster
+    clusters = params[:cluster]
     job = current_user.jobs.find_by(:job_id => params[:id])
-    ref = Reference.find(job[:reference_id])
-    results = []
-    File.open("#{job.job_directory}/orthomcl_out").each_line do |l|
-      m = l.match(/^#{params[:cluster]}/)
-      if m then
-        l.split("\t")[1].scan(/ *([^(]+)\(([^)]+)\)\s?/) do |gene, species|
-          is_ref = (species == ref[:abbr])
-          results << [gene, species, is_ref]
+    if not job then
+      render plain: "job #{params[:id]} not found or completed", status: 404
+    else
+      ref = Reference.find(job[:reference_id])
+      # the code below is horribly hacky IMHO and should eventually be
+      # replaced by proper SQL or iterative set operations
+      cl_a = job.clusters.joins(:genes).where(:genes => {:species => job[:prefix]}).distinct
+      cl_b = job.clusters.joins(:genes).where(:genes => {:species => ref[:abbr]}).distinct
+      v = {}
+      v[job[:prefix]] = cl_a - cl_b
+      v[ref[:abbr]] = cl_b - cl_a
+      v["#{job[:prefix]} #{ref[:abbr]}"] = cl_a & cl_b
+      results = []
+      if not v[clusters] then
+        render plain: "clusters #{params[:cluster]} not valid", status: 500
+      else
+        v[clusters].each do |cl|
+          cl.genes.each do |g|
+            results << {id: g[:gene_id], product: g[:product], cluster: cl[:cluster_id]}
+          end
         end
-        break
+        respond_to do |format|
+          format.html do
+            out = []
+            results.each do |r|
+              out << "#{r[:id]}\t#{r[:product]}\t#{r[:cluster]}"
+            end
+            render plain: out.join("\n")
+          end
+          format.json do
+            render json: results
+          end
+        end
       end
     end
-    render json: results
   end
 
   def get_clusters
@@ -141,6 +149,48 @@ class JobsController < ApplicationController
     if job and File.exist?("#{job.job_directory}/orthomcl_out") then
       render file: "#{job.job_directory}/orthomcl_out", layout: false, \
         content_type: 'text/plain'
+    else
+      render plain: "job #{params[:id]} not found or completed", status: 404
+    end
+  end
+
+  def get_singletons
+    job = current_user.jobs.find_by(:job_id => params[:id])
+    if job then
+      ref = Reference.find(job[:reference_id])
+      this_s = job.genes.includes(:clusters).where(:clusters => {id: nil})
+      ref_s = Gene.where(job: nil, species: ref[:abbr]).includes(:clusters).where(:clusters => { id: nil})
+      respond_to do |format|
+        format.html do
+          out = []
+          results.each do |r|
+            out << "#{r[:id]}\t#{r[:product]}\t#{r[:cluster]}"
+          end
+          render plain: out.join("\n")
+        end
+        format.json do
+          render json: {:ref => ref_s, :this => this_s}
+        end
+      end
+    else
+      render plain: "job #{params[:id]} not found or completed", status: 404
+    end
+  end
+
+  def get_tree
+    job = current_user.jobs.find_by(:job_id => params[:id])
+    if job and File.exist?("#{job.job_directory}/tree.out") then
+      data = File.open("#{job.job_directory}/tree.out").read
+      send_data data, :filename => "#{job[:job_id]}.nwk"
+    else
+      render plain: "job #{params[:id]} not found or completed", status: 404
+    end
+  end
+
+  def get_tree_genes
+    job = current_user.jobs.find_by(:job_id => params[:id])
+    if job then
+      render json: job.tree.genes.order(:product)
     else
       render plain: "job #{params[:id]} not found or completed", status: 404
     end

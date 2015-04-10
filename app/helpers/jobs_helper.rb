@@ -7,7 +7,8 @@ module JobsHelper
               "scaffold.out.gff3" => "Scaffold level genes (GFF3)",
               "pseudo.pseudochr.agp" => "Pseudochromosome layout (AGP)",
               "pseudo.scafs.agp" => "Scaffold layout (AGP)",
-              "out.gaf" => "Functional GO annotation (GAF1)"}
+              "out.gaf" => "Functional GO annotation (GAF1)",
+              "proteins.fasta" => "Protein sequences (FASTA)"}
 
     def file_description(fn)
       if @fnmaps[fn] then
@@ -22,6 +23,7 @@ module JobsHelper
       def initialize
         @items = {}
         @omcl_pepfiles = []
+        @items["ref_dir"] = CONFIG["referencedir"]
       end
 
       def add_item(key, val)
@@ -40,19 +42,26 @@ module JobsHelper
         @items["run_exonerate"] = val
       end
 
+      def make_embl(val = true)
+        @items["make_embl"] = val
+      end
+
+      def use_reference(val = true)
+        @items["use_reference"] = val
+      end
+
       def do_contiguation(val = true)
         @items["do_contiguation"] = val
       end
 
-      def use_reference(ref)
-        @items["ref_seq"] = ref[:ref_seq]
-        @items["ref_chr"] = ref[:ref_chr]
-        @items["ref_annot"] = ref[:ref_annot]
+      def do_circos(val = true)
+        @items["do_circos"] = val
+      end
+
+      def select_reference(ref)
+        @items["ref_species"] = ref[:abbr]
         @items["AUGUSTUS_SPECIES"] = ref[:augustus_species]
         @items["ABACAS_CHR_PATTERN"] = ref[:abacas_chr_pattern]
-        @items["OMCL_GFFFILE"] = ref[:ref_annot]
-        @items["OMCL_GAFFILE"] = ref[:ref_gaf]
-        add_omcl_pepfile(ref[:abbr], ref[:pepfile])
       end
 
       def get_target_seq(val)
@@ -66,16 +75,10 @@ module JobsHelper
         @items["inseq"] = target_path
       end
 
-      def add_omcl_pepfile(prefix, file)
-        @omcl_pepfiles.push([prefix, file])
-        @omcl_pepfiles.uniq!
-      end
-
       def get_file(job)
         add_item("RATT_TRANSFER_TYPE", job[:ratt_transfer_type])
         add_item("MAX_GENE_LENGTH", job[:max_gene_length])
         add_item("AUGUSTUS_GENEMODEL", 'intronless')
-        add_item("AUGUSTUS_EXTRINSIC_CFG", CONFIG['extrinsicconfig'])
         add_item("AUGUSTUS_HINTS_MAXINTRONLEN", '1')
         add_item("AUGUSTUS_SCORE_THRESHOLD", job[:augustus_score_threshold].round(2))
         add_item("TAXON_ID", job[:taxon_id])

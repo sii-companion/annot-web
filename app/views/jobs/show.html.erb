@@ -51,7 +51,36 @@
           <table class="table table-striped" id="vtable">
             <thead>
               <tr>
-                <th data-field="id">Cluster</th>
+                <th data-field="id">Gene ID</th>
+                <th data-field="product">Product</th>
+                <th data-field="cluster">Cluster</th>
+              </tr>
+            </thead>
+          </table>
+        </div>
+        <div id="vdownloadlink-container" aria-hidden="true"><a id="vdownloadlink"><i class="glyphicon glyphicon-download-alt"></i> Download</a> as text file</div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="genelistmodal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="gltabledesc"></h4>
+      </div>
+      <div class="modal-body">
+        <div class="span3">
+          <table class="table table-striped" id="gltable">
+            <thead>
+              <tr>
+                <th data-field="id">Gene ID</th>
+                <th data-field="product">Product</th>
               </tr>
             </thead>
           </table>
@@ -98,44 +127,42 @@
   <div class="panel-heading">
     <h3 class="panel-title">Genome statistics</h3>
   </div>
-  <div class="panel-body">
-    <table class="table table-striped">
-         <tbody>
-            <tr>
-                <td>Number of annotated regions/sequences</td>
-                <td><%= @job.genome_stat[:nof_regions]%></td>
-            </tr>
-            <tr>
-                <td>Number of genes</td>
-                <td><%= @job.genome_stat[:nof_genes]%></td>
-            </tr>
-            <tr>
-                <td>Number of coding genes</td>
-                <td><%= @job.genome_stat[:nof_coding_genes]%></td>
-            </tr>
-            <tr>
-                <td>Number of genes with function</td>
-                <td><%= @job.genome_stat[:nof_genes_with_function]%></td>
-            </tr>
-            <tr>
-                <td>Number of non-coding genes</td>
-                <td><%= @job.genome_stat[:nof_genes].to_i - @job.genome_stat[:nof_coding_genes].to_i %></td>
-            </tr>
-            <tr>
-                <td>Number of genes with multiple CDSs</td>
-                <td><%= @job.genome_stat[:nof_genes_with_mult_cds]%></td>
-            </tr>
-            <tr>
-                <td>Overall GC%</td>
-                <td><%= @job.genome_stat[:gc_overall].round(2)%></td>
-            </tr>
-            <tr>
-                <td>Coding GC%</td>
-                <td><%= @job.genome_stat[:gc_coding].round(2)%></td>
-            </tr>
-        </tbody>
-    </table>
-  </div>
+  <table class="table table-striped">
+       <tbody>
+          <tr>
+              <td>Number of annotated regions/sequences</td>
+              <td><%= @job.genome_stat[:nof_regions]%></td>
+          </tr>
+          <tr>
+              <td>Number of genes</td>
+              <td><%= @job.genome_stat[:nof_genes]%></td>
+          </tr>
+          <tr>
+              <td>Number of coding genes</td>
+              <td><%= @job.genome_stat[:nof_coding_genes]%></td>
+          </tr>
+          <tr>
+              <td>Number of genes with function</td>
+              <td><%= @job.genome_stat[:nof_genes_with_function]%></td>
+          </tr>
+          <tr>
+              <td>Number of non-coding genes</td>
+              <td><%= @job.genome_stat[:nof_genes].to_i - @job.genome_stat[:nof_coding_genes].to_i %></td>
+          </tr>
+          <tr>
+              <td>Number of genes with multiple CDSs</td>
+              <td><%= @job.genome_stat[:nof_genes_with_mult_cds]%></td>
+          </tr>
+          <tr>
+              <td>Overall GC%</td>
+              <td><%= @job.genome_stat[:gc_overall].round(2)%></td>
+          </tr>
+          <tr>
+              <td>Coding GC%</td>
+              <td><%= @job.genome_stat[:gc_coding].round(2)%></td>
+          </tr>
+      </tbody>
+  </table>
 </div>
 <% end %>
 
@@ -144,8 +171,6 @@
     <div class="panel-heading">
       <h3 class="panel-title">Result files</h3>
     </div>
-    <div class="panel-body">
-      Click on the file name to download.
        <table class="table table-striped">
           <thead>
               <tr>
@@ -156,13 +181,16 @@
           <tbody>
             <% @job.result_files.each do |file| %>
               <tr>
-                  <td><%= link_to JobsHelper::file_description(file.file.name), file.file.url %></td>
+                  <td><%= link_to file.file.url do %>
+                      <i class="glyphicon glyphicon-download-alt"></i>
+                       <%= JobsHelper::file_description(file.file.name) %>
+                    <% end %></td>
                   <td class="text-right"><%= number_to_human_size(file.file.size) %></td>
               </tr>
             <% end %>
           </tbody>
       </table>
-    </div>
+
   </div>
 <% end %>
 
@@ -172,11 +200,28 @@
       <h3 class="panel-title">Orthologous clusters</h3>
     </div>
     <div class="panel-body">
-      <div class="center=block">
-        <div id="jvenn-container"></div>
-      </div>
-      <%= link_to "Download", clusters_url(id: @job[:job_id]) %> the clusters as OrthoMCL output file.
+        <p>Click on the numbers to view clusters and singleton gene lists.</p>
+        <table class="small" style="width:100%;">
+          <tr>
+          <td style="width:12%;">
+            <%= link_to '', {:class => 'genome-singletons-link'} do %>
+              <span id="genome-singletons"></span> singletons
+            <% end %>
+          </td>
+          <td style="width:76%;"><div id="jvenn-container"></div></td>
+          <td style="width:12%;">
+            <%= link_to '', {:class => 'ref-singletons-link'} do %>
+              <span id="ref-singletons"></span> singletons
+            <% end %>
+          </td>
+          </tr>
+        </table>
     </div>
+     <div class="panel-footer">
+      <%= link_to clusters_url(id: @job[:job_id]) do %>
+            <i class="glyphicon glyphicon-download-alt"></i> Cluster assignments
+       <% end %> as OrthoMCL 1.4 output file
+     </div>
   </div>
 <% end %>
 
@@ -186,10 +231,19 @@
       <h3 class="panel-title">Phylogeny</h3>
     </div>
     <div class="panel-body">
+      <p>Click and drag in the diagram below to pan around. Use the mouse wheel to zoom in and out.</p>
       <div class="center=block">
         <div id="svgCanvas"> </div>
       </div>
     </div>
+    <div class="panel-footer">
+      <%= link_to @job.tree.seq.url  do %>
+            <i class="glyphicon glyphicon-download-alt"></i> Multiple sequence alignment
+       <% end %> for this tree (FASTA)<br />
+      <%= link_to '', {:class => 'tree_genes'} do %>
+            <i class="glyphicon glyphicon-list"></i> Core genes
+      <% end %> used to build this tree
+     </div>
   </div>
 <% end %>
 
@@ -289,7 +343,7 @@ $(document).ready(function(){
   $.getJSON( "<%= @job[:job_id] %>/orths", function(data) {
     $('#jvenn-container').jvenn({
       displayStat: false,
-      exporting: false,
+      exporting: true,
       series: data,
       fnClickCallback: function() {
         $('#vtable tbody').remove();
@@ -297,14 +351,55 @@ $(document).ready(function(){
         for (name in this.listnames) {
           value += this.listnames[name] + " ";
         }
-        $('#vtabledesc').text("Clusters in: " + value);
-        for (val in this.list) {
-          $("#vtable").append("<tr><td>" + this.list[val] + "</td></tr>");
-        }
-        $('#jvennmodal').modal()
+        $.getJSON( "<%= @job[:job_id] %>/orths/cluster/" + value, function(data2) {
+          $('#vtabledesc').text("Clusters in: " + value);
+          for(var i = 0; i < data2.length; i++) {
+            $("#vtable").append("<tr><td>" + data2[i].id + "</td><td>"
+                                           + data2[i].product + "</td><td>"
+                                           + data2[i].cluster + "</td></tr>");
+          }
+          if (data2.length > 0) {
+            $('#vdownloadlink-container').show();
+            $('#vdownloadlink').attr('href','<%= @job[:job_id] %>/orths/cluster/'+ value);
+          } else {
+            $('#vdownloadlink-container').hide();
+          }
+          $('#jvennmodal').modal()
+        });
       }
     });
   });
+  $.getJSON( "<%= @job[:job_id] %>/singletons", function(data) {
+    $('#ref-singletons').text(data.ref.length);
+    $('#genome-singletons').text(data.this.length);
+    $('.ref-singletons-link').click(function(event) {
+      $("#gltable").empty();
+      $('#gltabledesc').text("Singleton genes in reference");
+      for(var i = 0; i < data.ref.length; i++) {
+        $("#gltable").append("<tr><td>" + data.ref[i].gene_id + "</td><td>"
+                                       + data.ref[i].product + "</td></tr>");
+      }
+      $('#genelistmodal').modal();
+      event.preventDefault();
+    });
+    $('.genome-singletons-link').click(function(event) {
+      $("#gltable").empty();
+      $('#gltabledesc').text("Singleton genes in new genome");
+      for(var i = 0; i < data.this.length; i++) {
+        $("#gltable").append("<tr><td>" + data.this[i].gene_id + "</td><td>"
+                                       + data.this[i].product + "</td></tr>");
+      }
+      $('#genelistmodal').modal();
+      event.preventDefault();
+    });
+  });
+  var phylocanvas = new PhyloCanvas.Tree('svgCanvas', { history_collapsed : true });
+  phylocanvas.setTreeType("radial");
+  phylocanvas.load('<%= @job[:job_id] %>/tree.nwk');
+  phylocanvas.setNodeColourAndShape("LmjF.1", "red", "x", 20);
+  //phylocanvas.setNodeColourAndShape("", 'orange', 'x');
+  phylocanvas.draw();
+
   $('li img').on('click',function(){
     var src = $(this).attr('src');
     var img = '<img src="' + src + '" class="img-responsive"/>';
@@ -315,6 +410,17 @@ $(document).ready(function(){
     $('#thumbmodal').on('hidden.bs.modal', function(){
         $('#thumbmodal .modal-body').html('');
     });
+  });
+  $('.tree_genes').click(function(event) {
+    $.getJSON( "<%= @job[:job_id] %>/tree/genes", function(data) {
+      $("#gltable").empty();
+      for(var i = 0; i < data.length; i++) {
+        $("#gltable").append("<tr><td>" + data[i].gene_id + "</td><td>"
+                                       + data[i].product + "</td></tr>");
+      }
+      $('#genelistmodal').modal();
+    });
+    event.preventDefault();
   });
   $('#logs-panel').slideUp();
   $('.panel-heading span.clickable').addClass('panel-collapsed');
@@ -336,13 +442,5 @@ jQuery(function ($) {
       $(this).find('i').removeClass('glyphicon-chevron-up').addClass('glyphicon-chevron-down');
     }
   });
-
-var dataObject = { newick: '(LmjF:0.01723,<%= @job[:prefix] %>:0.01011,((LinJ:0.00124,LdBPK:0.00123)1.000:0.01318,(LmxM:0.02567,(LbrM:0.06584,(TcCLB:0.20446,(TcIL3000:0.18874,(Tbg972:0.00181,Tb927:0.00161)1.000:0.15843)1.000:0.17104)1.000:0.60270)1.000:0.03596)1.000:0.00792)1.000:0.00522);' };
-phylocanvas = new Smits.PhyloCanvas(
-    dataObject,
-    'svgCanvas',
-    700, 500,
-    'rectangular');
 });
-
 </script>
