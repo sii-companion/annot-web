@@ -58,7 +58,7 @@ gem 'sidekiq-limit_fetch'
 
 # upload/asset management (sequences, images, ...)
 gem 'dragonfly'
-group :production do
+group :production, :development do
   gem 'rack-cache', :require => 'rack/cache'
 end
 
@@ -74,5 +74,9 @@ gem 'jquery.fileupload-rails'
 #gem 'omniauth', '~> 1.2.2'
 #gem 'omniauth-google-oauth2'
 
+# for bulk import of data into ActiveRecord
+gem 'activerecord-import', '~> 0.4.0'
+
 # for the reference definitions
 gem 'active_hash'
+gem 'json'
