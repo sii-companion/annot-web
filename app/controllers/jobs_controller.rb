@@ -61,15 +61,19 @@ class JobsController < ApplicationController
   end
 
   def destroy
-    thisjob = current_user.jobs.find_by(:job_id => params[:id])
-    if thisjob then
-      thisjob.destroy
-      queue = Sidekiq::Queue.new
-      queue.each do |job|
-        job.delete if job.jid == params[:id]
+    if not logged_in? then
+      redirect_to controller: "sessions", action: "new"
+    else
+      thisjob = current_user.jobs.find_by(:job_id => params[:id])
+      if thisjob then
+        thisjob.destroy
+        queue = Sidekiq::Queue.new
+        queue.each do |job|
+          job.delete if job.jid == params[:id]
+        end
       end
+      redirect_to action: "index"
     end
-    redirect_to action: "index"
   end
 
   def show
@@ -87,47 +91,94 @@ class JobsController < ApplicationController
   end
 
   def orths
-    job = current_user.jobs.find_by(:job_id => params[:id])
-    if not job then
-      render plain: "job #{params[:id]} not found or completed", status: 404
+    if not logged_in? then
+      render plain: "Not logged in. Please log in before using web services.", status: 401
     else
-      ref = Reference.find(job[:reference_id])
-      # XXX: this could be made more efficient
-      cl_a = job.clusters.joins(:genes).where(:genes => {:species => job[:prefix]}).distinct.collect {|c| c[:cluster_id]}
-      cl_b = job.clusters.joins(:genes).where(:genes => {:species => ref[:abbr]}).distinct.collect {|c| c[:cluster_id]}
-      a = cl_a - cl_b
-      b = cl_b - cl_a
-      ab = cl_a & cl_b
-      orths = [{:name => {:A => job[:prefix], :B => ref[:abbr]},
-                :data => {:A => a, :B => b, :AB => ab}}]
-      render json: orths
+      job = current_user.jobs.find_by(:job_id => params[:id])
+      if not job then
+        render plain: "job #{params[:id]} not found or completed", status: 404
+      else
+        ref = Reference.find(job[:reference_id])
+        # XXX: this could be made more efficient
+        cl_a = job.clusters.joins(:genes).where(:genes => {:species => job[:prefix]}).distinct.collect {|c| c[:cluster_id]}
+        cl_b = job.clusters.joins(:genes).where(:genes => {:species => ref[:abbr]}).distinct.collect {|c| c[:cluster_id]}
+        a = cl_a - cl_b
+        b = cl_b - cl_a
+        ab = cl_a & cl_b
+        orths = [{:name => {:A => job[:prefix], :B => ref[:abbr]},
+                  :data => {:A => a, :B => b, :AB => ab}}]
+        render json: orths
+      end
     end
   end
 
   def orths_for_cluster
-    clusters = params[:cluster]
-    job = current_user.jobs.find_by(:job_id => params[:id])
-    if not job then
-      render plain: "job #{params[:id]} not found or completed", status: 404
+    if not logged_in? then
+      render plain: "Not logged in. Please log in before using web services.", status: 401
     else
-      ref = Reference.find(job[:reference_id])
-      # the code below is horribly hacky IMHO and should eventually be
-      # replaced by proper SQL or iterative set operations
-      cl_a = job.clusters.joins(:genes).where(:genes => {:species => job[:prefix]}).distinct
-      cl_b = job.clusters.joins(:genes).where(:genes => {:species => ref[:abbr]}).distinct
-      v = {}
-      v[job[:prefix]] = cl_a - cl_b
-      v[ref[:abbr]] = cl_b - cl_a
-      v["#{job[:prefix]} #{ref[:abbr]}"] = cl_a & cl_b
-      results = []
-      if not v[clusters] then
-        render plain: "clusters #{params[:cluster]} not valid", status: 500
+      clusters = params[:cluster]
+      job = current_user.jobs.find_by(:job_id => params[:id])
+      if not job then
+        render plain: "job #{params[:id]} not found or completed", status: 404
       else
-        v[clusters].each do |cl|
-          cl.genes.each do |g|
-            results << {id: g[:gene_id], product: g[:product], cluster: cl[:cluster_id]}
+        ref = Reference.find(job[:reference_id])
+        # the code below is horribly hacky IMHO and should eventually be
+        # replaced by proper SQL or iterative set operations
+        cl_a = job.clusters.joins(:genes).where(:genes => {:species => job[:prefix]}).distinct
+        cl_b = job.clusters.joins(:genes).where(:genes => {:species => ref[:abbr]}).distinct
+        v = {}
+        v[job[:prefix]] = cl_a - cl_b
+        v[ref[:abbr]] = cl_b - cl_a
+        v["#{job[:prefix]} #{ref[:abbr]}"] = cl_a & cl_b
+        results = []
+        if not v[clusters] then
+          render plain: "clusters #{params[:cluster]} not valid", status: 500
+        else
+          v[clusters].each do |cl|
+            cl.genes.each do |g|
+              results << {id: g[:gene_id], product: g[:product], cluster: cl[:cluster_id]}
+            end
+          end
+          respond_to do |format|
+            format.html do
+              out = []
+              results.each do |r|
+                out << "#{r[:id]}\t#{r[:product]}\t#{r[:cluster]}"
+              end
+              render plain: out.join("\n")
+            end
+            format.json do
+              render json: results
+            end
           end
         end
+      end
+    end
+  end
+
+  def get_clusters
+    if not logged_in? then
+      render plain: "Not logged in. Please log in before using web services.", status: 401
+    else
+      job = current_user.jobs.find_by(:job_id => params[:id])
+      if job and File.exist?("#{job.job_directory}/orthomcl_out") then
+        render file: "#{job.job_directory}/orthomcl_out", layout: false, \
+          content_type: 'text/plain'
+      else
+        render plain: "job #{params[:id]} not found or completed", status: 404
+      end
+    end
+  end
+
+  def get_singletons
+    if not logged_in? then
+      render plain: "Not logged in. Please log in before using web services.", status: 401
+    else
+      job = current_user.jobs.find_by(:job_id => params[:id])
+      if job then
+        ref = Reference.find(job[:reference_id])
+        this_s = job.genes.includes(:clusters).where(:clusters => {id: nil})
+        ref_s = Gene.where(job: nil, species: ref[:abbr]).includes(:clusters).where(:clusters => { id: nil})
         respond_to do |format|
           format.html do
             out = []
@@ -137,62 +188,39 @@ class JobsController < ApplicationController
             render plain: out.join("\n")
           end
           format.json do
-            render json: results
+            render json: {:ref => ref_s, :this => this_s}
           end
         end
+      else
+        render plain: "job #{params[:id]} not found or completed", status: 404
       end
-    end
-  end
-
-  def get_clusters
-    job = current_user.jobs.find_by(:job_id => params[:id])
-    if job and File.exist?("#{job.job_directory}/orthomcl_out") then
-      render file: "#{job.job_directory}/orthomcl_out", layout: false, \
-        content_type: 'text/plain'
-    else
-      render plain: "job #{params[:id]} not found or completed", status: 404
-    end
-  end
-
-  def get_singletons
-    job = current_user.jobs.find_by(:job_id => params[:id])
-    if job then
-      ref = Reference.find(job[:reference_id])
-      this_s = job.genes.includes(:clusters).where(:clusters => {id: nil})
-      ref_s = Gene.where(job: nil, species: ref[:abbr]).includes(:clusters).where(:clusters => { id: nil})
-      respond_to do |format|
-        format.html do
-          out = []
-          results.each do |r|
-            out << "#{r[:id]}\t#{r[:product]}\t#{r[:cluster]}"
-          end
-          render plain: out.join("\n")
-        end
-        format.json do
-          render json: {:ref => ref_s, :this => this_s}
-        end
-      end
-    else
-      render plain: "job #{params[:id]} not found or completed", status: 404
     end
   end
 
   def get_tree
-    job = current_user.jobs.find_by(:job_id => params[:id])
-    if job and File.exist?("#{job.job_directory}/tree.out") then
-      data = File.open("#{job.job_directory}/tree.out").read
-      send_data data, :filename => "#{job[:job_id]}.nwk"
+    if not logged_in? then
+      render plain: "Not logged in. Please log in before using web services.", status: 401
     else
-      render plain: "job #{params[:id]} not found or completed", status: 404
+      job = current_user.jobs.find_by(:job_id => params[:id])
+      if job and File.exist?("#{job.job_directory}/tree.out") then
+        data = File.open("#{job.job_directory}/tree.out").read
+        send_data data, :filename => "#{job[:job_id]}.nwk"
+      else
+        render plain: "job #{params[:id]} not found or completed", status: 404
+      end
     end
   end
 
   def get_tree_genes
-    job = current_user.jobs.find_by(:job_id => params[:id])
-    if job then
-      render json: job.tree.genes.order(:product)
+    if not logged_in? then
+      render plain: "Not logged in. Please log in before using web services.", status: 401
     else
-      render plain: "job #{params[:id]} not found or completed", status: 404
+      job = current_user.jobs.find_by(:job_id => params[:id])
+      if job then
+        render json: job.tree.genes.order(:product)
+      else
+        render plain: "job #{params[:id]} not found or completed", status: 404
+      end
     end
   end
 
