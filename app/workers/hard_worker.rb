@@ -74,7 +74,7 @@ class HardWorker
       run = "#{CONFIG['nextflowpath']}/nextflow -c " + \
             "#{CONFIG['locationconfig']} -c " + \
             "#{job[:config_file]} run " + \
-            "#{CONFIG['nextflowscript']} #{CONFIG['dockerconf']} " + \
+            "#{CONFIG['nextflowscript']} " + \
             "#{'-resume' unless job[:no_resume]} " + \
             "--dist_dir #{job.job_directory}"
       puts run
