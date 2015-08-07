@@ -45,4 +45,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       }
     }
   end
+  config.vm.provision :shell, :inline => "apt-get install -y docker.io"
+  config.vm.provision :shell, :inline => "usermod -a -G docker vagrant"
 end
