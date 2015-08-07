@@ -13,6 +13,12 @@ class User < ActiveRecord::Base
   has_many :jobs
   has_many :user_files
 
+  def User.digest(string)
+    cost = ActiveModel::SecurePassword.min_cost ? BCrypt::Engine::MIN_COST :
+                                                  BCrypt::Engine.cost
+    BCrypt::Password.create(string, cost: cost)
+  end
+
   def User.new_token
     SecureRandom.urlsafe_base64
   end
