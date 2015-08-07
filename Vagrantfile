@@ -19,6 +19,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     chef.add_recipe "runit"
     chef.add_recipe "apt"
     chef.add_recipe "nodejs"
+    chef.add_recipe "java"
     chef.add_recipe "redisio"
     chef.add_recipe "redisio::enable"
     chef.add_recipe "ruby_build"
@@ -27,6 +28,9 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     chef.add_recipe "vim"
 
     chef.json = {
+      java: {
+         jdk_version: "7",
+      },
       rbenv: {
         user_installs: [{
           user: 'vagrant',
@@ -41,4 +45,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       }
     }
   end
+  config.vm.provision :shell, :inline => "apt-get install -y docker.io"
+  config.vm.provision :shell, :inline => "usermod -a -G docker vagrant"
 end
