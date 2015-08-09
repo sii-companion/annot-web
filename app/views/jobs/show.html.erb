@@ -397,7 +397,6 @@ $(document).ready(function(){
   phylocanvas.setTreeType("radial");
   phylocanvas.load('<%= @job[:job_id] %>/tree.nwk');
   phylocanvas.setNodeColourAndShape("LmjF.1", "red", "x", 20);
-  //phylocanvas.setNodeColourAndShape("", 'orange', 'x');
   phylocanvas.draw();
 
   $('li img').on('click',function(){
