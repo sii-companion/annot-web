@@ -19,7 +19,7 @@ class UsersController < ApplicationController
     puts params[:user].inspect
     if @user.save
       log_in @user
-      render :show
+      redirect_to :jobs
     else
       render :signup
     end
