@@ -42,6 +42,14 @@ module JobsHelper
         @items["run_exonerate"] = val
       end
 
+      def run_snap(val = true)
+        @items["run_snap"] = val
+      end
+
+      def fix_polycistrons(val = true)
+        @items["fix_polycistrons"] = val
+      end
+
       def make_embl(val = true)
         @items["make_embl"] = val
       end
