@@ -26,7 +26,7 @@
                 </td>
                 <td style="padding-left: 20px; padding-right: 20px;">
                     <% if job[:queued] then %>
-                        <span class="label label-info">Queued</span>
+                        <span class="label label-default">Queued</span>
                     <% elsif job[:working] then %>
                         <span class="label label-info">Working</span>
                     <% elsif job[:failed] then %>
