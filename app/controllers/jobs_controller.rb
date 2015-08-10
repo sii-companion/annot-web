@@ -27,12 +27,16 @@ class JobsController < ApplicationController
       puts @outjobs
       if jobs then
         jobs.each do |job|
+          jobname = Sidekiq::Status::get(job[:job_id], :name)
+          if not jobname then
+            jobname = job[:name]
+          end
           @outjobs <<  {:job_id => job[:job_id],
                         :id => job[:id],
                         :created_at => job[:created_at],
                         :started_at => job[:started_at],
                         :finished_at => job[:finished_at],
-                        :name => Sidekiq::Status::get(job[:job_id], :name),
+                        :name => jobname,
                         :queued => Sidekiq::Status::queued?(job[:job_id]),
                         :working => Sidekiq::Status::working?(job[:job_id]),
                         :failed => Sidekiq::Status::failed?(job[:job_id]),
