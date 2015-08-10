@@ -102,32 +102,37 @@
   </div>
 </div>
 
-      <div class="row">
-        <p>This job was submitted <b><%= distance_of_time_in_words(Time.now,@job[:created_at]) %></b> ago<% if @job[:finished_at] then %>
-            and ran for <b><%= distance_of_time_in_words(@job[:started_at],@job[:finished_at])%></b>, finally finishing at <b><%= @job[:finished_at] %></b>
-          <% end %>.
-<span class="pull-right" style="font-size: 200%; margin-right: 30px;">
-<% if @queued then %>
-    <span class="label label-info">Queued</span>
-<% elsif @working then %>
-    <span class="label label-info">Working</span>
-<% elsif @failed then %>
-    <span class="label label-danger">Failed</span>
-<% elsif @complete then %>
-    <span class="label label-success">Completed</span>
-<% else %>
-    <span class="label label-default">No status available</span>
-<% end %></span>
-        </p>
-        <div style="margin-top:20px;">&nbsp;</div>
-        <div class="col-md-8">
 
-<% if @job.genome_stat then %>
-<div class="panel panel-default">
-  <div class="panel-heading">
-    <h3 class="panel-title">Genome statistics</h3>
-  </div>
-  <table class="table table-striped">
+<div class="row">
+  <p>This job was submitted <b><%= distance_of_time_in_words(Time.now,@job[:created_at]) %></b> ago
+    <% if @job[:finished_at] then %>
+      and ran for <b><%= distance_of_time_in_words(@job[:started_at],@job[:finished_at])%></b>, finally finishing at <b><%= @job[:finished_at] %></b>.
+    <% end %>
+  </p>
+<div style="margin-top:20px;">&nbsp;</div>
+
+<ul class="nav nav-tabs">
+  <li class="active"><a data-toggle="tab" href="#stats">Genome statistics</a></li>
+  <% if @job.result_files.size > 0 then %>
+  <li><a data-toggle="tab" href="#result">Result files</a></li>
+  <% end %>
+  <% if @job[:finished_at] then %>
+  <li><a data-toggle="tab" href="#orth">Orthology</a></li>
+  <% end %>
+  <% if @job[:finished_at] then %>
+  <li><a data-toggle="tab" href="#phylo">Phylogeny</a></li>
+  <% end %>
+  <% if @job[:do_contiguate] and @job.circos_images.size > 0 then %>
+  <li><a data-toggle="tab" href="#synteny">Synteny</a></li>
+  <% end %>
+  <li><a data-toggle="tab" href="#params">Job parameters</a></li>
+  <li><a data-toggle="tab" href="#logs">Pipeline logs</a></li>
+</ul>
+
+<div class="tab-content">
+<div id="stats" class="tab-pane fade in active">
+  <div class="row">
+    <table class="table table-striped">
        <tbody>
           <tr>
               <td>Number of annotated regions/sequences</td>
@@ -162,15 +167,12 @@
               <td><%= @job.genome_stat[:gc_coding].round(2)%></td>
           </tr>
       </tbody>
-  </table>
+    </table>
+  </div>
 </div>
-<% end %>
 
 <% if @job.result_files.size > 0 then %>
-  <div class="panel panel-default">
-    <div class="panel-heading">
-      <h3 class="panel-title">Result files</h3>
-    </div>
+<div id="result" class="tab-pane fade">
        <table class="table table-striped">
           <thead>
               <tr>
@@ -190,152 +192,140 @@
             <% end %>
           </tbody>
       </table>
-
   </div>
 <% end %>
 
 <% if @job[:finished_at] then %>
-  <div class="panel panel-default">
-    <div class="panel-heading">
-      <h3 class="panel-title">Orthologous clusters</h3>
+  <div id="orth" class="tab-pane fade">
+    <div class="row">
+      <p>Click on the numbers to view clusters and singleton gene lists.</p>
+      <table class="small" style="width:100%;">
+        <tr>
+        <td style="width:12%;">
+          <%= link_to '', {:class => 'genome-singletons-link'} do %>
+            <span id="genome-singletons"></span> singletons
+          <% end %>
+        </td>
+        <td style="width:76%;"><div id="jvenn-container"></div></td>
+        <td style="width:12%;">
+          <%= link_to '', {:class => 'ref-singletons-link'} do %>
+            <span id="ref-singletons"></span> singletons
+          <% end %>
+        </td>
+        </tr>
+      </table>
     </div>
-    <div class="panel-body">
-        <p>Click on the numbers to view clusters and singleton gene lists.</p>
-        <table class="small" style="width:100%;">
-          <tr>
-          <td style="width:12%;">
-            <%= link_to '', {:class => 'genome-singletons-link'} do %>
-              <span id="genome-singletons"></span> singletons
-            <% end %>
-          </td>
-          <td style="width:76%;"><div id="jvenn-container"></div></td>
-          <td style="width:12%;">
-            <%= link_to '', {:class => 'ref-singletons-link'} do %>
-              <span id="ref-singletons"></span> singletons
-            <% end %>
-          </td>
-          </tr>
-        </table>
-    </div>
-     <div class="panel-footer">
+    <div>
       <%= link_to clusters_url(id: @job[:job_id]) do %>
-            <i class="glyphicon glyphicon-download-alt"></i> Cluster assignments
-       <% end %> as OrthoMCL 1.4 output file
-     </div>
+          <i class="glyphicon glyphicon-download-alt"></i> Cluster assignments
+     <% end %> as OrthoMCL 1.4 output file
+    </div>
   </div>
 <% end %>
 
 <% if @job[:finished_at] then %>
-  <div class="panel panel-default">
-    <div class="panel-heading">
-      <h3 class="panel-title">Phylogeny</h3>
-    </div>
-    <div class="panel-body">
-      <p>Click and drag in the diagram below to pan around. Use the mouse wheel to zoom in and out.</p>
-      <div class="center=block">
-        <div id="svgCanvas"> </div>
+  <div id="phylo" class="tab-pane fade">
+    <div class="row">
+      <div>
+        <p>Click and drag in the diagram below to pan around. Use the mouse wheel to zoom in and out.</p>
+        <div id="PhyloCanvas" style="height: 400px; width=100%;"> </div>
       </div>
+      <div>
+        <%= link_to @job.tree.seq.url do %>
+          <i class="glyphicon glyphicon-download-alt"></i> Multiple sequence alignment
+        <% end %> for this tree (FASTA)<br />
+        <%= link_to '', {:class => 'tree_genes'} do %>
+          <i class="glyphicon glyphicon-list"></i> Core genes
+        <% end %> used to build this tree
+       </div>
     </div>
-    <div class="panel-footer">
-      <%= link_to @job.tree.seq.url  do %>
-            <i class="glyphicon glyphicon-download-alt"></i> Multiple sequence alignment
-       <% end %> for this tree (FASTA)<br />
-      <%= link_to '', {:class => 'tree_genes'} do %>
-            <i class="glyphicon glyphicon-list"></i> Core genes
-      <% end %> used to build this tree
-     </div>
   </div>
 <% end %>
 
 <% if @job[:do_contiguate] and @job.circos_images.size > 0 then %>
-<div class="panel panel-default">
-  <div class="panel-heading">
-    <h3 class="panel-title">Target-reference comparison</h3>
-  </div>
-  <div class="panel-body">
+<div id="synteny" class="tab-pane fade">
+  <div class="row">
     <p>Each circle below represents a single target-reference pseudochromosome
        alignment. Click on it to zoom in.</p>
-    <div class="container-fluid">
-      <ul class="circos row">
-        <% @job.circos_images.each do |image| %>
-            <li class="col-lg-2 col-md-2 col-sm-3">
-              <%= image_tag image.file.url, class: "img-responsive" %>
-            </li>
-        <% end %>
-      </ul>
-    </div>
+    <ul class="media-list">
+      <% 3.times do %>
+      <% @job.circos_images.each do |image| %>
+      <li class="media">
+        <div class="media-left">
+          <a href="#">
+            <%= image_tag image.file.thumb('70x70').url, class: "media-object", :data => {:full_URL => image.file.url} %>
+          </a>
+        </div>
+        <div class="media-body">
+          <h4 class="media-heading"><%= image.file.name %></h4>
+        </div>
+      </li>
+      <% end %>
+      <% end %>
+    </ul>
+
   </div>
 </div>
 <% end %>
 
-<div class="panel panel-default">
-  <div class="panel-heading">
-    <h3 class="panel-title">Pipeline output logs</h3>
-    <span class="pull-right clickable"><i class="glyphicon glyphicon-chevron-up"></i></span>
-  </div>
-  <div id="logs-panel" class="panel-body">
-    <h3>Standard output:</h3>
+<div id="logs" class="tab-pane fade">
+  <div class="row">
+    <h4>Standard output:</h4>
     <pre><%= @job[:stdout] %></pre>
-    <h3>Standard error:</h3>
+    <h4>Standard error:</h4>
     <pre><%= @job[:stderr] %></pre>
   </div>
 </div>
-        </div>
-        <div class="col-md-4">
 
-          <div class="panel panel-default">
-  <div class="panel-heading">
-    <h3 class="panel-title">Job parameters</h3>
-  </div>
-  <div class="panel-body">
-    <div style="text-align: center;">
-    <b><%= @file.file_name %></b><br />
- vs.   <br /> <b><%= @ref.name %></b><br /><br />
+
+<div id="params" class="tab-pane fade">
+  <div class="row">
+    <div>
+      The parameters you have chosen for your <b><%= @file.file_name %></b> vs. <b><%= @ref.name %></b> run are:
     </div>
     <table class="table table-striped">
-          <tbody>
-            <tr>
-                <td>Pseudochromosomes</td>
-                <td>
-                    <% if @job[:do_contiguate] %>
-                      &#10003;
-                    <% else %>
-                      &#10007;
-                    <% end %>
-                </td>
-            </tr>
-            <tr>
-                <td>Protein evidence</td>
-                <td>
-                    <% if @job[:do_exonerate] %>
-                      &#10003;
-                    <% else %>
-                      &#10007;
-                    <% end %>
-                </td>
-            </tr>
-            <tr>
-                <td>RATT</td>
-                <td>
-                    <% if @job[:do_ratt] %>
-                      &#10003;
-                    <% else %>
-                      &#10007;
-                    <% end %>
-                </td>
-            </tr>
-            <tr>
-                <td>Max gene length</td>
-                <td><%= @job[:max_gene_length] %></td>
-            </tr>
-            <tr>
-                <td>Score threshold</td>
-                <td><%= @job[:augustus_score_threshold].round(2) %></td>
-            </tr>
-        </tbody>
-          </table>
-            </div>
-      </div>
+        <tbody>
+          <tr>
+              <td>Pseudochromosomes</td>
+              <td>
+                  <% if @job[:do_contiguate] %>
+                    &#10003;
+                  <% else %>
+                    &#10007;
+                  <% end %>
+              </td>
+          </tr>
+          <tr>
+              <td>Protein evidence</td>
+              <td>
+                  <% if @job[:do_exonerate] %>
+                    &#10003;
+                  <% else %>
+                    &#10007;
+                  <% end %>
+              </td>
+          </tr>
+          <tr>
+              <td>RATT</td>
+              <td>
+                  <% if @job[:do_ratt] %>
+                    &#10003;
+                  <% else %>
+                    &#10007;
+                  <% end %>
+              </td>
+          </tr>
+          <tr>
+              <td>Max gene length</td>
+              <td><%= @job[:max_gene_length] %></td>
+          </tr>
+          <tr>
+              <td>Score threshold</td>
+              <td><%= @job[:augustus_score_threshold].round(2) %></td>
+          </tr>
+      </tbody>
+    </table>
+  </div>
 </div>
 
 <script>
@@ -393,14 +383,22 @@ $(document).ready(function(){
       event.preventDefault();
     });
   });
-  var phylocanvas = new PhyloCanvas.Tree('svgCanvas', { history_collapsed : true });
-  phylocanvas.setTreeType("radial");
-  phylocanvas.load('<%= @job[:job_id] %>/tree.nwk');
-  phylocanvas.setNodeColourAndShape("LmjF.1", "red", "x", 20);
-  phylocanvas.draw();
+
+  var firstPhyloTabOpen = true;
+  // hook into tab change events
+  $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+    var target = $(e.target).attr("href");
+    if (target == '#phylo' && firstPhyloTabOpen) {
+      var phylocanvas = new PhyloCanvas.Tree('PhyloCanvas', { history_collapsed : true });
+      phylocanvas.setTreeType("radial");
+      phylocanvas.load('<%= @job[:job_id] %>/tree.nwk');
+      phylocanvas.draw();
+      firstPhyloTabOpen = false;
+    }
+  });
 
   $('li img').on('click',function(){
-    var src = $(this).attr('src');
+    var src = $(this).attr('data-full-URL');
     var img = '<img src="' + src + '" class="img-responsive"/>';
     $('#thumbmodal').modal();
     $('#thumbmodal').on('shown.bs.modal', function(){
@@ -420,26 +418,6 @@ $(document).ready(function(){
       $('#genelistmodal').modal();
     });
     event.preventDefault();
-  });
-  $('#logs-panel').slideUp();
-  $('.panel-heading span.clickable').addClass('panel-collapsed');
-  $('.panel-heading span.clickable').find('i').removeClass('glyphicon-chevron-up').addClass('glyphicon-chevron-down');
-});
-
-jQuery(function ($) {
-  $('.panel-heading span.clickable').on("click", function (e) {
-    if ($(this).hasClass('panel-collapsed')) {
-      // expand the panel
-      $(this).parents('.panel').find('.panel-body').slideDown();
-      $(this).removeClass('panel-collapsed');
-      $(this).find('i').removeClass('glyphicon-chevron-down').addClass('glyphicon-chevron-up');
-    }
-    else {
-      // collapse the panel
-      $(this).parents('.panel').find('.panel-body').slideUp();
-      $(this).addClass('panel-collapsed');
-      $(this).find('i').removeClass('glyphicon-chevron-up').addClass('glyphicon-chevron-down');
-    }
   });
 });
 </script>
