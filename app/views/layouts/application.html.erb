@@ -7,50 +7,51 @@
   <%= csrf_meta_tags %>
 </head>
 <body>
-     <div class="container">
-        <nav class="navbar navbar-default">
-        <div class="container-fluid">
-          <!-- Brand and toggle get grouped for better mobile display -->
-          <div class="navbar-header">
-            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-              <span class="sr-only">Toggle navigation</span>
-              <span class="icon-bar"></span>
-              <span class="icon-bar"></span>
-              <span class="icon-bar"></span>
-            </button>
-            <%= link_to root_url, :class => "navbar-brand" do %>
-                 <!-- <i class="glyphicon glyphicon-road"></i> -->Kingpin
-            <% end %>
-          </div>
+  <nav class="navbar navbar-default navbar-static-top">
+  <div class="container-fluid">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <%= link_to root_url, :class => "navbar-brand" do %>
+           <!-- <i class="glyphicon glyphicon-road"></i> -->Kingpin
+      <% end %>
+    </div>
 
-          <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-            <ul class="nav navbar-nav">
-              <li class="<%= 'active' if current_page?(about_path) %>"><%= link_to "About", about_path %></a></li>
-              <li class="<%= 'active' if current_page?(examples_path) %>"><%= link_to "Examples", examples_path %></li>
-              <li class="<%= 'active' if current_page?(how_it_works_path) %>"><%= link_to "How it works", how_it_works_path %></li>
-            </ul>
-            <ul class="nav navbar-nav navbar-right">
-              <% if !logged_in? then %>
-                <li><%= link_to "Log in", login_path %></li>
-              <% else %>
-              <li class="dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><span>
-                    <!-- <%= gravatar_for current_user %> --> <%= current_user[:fullname] %></span> <span class="caret"></span></a>
-                <ul class="dropdown-menu" role="menu">
-                  <li><%= link_to "My jobs", jobs_url %></li>
-                  <li><%= link_to "My files", user_files_url %></li>
-                  <li class="divider"></li>
-                  <li><%= link_to "Settings", '#' %></li>
-                  <li class="divider"></li>
-                  <li><%= link_to "Log out", logout_path, method: "delete" %></li>
-                </ul>
-              </li>
-              <% end %>
-            </ul>
-          </div><!-- /.navbar-collapse -->
-        </div><!-- /.container-fluid -->
-      </nav>
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <ul class="nav navbar-nav">
+        <li class="<%= 'active' if current_page?(about_path) %>"><%= link_to "About", about_path %></a></li>
+        <li class="<%= 'active' if current_page?(examples_path) %>"><%= link_to "Examples", examples_path %></li>
+        <li class="<%= 'active' if current_page?(how_it_works_path) %>"><%= link_to "How it works", how_it_works_path %></li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <% if !logged_in? then %>
+          <li><%= link_to "Sign up", signup_path %></li>
+          <li><%= link_to "Log in", login_path %></li>
+        <% else %>
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><span>
+              <!-- <%= gravatar_for current_user %> --> <%= current_user[:fullname] %></span> <span class="caret"></span></a>
+          <ul class="dropdown-menu" role="menu">
+            <li><%= link_to "My jobs", jobs_url %></li>
+            <li><%= link_to "My files", user_files_url %></li>
+            <li class="divider"></li>
+            <li><%= link_to "Settings", '#' %></li>
+            <li class="divider"></li>
+            <li><%= link_to "Log out", logout_path, method: "delete" %></li>
+          </ul>
+        </li>
+        <% end %>
+      </ul>
+    </div><!-- /.navbar-collapse -->
+  </div><!-- /.container-fluid -->
+</nav>
+<div class="container">
 <%= yield %>
-  </div>
+</div>
 </body>
 </html>
