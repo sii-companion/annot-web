@@ -199,7 +199,7 @@
   <div id="orth" class="tab-pane fade">
     <div class="row">
       <p>Click on the numbers to view clusters and singleton gene lists.</p>
-      <table class="small" style="width:100%;">
+      <table class="small" style="width:700px;">
         <tr>
         <td style="width:12%;">
           <%= link_to '', {:class => 'genome-singletons-link'} do %>
@@ -247,23 +247,37 @@
   <div class="row">
     <p>Each circle below represents a single target-reference pseudochromosome
        alignment. Click on it to zoom in.</p>
+  </div>
+  <div class="row">
     <ul class="media-list">
-      <% 3.times do %>
       <% @job.circos_images.each do |image| %>
       <li class="media">
         <div class="media-left">
           <a href="#">
-            <%= image_tag image.file.thumb('70x70').url, class: "media-object", :data => {:full_URL => image.file.url} %>
+            <%= image_tag image.file.thumb('70x70').url, class: "media-object chrthumb", :data => {:full_URL => image.file.url} %>
           </a>
         </div>
         <div class="media-body">
-          <h4 class="media-heading"><%= image.file.name %></h4>
+          <% if image.chromosome %>
+            <h4 class="media-heading">
+              <% if image.chromosome.match(/_0$/) %>
+                Bin chromosome
+              <% else %>
+                Chromosome <%= image.chromosome %>
+              <% end  %>
+            </h4>
+            <p>
+              <% if image.chromosome.match(/_0$/) %>
+                This is the <i>bin chromosome</i>, a virtual concatenation of all uncontiguated scaffolds aligned against all <i><%= @ref.name %></i> reference sequences.
+              <% else %>
+                This is pseudochromosome <%= image.chromosome %> generated from input file '<%= @file.file_name %>' aligned against its <i><%= @ref.name %></i> reference chromosome.
+              <% end  %>
+            </p>
+          <% end %>
         </div>
       </li>
       <% end %>
-      <% end %>
     </ul>
-
   </div>
 </div>
 <% end %>
@@ -397,7 +411,7 @@ $(document).ready(function(){
     }
   });
 
-  $('li img').on('click',function(){
+  $('.chrthumb').on('click',function(){
     var src = $(this).attr('data-full-URL');
     var img = '<img src="' + src + '" class="img-responsive"/>';
     $('#thumbmodal').modal();
