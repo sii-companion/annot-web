@@ -41,6 +41,13 @@ class JobsController < ApplicationController
                         :working => Sidekiq::Status::working?(job[:job_id]),
                         :failed => Sidekiq::Status::failed?(job[:job_id]),
                         :complete => Sidekiq::Status::complete?(job[:job_id])}
+          @running = @outjobs.reduce(0) do |a,job|
+            if job[:working] then
+              a + 1
+            else
+              a
+            end
+          end
         end
       end
     end

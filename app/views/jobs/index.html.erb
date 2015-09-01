@@ -1,5 +1,9 @@
-  <h1>Jobs for <%= current_user[:name] %> <small> (<%= @outjobs.reduce(0) { |a,job| if job[:working] then a + 1 else a end } %> currently running)</small></h1>
-    <table style="white-space:nowrap;" class="table table-striped">
+  <h1><%= current_user[:fullname] %>'s jobs
+    <% if @running > 0 %>
+      <small> (<%= @running %> currently running)</small>
+    <% end %>
+  </h1>
+  <table style="white-space:nowrap;" class="table table-striped">
         <thead>
             <tr>
                 <th>Name</th>
