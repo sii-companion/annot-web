@@ -17,9 +17,15 @@ body {
   vertical-align:middle;
 }
 
+.navbar-text img {
+  max-height:30px;
+  width:auto;
+  vertical-align:middle;
+}
+
 /* Custom page header */
 .header {
-/*  border-bottom: 1px solid #e5e5e5; */
+ border-bottom: 1px solid #e5e5e5;
 }
 /* Make the masthead heading the same height as the navigation */
 .header h3 {
