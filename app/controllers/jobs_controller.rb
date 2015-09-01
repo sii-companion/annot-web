@@ -24,7 +24,7 @@ class JobsController < ApplicationController
     else
       jobs = current_user.jobs
       @outjobs = []
-      puts @outjobs
+      @running = 0
       if jobs then
         jobs.each do |job|
           jobname = Sidekiq::Status::get(job[:job_id], :name)
