@@ -74,7 +74,7 @@ class HardWorker
       run = "#{CONFIG['nextflowpath']}/nextflow -c " + \
             "#{CONFIG['locationconfig']} -c " + \
             "#{job[:config_file]} run " + \
-            "#{CONFIG['nextflowscript']} " + \
+            "#{CONFIG['nextflowscript']} #{CONFIG['dockerconf']} " + \
             "#{'-resume' unless job[:no_resume]} " + \
             "--dist_dir #{job.job_directory}"
       puts run
@@ -126,8 +126,15 @@ class HardWorker
 
       # store circos images
       Dir.glob("#{job.job_directory}/chr*.png") do |f|
+        m = f.match(/chr([^.]+).png$/)
+        if not m.nil? then
+          chrname = m[1]
+        else
+          chrname = "unnamed chromosome"
+        end
         img = CircosImage.new
         img.file = File.new(f)
+        img.chromosome = chrname
         img.save!
         job.circos_images << img
         File.unlink(f)
@@ -196,6 +203,5 @@ class HardWorker
       JobMailer.finish_failure_job_email(job.user, job).deliver_later
       raise e
     end
-
   end
 end
