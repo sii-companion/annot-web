@@ -41,7 +41,9 @@
 <div class="page-header">
   <h1><%= @job[:name] %><span class="small"> (<%= @job[:prefix] %>)</span></h1>
 </div>
-
+<script>
+var phylocanvas;
+</script>
 <div class="modal fade" id="jvennmodal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -229,8 +231,28 @@
     <div class="row">
       <div>
         <p>Click and drag in the diagram below to pan around. Use the mouse wheel to zoom in and out.</p>
+        <div class="center-block col-md-4" style="float: none;">
+          <form>
+            <div class="btn-group" data-toggle="buttons">
+                <label onClick="phylocanvas.setTreeType('rectangular');" class="btn btn-default active">
+                    <input id="tree-rectangular" name="treetype" type="radio" checked="checked" /> Rectangular
+                </label>
+                <label onClick="phylocanvas.setTreeType('circular');" class="btn btn-default">
+                    <input id="tree-circular" name="treetype" type="radio" /> Circular
+                </label>
+                <label onClick="phylocanvas.setTreeType('radial');" class="btn btn-default">
+                    <input id="tree-radial" name="treetype" type="radio" /> Radial
+                </label>
+                <label onClick="phylocanvas.setTreeType('diagonal');" class="btn btn-default">
+                    <input id="tree-diagonal" name="treetype" type="radio"  /> Diagonal
+                </label>
+            </div>
+          </form>
+        </div>
         <div id="PhyloCanvas" style="height: 400px; width=100%;"> </div>
       </div>
+    </div>
+    <div class="row">
       <div>
         <%= link_to @job.tree.seq.url do %>
           <i class="glyphicon glyphicon-download-alt"></i> Multiple sequence alignment
@@ -412,8 +434,8 @@ $(document).ready(function(){
   $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
     var target = $(e.target).attr("href");
     if (target == '#phylo' && firstPhyloTabOpen) {
-      var phylocanvas = new PhyloCanvas.Tree('PhyloCanvas', { history_collapsed : true });
-      phylocanvas.setTreeType("radial");
+      phylocanvas = new PhyloCanvas.Tree('PhyloCanvas', { history_collapsed : true });
+      phylocanvas.setTreeType("rectangular");
       phylocanvas.load('<%= @job[:job_id] %>/tree.nwk');
       phylocanvas.draw();
       firstPhyloTabOpen = false;
