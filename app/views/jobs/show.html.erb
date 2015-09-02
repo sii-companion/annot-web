@@ -37,7 +37,10 @@
 }
 </style>
 
-<h1><%= @job[:name] %><span class="small"> (<%= @job[:prefix] %>)</span></h1>
+<% content_for(:title, "#{@job[:name]} results (#{@job.genome_stat[:nof_genes]} genes)") %>
+<div class="page-header">
+  <h1><%= @job[:name] %><span class="small"> (<%= @job[:prefix] %>)</span></h1>
+</div>
 
 <div class="modal fade" id="jvennmodal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog">
@@ -122,9 +125,7 @@
   <% if @job[:finished_at] then %>
   <li><a data-toggle="tab" href="#phylo">Phylogeny</a></li>
   <% end %>
-  <% if @job[:do_contiguate] and @job.circos_images.size > 0 then %>
   <li><a data-toggle="tab" href="#synteny">Synteny</a></li>
-  <% end %>
   <li><a data-toggle="tab" href="#params">Job parameters</a></li>
   <li><a data-toggle="tab" href="#logs">Pipeline logs</a></li>
 </ul>
@@ -242,52 +243,60 @@
   </div>
 <% end %>
 
-<% if @job[:do_contiguate] and @job.circos_images.size > 0 then %>
 <div id="synteny" class="tab-pane fade">
-  <div class="row">
-    <p>Each circle below represents a single target-reference pseudochromosome
-       alignment. Click on it to zoom in.</p>
-  </div>
-  <div class="row">
-    <ul class="media-list">
-      <% @job.circos_images.each do |image| %>
-      <li class="media">
-        <div class="media-left">
-          <a href="#">
-            <%= image_tag image.file.thumb('70x70').url, class: "media-object chrthumb", :data => {:full_URL => image.file.url} %>
-          </a>
-        </div>
-        <div class="media-body">
-          <% if image.chromosome %>
-            <h4 class="media-heading">
-              <% if image.chromosome.match(/_0$/) %>
-                Bin chromosome
-              <% else %>
-                Chromosome <%= image.chromosome %>
-              <% end  %>
-            </h4>
-            <p>
-              <% if image.chromosome.match(/_0$/) %>
-                This is the <i>bin chromosome</i>, a virtual concatenation of all uncontiguated scaffolds aligned against all <i><%= @ref.name %></i> reference sequences.
-              <% else %>
-                This is pseudochromosome <%= image.chromosome %> generated from input file '<%= @file.file_name %>' aligned against its <i><%= @ref.name %></i> reference chromosome.
-              <% end  %>
-            </p>
-          <% end %>
-        </div>
-      </li>
-      <% end %>
-    </ul>
-  </div>
+  <% if @job[:do_contiguate] and @job.circos_images.size > 0 then %>
+    <div class="row">
+      <p>Each circle below represents a single target-reference pseudochromosome
+         alignment. Click on it to zoom in.</p>
+    </div>
+    <div class="row">
+      <ul class="media-list">
+        <% @job.circos_images.sort { |a,b| a.chromosome <=> b.chromosome }.each do |image| %>
+        <li class="media">
+          <div class="media-left">
+            <a href="#">
+              <%= image_tag image.file.thumb('70x70').url, class: "media-object chrthumb", :data => {:full_URL => image.file.url} %>
+            </a>
+          </div>
+          <div class="media-body">
+            <% if image.chromosome %>
+              <h4 class="media-heading">
+                <% if image.chromosome.match(/_0$/) %>
+                  Bin chromosome
+                <% else %>
+                  Chromosome <%= image.chromosome %>
+                <% end  %>
+              </h4>
+              <p>
+                <% if image.chromosome.match(/_0$/) %>
+                  This is the <i>bin chromosome</i>, a virtual concatenation of all uncontiguated scaffolds aligned against all <i><%= @ref.name %></i> reference sequences.
+                <% else %>
+                  This is pseudochromosome <%= image.chromosome %> generated from input file '<%= @file.file_name %>' aligned against its <i><%= @ref.name %></i> reference chromosome.
+                <% end  %>
+              </p>
+            <% end %>
+          </div>
+        </li>
+        <% end %>
+      </ul>
+    </div>
+  <% else %>
+    <div class="row">
+      <p>This job does not include reference-based contiguation.
+         No reference synteny plots are available.</p>
+    </div>
+  <% end %>
 </div>
-<% end %>
+
 
 <div id="logs" class="tab-pane fade">
   <div class="row">
     <h4>Standard output:</h4>
-    <pre><%= @job[:stdout] %></pre>
+    <pre class='span3'><%= @job[:stdout] %></pre>
+    <% if @job[:stderr] && @job[:stderr].length > 0 then %>
     <h4>Standard error:</h4>
-    <pre><%= @job[:stderr] %></pre>
+    <pre class='span3'><%= @job[:stderr] %></pre>
+    <% end %>
   </div>
 </div>
 
