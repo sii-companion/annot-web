@@ -11,7 +11,7 @@ class JobsController < ApplicationController
       @job[:no_resume] = false
       @job[:max_gene_length] = 20000
       @job[:augustus_score_threshold] = 0.8
-      @job[:taxon_id] = 5653                    # 'Kinetoplastida'
+      @job[:taxon_id] = 5653
       @job[:db_id] = "Companion"
       @job[:ratt_transfer_type] = 'Species'
       @user_file = UserFile.new
