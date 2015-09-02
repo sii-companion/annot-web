@@ -29,6 +29,9 @@
         <li class="<%= 'active' if current_page?(how_it_works_path) %>">
           <%= link_to "How it works", how_it_works_path %>
         </li>
+        <li class="<%= 'active' if current_page?(faq_path) %>">
+          <%= link_to "FAQ", faq_path %>
+        </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <% if !logged_in? then %>
