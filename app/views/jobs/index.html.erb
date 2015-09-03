@@ -2,11 +2,11 @@
 
   <div class="page-header">
     <h1><%= current_user[:fullname] %>'s jobs
+      <% if @running > 0 %>
+        <small> (<%= @running %> currently running)</small>
+      <% end %>
+    </h1>
   </div>
-    <% if @running > 0 %>
-      <small> (<%= @running %> currently running)</small>
-    <% end %>
-  </h1>
   <table style="white-space:nowrap;" class="table table-striped">
         <thead>
             <tr>
