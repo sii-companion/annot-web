@@ -438,6 +438,7 @@ $(document).ready(function(){
       phylocanvas.setTreeType("rectangular");
       phylocanvas.load('<%= @job[:job_id] %>/tree.nwk');
       phylocanvas.draw();
+      //phylocanvas.setNodeColourAndShape('<%= @job[:prefix] %>', 'blue', 'x');
       firstPhyloTabOpen = false;
     }
   });
