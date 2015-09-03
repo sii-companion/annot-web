@@ -47,13 +47,13 @@
                 </td>
                 <td>
                    <div class="btn-group">
-                   <% if job[:job_id] then %>
+                   <% if job[:job_id] and not job[:working] then %>
                      <%= link_to job_path(id: job[:job_id]), method: :delete, data: { confirm: "Are you sure?" } do %>
                        <i class="glyphicon glyphicon-trash"></i> Delete
                      <% end %>&nbsp;
                      <% if job[:complete] then %>
                        <%= link_to job_path(id: job[:job_id]) do %>
-                         <i class="glyphicon glyphicon-eye-open"></i> Show
+                         <i class="glyphicon glyphicon-eye-open"></i> Results
                        <% end %>
                      <% end %>
                    <% end %>
