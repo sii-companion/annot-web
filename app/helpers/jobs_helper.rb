@@ -50,6 +50,9 @@ module JobsHelper
         @items["fix_polycistrons"] = val
       end
 
+    def do_pseudo(val = true)
+      @items["do_pseudo"] = val
+    end
       def make_embl(val = true)
         @items["make_embl"] = val
       end

@@ -8,6 +8,7 @@ class JobsController < ApplicationController
       @job[:do_contiguate] = true
       @job[:do_exonerate] = false
       @job[:do_ratt] = true
+      @job[:do_pseudo] = true
       @job[:use_transcriptome_data] = false
       @job[:no_resume] = false
       @job[:max_gene_length] = 20000

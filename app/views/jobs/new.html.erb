@@ -168,6 +168,15 @@
          <label><%= f.radio_button :do_exonerate, false, required: true %> No, do not use reference protein evidence.</label>
        </div>
      </div>
+     <div> <p>Do you want to perform pseudogene detection using frameshifted reference protein-DNA alignments? This will moderately increase your job's running time.</p> </div>
+     <div class="form-group">
+       <div class="radio">
+         <label><%= f.radio_button :do_pseudo, true, required: true %> Yes, perform pseudogene detection.</label>
+       </div>
+       <div class="radio">
+         <label><%= f.radio_button :do_pseudo, false, required: true %> No, do not try to call pseudogenes.</label>
+       </div>
+     </div>
      <div> <p>Do you want to use the <a href="http://nar.oxfordjournals.org/content/39/9/e57" target="_blank">Rapid Annotation Transfer Tool (RATT)</a> to directly map highly conserved genes from the reference to the target genome? This step can result in high quality gene models, but is not guaranteed to work for annotating genomes not closely related to the chosen reference.</p> </div>
      <div class="form-group">
        <div class="radio">
@@ -205,7 +214,7 @@
   </div>
   </div>
 
-  <div class="panel panel-default">
+<!--  <div class="panel panel-default">
     <div class="panel-heading">
       <h3 class="panel-title">Caching</h3>
     </div>
