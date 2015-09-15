@@ -118,12 +118,20 @@ class HardWorker
       job[:stderr] = my_stderr
       job[:stdout] = my_stdout
       job.save!
+
+      # zip up EMBL files
+      Kernel.system("cd #{job.job_directory}; tar -czf #{job.job_directory}/embl.tar.gz *.embl")
+      if File.exist?("#{job.job_directory}/embl.tar.gz") then
+        Kernel.system("rm -f #{job.job_directory}/*.embl")
+      end
+
       add_result_file(job, "pseudochr.fasta.gz")
       add_result_file(job, "pseudo.out.gff3")
       add_result_file(job, "pseudo.pseudochr.agp")
       add_result_file(job, "scafs.fasta.gz")
       add_result_file(job, "scaffold.out.gff3")
       add_result_file(job, "pseudo.scafs.agp")
+      add_result_file(job, "embl.tar.gz") if File.exist?("#{job.job_directory}/embl.tar.gz")
       add_result_file(job, "out.gaf")
       add_result_file(job, "proteins.fasta")
       job.save!
