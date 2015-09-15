@@ -1,0 +1,56 @@
+development:
+  nextflowpath: "/Users/ss34/"
+  nextflowscript: "/Users/ss34/develop/annot-nf/annot.nf"
+  locationconfig: "/Users/ss34/develop/annot-nf/loc_docker.config"
+  extrinsicconfig: "/Users/ss34/develop/annot-nf/data/augustus/extrinsic.cfg"
+  referencedirs:
+    Kinetoplastida: "/Users/ss34/rails/testapp/ref_kinetoplastids"
+    Plasmodium: "/Users/ss34/rails/testapp/ref_plasmodium"
+  weightfiles:
+    Kinetoplastida: "/Users/ss34/develop/annot-nf/data/weight/weight_kinetoplastid.lua"
+    Plasmodium: "/Users/ss34/develop/annot-nf/data/weight/weight_plasmodium.lua"
+  maxintronlengths:
+    Kinetoplastida: 1
+    Plasmodium: 20000
+  dockerconf: "-with-docker satta/annot-nf"
+  rootdir: "/Users/ss34/develop/annot-nf/"
+  workdir: "/Users/ss34/develop/annot-nf/work"
+  tmpdir: "/tmp"
+
+production:
+  nextflowpath: "/Users/ss34/"
+  nextflowscript: "/Users/ss34/develop/annot-nf/annot.nf"
+  locationconfig: "/Users/ss34/develop/annot-nf/loc_docker.config"
+  extrinsicconfig: "/Users/ss34/develop/annot-nf/data/augustus/extrinsic.cfg"
+  referencedirs:
+    Kinetoplastida: "/Users/ss34/rails/testapp/ref_kinetoplastids"
+    Plasmodium: "/Users/ss34/rails/testapp/ref_plasmodium"
+  weightfiles:
+    Kinetoplastida: "/Users/ss34/develop/annot-nf/data/weight/weight_kinetoplastid.lua"
+    Plasmodium: "/Users/ss34/develop/annot-nf/data/weight/weight_plasmodium.lua"
+  maxintronlengths:
+    Kinetoplastida: 1
+    Plasmodium: 20000
+  dockerconf: "-with-docker satta/annot-nf"
+  rootdir: "/Users/ss34/develop/annot-nf/"
+  workdir: "/Users/ss34/develop/annot-nf/work"
+  tmpdir: "/tmp"
+
+test:
+  nextflowpath: "/Users/ss34/"
+  nextflowscript: "/Users/ss34/develop/annot-nf/annot.nf"
+  locationconfig: "/Users/ss34/develop/annot-nf/loc_docker.config"
+  extrinsicconfig: "/Users/ss34/develop/annot-nf/data/augustus/extrinsic.cfg"
+  referencedirs:
+    Kinetoplastida: "/Users/ss34/rails/testapp/ref_kinetoplastids"
+    Plasmodium: "/Users/ss34/rails/testapp/ref_plasmodium"
+  weightfiles:
+    Kinetoplastida: "/Users/ss34/develop/annot-nf/data/weight/weight_kinetoplastid.lua"
+    Plasmodium: "/Users/ss34/develop/annot-nf/data/weight/weight_plasmodium.lua"
+  maxintronlengths:
+    Kinetoplastida: 1
+    Plasmodium: 20000
+  dockerconf: "-with-docker satta/annot-nf"
+  rootdir: "/Users/ss34/develop/annot-nf/"
+  workdir: "/Users/ss34/develop/annot-nf/work"
+  tmpdir: "/tmp"
