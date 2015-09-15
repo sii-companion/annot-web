@@ -1,0 +1,6 @@
+<% if @sequence_file.new_record? %>
+alert('The file could not be uploaded for the following reasons:\n\n<% @sequence_file.errors.full_messages.each do |m| %>\t• <%= m.html_safe %>\n<% end %>');
+<% else %>
+$('#seqfile-list').append('<%= j render partial: 'jobs/seq_file', :object => @sequence_file %>');
+$('#snosequences').hide();
+<% end %>

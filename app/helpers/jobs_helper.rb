@@ -77,11 +77,17 @@ module JobsHelper
         target_path = target_path.join(val[:file_uid])
       end
 
+    def use_transcript_file(val)
+      target_path = get_target_seq(val)
+      unless File.exist?(target_path)
+        raise "Transcript file could not be found!"
       def use_target_seq(val)
         target_path = get_target_seq(val)
         raise unless File.exist?(target_path)
         @items["inseq"] = target_path
       end
+      @items["TRANSCRIPT_FILE"] = target_path
+    end
 
       def get_file(job)
         add_item("RATT_TRANSFER_TYPE", job[:ratt_transfer_type])

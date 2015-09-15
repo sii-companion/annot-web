@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150811090327) do
+ActiveRecord::Schema.define(version: 20150914114728) do
 
   create_table "circos_images", force: :cascade do |t|
     t.string   "file_uid"
@@ -62,6 +62,7 @@ ActiveRecord::Schema.define(version: 20150811090327) do
     t.string  "gtype"
     t.string  "species"
     t.integer "tree_id"
+    t.string  "section"
   end
 
   add_index "genes", ["gene_id"], name: "index_genes_on_gene_id"
@@ -109,7 +110,6 @@ ActiveRecord::Schema.define(version: 20150811090327) do
     t.datetime "updated_at",               null: false
     t.integer  "user_id"
     t.string   "path"
-    t.integer  "user_file_id"
     t.boolean  "do_contiguate"
     t.boolean  "do_exonerate"
     t.boolean  "do_ratt"
@@ -126,6 +126,10 @@ ActiveRecord::Schema.define(version: 20150811090327) do
     t.integer  "genome_stat_id"
     t.boolean  "no_resume"
     t.integer  "tree_id"
+    t.integer  "sequence_file_id"
+    t.integer  "transcript_file_id"
+    t.boolean  "use_transcriptome_data"
+    t.boolean  "do_pseudo"
   end
 
   create_table "result_files", force: :cascade do |t|
@@ -150,6 +154,7 @@ ActiveRecord::Schema.define(version: 20150811090327) do
     t.datetime "updated_at",   null: false
     t.string   "file_uid"
     t.string   "file_name"
+    t.string   "type"
   end
 
   create_table "users", force: :cascade do |t|

@@ -1,0 +1,6 @@
+<% if @transcript_file.new_record? %>
+alert('The file could not be uploaded for the following reasons:\n\n<% @transcript_file.errors.full_messages.each do |m| %>\t• <%= m.html_safe %>\n<% end %>');
+<% else %>
+$('#transfile-list').append('<%= j render partial: 'jobs/trans_file', :object => @transcript_file %>');
+$('#tnosequences').hide();
+<% end %>

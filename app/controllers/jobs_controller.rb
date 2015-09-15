@@ -8,6 +8,7 @@ class JobsController < ApplicationController
       @job[:do_contiguate] = true
       @job[:do_exonerate] = false
       @job[:do_ratt] = true
+      @job[:use_transcriptome_data] = false
       @job[:no_resume] = false
       @job[:max_gene_length] = 20000
       @job[:augustus_score_threshold] = 0.8
@@ -96,7 +97,8 @@ class JobsController < ApplicationController
       @working = Sidekiq::Status::working?(params[:id])
       @failed = Sidekiq::Status::failed?(params[:id])
       @complete = Sidekiq::Status::complete?(params[:id])
-      @file = UserFile.find(@job[:user_file_id])
+      @sfile = SequenceFile.find(@job[:sequence_file_id])
+      @tfile = TranscriptFile.find(@job[:transcript_file_id])
       @ref = Reference.find(@job[:reference_id])
     end
   end
@@ -238,8 +240,10 @@ class JobsController < ApplicationController
   private
 
   def jobs_params(params)
-    params.require(:job).permit(:name, :user_file_id, :reference_id, :prefix, \
+    params.require(:job).permit(:name, :sequence_file_id, :transcript_file_id, \
+                                :reference_id, :prefix, :do_pseudo, \
                                 :do_contiguate, :do_exonerate, :do_ratt, \
+                                :use_transcriptome_data, \
                                 :max_gene_length, :augustus_score_threshold, \
                                 :taxon_id, :db_id, :ratt_transfer_type, \
                                 :no_resume)

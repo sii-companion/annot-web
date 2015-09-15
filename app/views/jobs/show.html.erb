@@ -289,6 +289,22 @@ var phylocanvas;
   <div class="row">
     <div>
       The parameters you have chosen for your <b><%= @file.file_name %></b> vs. <b><%= @ref.name %></b> run are:
+            <tr>
+                <td>Transcript evidence</td>
+                <td>
+                    <% if @job[:use_transcriptome_data] %>
+                      &#10003;
+                    <% else %>
+                      &#10007;
+                    <% end %>
+                </td>
+            </tr>
+            <% if @job[:use_transcriptome_data] %>
+            <tr>
+                <td>Transcript filename</td>
+                <td><%= @tfile.file_name %></td>
+            </tr>
+            <% end %>
     </div>
     <table class="table table-striped">
         <tbody>

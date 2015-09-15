@@ -11,7 +11,10 @@ class User < ActiveRecord::Base
                     uniqueness: { case_sensitive: false }
   has_secure_password
   has_many :jobs
+  has_many :sequence_files
+  has_many :transcript_files
   has_many :user_files
+
 
   def User.digest(string)
     cost = ActiveModel::SecurePassword.min_cost ? BCrypt::Engine::MIN_COST :
