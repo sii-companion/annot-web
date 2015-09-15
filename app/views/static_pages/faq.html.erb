@@ -1,54 +1,54 @@
 <% content_for(:title, "Companion FAQ") %>
 
 <div class="page-header">
-    <h1>Companion FAQ</h1>
+    <h1>Frequently Asked Questions</h1>
 </div>
 
-<div class="panel-group" id="accordion">
+<div class="row">
+<h4>Can I upload large genomes?</h4>
+<p>The current limit for uploaded files is 50MB. If you need to annotate input
+    genomes larger than that, it makes sense to run a stand-alone version of
+    Companion on a sufficiently powerful machine, as it hits the limit of this
+    web server. You can find the standalone version of Companion
+    on <a href="https://github.com/sanger-pathogens/annot-nf">GitHub</a>.
+    Please follow the instructions there to set up your stand-alone instance.
+</p>
+</div>
 
-    <div class="panel panel-default">
-        <div class="panel-heading">
-            <h4 class="panel-title">
-                <a data-toggle="collapse" data-parent="#accordion" href="#FAQ1">
-                    I have a question or need help to perform an analysis. Can I contact you to get any help?
-                </a>
-            </h4>
-        </div>
-        <div id="FAQ1" class="panel-collapse collapse ">
-            <div class="panel-body">
-    Yes, we are reachable by email. For general questions about OMA, our preferred way of answering questions is through BioStar. Please consider asking your question there, including the tag OMA. We monitor BioStar for such questions and will answer them directly on that platform.
-            </div>
-        </div>
-    </div>
+<div class="row">
+<h4>How many jobs can I run at once?</h4>
+<p>You can submit as many jobs as you like. They will all be added to the
+   global queue and executed sequentially one after another. This server is a
+   shared resource, so please refrain from submitting many jobs that compute
+   protein-DNA alignments.
+</p>
+</div>
 
-    <div class="panel panel-default">
-        <div class="panel-heading">
-            <h4 class="panel-title">
-                <a data-toggle="collapse" data-parent="#accordion" href="#FAQ2">
-                    I have a question or need help to perform an anlaysis. Can I contact you to get any help?
-                </a>
-            </h4>
-        </div>
-        <div id="FAQ2" class="panel-collapse collapse ">
-            <div class="panel-body">
-    Yes, we are reachable by email. For general questions about OMA, our preferred way of answering questions is through BioStar. Please consider asking your question there, including the tag OMA. We monitor BioStar for such questions and will answer them directly on that platform.
-            </div>
-        </div>
-    </div>
+<div class="row">
+<h4>What format do the transcript evidence files need to have?</h4>
+<p>Transcript evidence, for example, must be given in GTF format, for example
+    as produced by <a href="http://cole-trapnell-lab.github.io/cufflinks/tools/">Cufflinks</a>
+    (e.g. <tt>cufflinks</tt>, <tt>cuffmerge</tt> or <tt>cuffcompare</tt>). Here is an example:</p>
+<pre>
+Pf3D7_01_v3     Cufflinks       exon    29108   34762   .       +       .       gene_id "XLOC_000001"; transcript_id "TCONS_00000001"; exon_number "1"; oId "CUFF.2.1"; tss_id "TSS1";
+Pf3D7_01_v3     Cufflinks       exon    35888   37610   .       +       .       gene_id "XLOC_000001"; transcript_id "TCONS_00000001"; exon_number "2"; oId "CUFF.2.1"; tss_id "TSS1";
+Pf3D7_01_v3     Cufflinks       exon    35202   37610   .       +       .       gene_id "XLOC_000001"; transcript_id "TCONS_00000002"; exon_number "1"; oId "CUFF.2.2"; tss_id "TSS2";
+Pf3D7_01_v3     Cufflinks       exon    38222   39773   .       +       .       gene_id "XLOC_000002"; transcript_id "TCONS_00000003"; exon_number "1"; oId "CUFF.4.1"; tss_id "TSS3";
+Pf3D7_01_v3     Cufflinks       exon    97430   99013   .       +       .       gene_id "XLOC_000003"; transcript_id "TCONS_00000004"; exon_number "1"; oId "CUFF.9.1"; tss_id "TSS4";
+Pf3D7_01_v3     Cufflinks       exon    99220   104775  .       +       .       gene_id "XLOC_000003"; transcript_id "TCONS_00000004"; exon_number "2"; oId "CUFF.9.1"; tss_id "TSS4";
+Pf3D7_01_v3     Cufflinks       exon    104928  105838  .       +       .       gene_id "XLOC_000003"; transcript_id "TCONS_00000004"; exon_number "3"; oId "CUFF.9.1"; tss_id "TSS4";
+Pf3D7_01_v3     Cufflinks       exon    106191  108971  .       +       .       gene_id "XLOC_000004"; transcript_id "TCONS_00000005"; exon_number "1"; oId "CUFF.10.1"; tss_id "TSS5";
+[...]
+</pre>
+<p>Please note that the coordinates in this file must match the coordinate system of the corresponding uploaded sequence file and the IDs in the first column must match the sequence headers in the uploaded sequence.</p>
+</div>
 
-    <div class="panel panel-default">
-        <div class="panel-heading">
-            <h4 class="panel-title">
-                <a data-toggle="collapse" data-parent="#accordion" href="#FAQ3">
-                    I have a question or need help to perform an anlaysis. Can I contact you to get any help?
-                </a>
-            </h4>
-        </div>
-        <div id="FAQ3" class="panel-collapse collapse ">
-            <div class="panel-body">
-    Yes, we are reachable by email. For general questions about OMA, our preferred way of answering questions is through BioStar. Please consider asking your question there, including the tag OMA. We monitor BioStar for such questions and will answer them directly on that platform.
-            </div>
-        </div>
-    </div>
+<div class="row">
+<h4>What do I do if I can't find a related species in the reference list, or there is no reference yet?</h4>
+<p>You need to pick one of the given references to provide models for the gene finders as well as a set of chromosomes for input contiguation. If you can't use any of the references, just disable the contiguation option (which will leave your initial sequence untouched) and pick the closest reference in the list.</p>
+</div>
 
+<div class="row">
+<h4>I have a question but it is not here on this list!</h4>
+<p>Please send an email to <a href="mailto:ss34@sanger.ac.uk">us</a> with your inquiry, we will get back to you shortly.</p>
 </div>
