@@ -83,6 +83,9 @@ class JobsController < ApplicationController
         queue.each do |job|
           job.delete if job.jid == params[:id]
         end
+        if File.exist?("#{thisjob.job_directory}") then
+          FileUtils.rm_rf("#{thisjob.job_directory}")
+        end
       end
       redirect_to action: "index"
     end

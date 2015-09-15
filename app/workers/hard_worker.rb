@@ -33,6 +33,23 @@ class HardWorker
     end
   end
 
+  def make_directories(job)
+    # make result directory
+    if not Dir.exist?(job.job_directory) then
+      Dir.mkdir(job.job_directory)
+    end
+
+    # make temp directory
+    if not Dir.exist?(job.temp_directory) then
+      Dir.mkdir(job.temp_directory)
+    end
+
+    # make work directory
+    if not Dir.exist?(job.work_directory) then
+      Dir.mkdir(job.work_directory)
+    end
+  end
+
   def perform(id)
     job = Job.find(id)
     store name: job[:name]
@@ -50,23 +67,29 @@ class HardWorker
     JobMailer.start_job_email(job.user, job).deliver_later
 
     begin
-      # make result directory
-      if not Dir.exist?(job.job_directory) then
-        Dir.mkdir(job.job_directory)
-      end
+      # make necessary run directories
+      make_directories(job)
 
       # prepare starting Sidekiq job
       cf = JobsHelper::ConfigFactory.new
-      uf = UserFile.find(job[:user_file_id])
+      uf = SequenceFile.find(job[:sequence_file_id])
       cf.use_target_seq(uf)
       r = Reference.find(job[:reference_id])
       cf.select_reference(r)
       cf.use_prefix(job[:prefix])
       cf.do_contiguation(job[:do_contiguate])
+      if job[:use_transcriptome_data] then
+        tf = TranscriptFile.find(job[:transcript_file_id])
+        if tf then
+          cf.use_transcript_file(tf)
+        end
+      end
       cf.make_embl()
       cf.use_reference()
       cf.do_circos()
       cf.do_exonerate(job[:do_exonerate])
+      cf.run_ratt(job[:do_ratt])
+      cf.do_pseudo(job[:do_pseudo])
       job[:config_file] = cf.get_file(job).path
       job.save!
 
@@ -79,8 +102,8 @@ class HardWorker
             "--dist_dir #{job.job_directory}"
       puts run
       with_environment("ROOTDIR" => "#{CONFIG['rootdir']}",
-                       "NXF_WORK" => "#{CONFIG['workdir']}",
-                       "NXF_TEMP" => "#{CONFIG['tmpdir']}") do
+                       "NXF_WORK" => job.work_directory,
+                       "NXF_TEMP" => job.temp_directory) do
         status = Open4::popen4(run) do |pid, stdin, stdout, stderr|
           my_stdout = stdout.readlines.join
           my_stderr = stderr.readlines.join
@@ -195,6 +218,10 @@ class HardWorker
 
       job[:finished_at] = DateTime.now
       job.save!
+
+      # clean up directories
+      FileUtils.rm_rf(job.temp_directory)
+      FileUtils.rm_rf(job.work_directory)
 
       # send finish notification email
       JobMailer.finish_success_job_email(job.user, job).deliver_later
