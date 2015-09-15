@@ -17,7 +17,7 @@
         <span class="icon-bar"></span>
       </button>
       <%= link_to root_url, :class => "navbar-brand" do %>
-         <%= image_tag 'companion_logo.png', width: "80px" %>
+         <%= image_tag 'companion_logo.png', width: "80" %>
       <% end %>
     </div>
 
@@ -60,5 +60,10 @@
 <div class="container">
 <%= yield %>
 </div>
+
+<footer class="footer">
+    <div class="pull-right" style="margin-right: 20px"> <a href="http://www.sanger.ac.uk/research/projects/parasitegenomics"><%= image_tag 'sang_logo.png', height: "25" %></a></div>
+    <!-- <div class="col-md-10 text-right">Companion is developed and maintained by the <a href="http://www.sanger.ac.uk/research/projects/parasitegenomics">Parasite Genomics group</a> at the Wellcome Trust Sanger Institute.</div>-->
+</footer>
 </body>
 </html>
