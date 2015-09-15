@@ -157,7 +157,7 @@ class HardWorker
 
       # store circos images
       Dir.glob("#{job.job_directory}/chr*.png") do |f|
-        m = f.match(/chr([^.]+).png$/)
+        m = f.match(/chr(.+)\.png$/)
         if not m.nil? then
           chrname = m[1]
         else
