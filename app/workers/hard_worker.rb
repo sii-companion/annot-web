@@ -179,7 +179,8 @@ class HardWorker
           id, type, product, seqid, start, stop, strand = l.split("\t")
           g = Gene.new(:gene_id => id, :product => product, :loc_start => start,
                        :loc_end => stop, :strand => strand, :job => job,
-                       :seqid => seqid, :gtype => type, :species => job[:prefix])
+                       :seqid => seqid, :gtype => type, :species => job[:prefix],
+                       :section => r[:section])
           genes << g
         end
         Gene.import(genes)

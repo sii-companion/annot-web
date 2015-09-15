@@ -1,7 +1,7 @@
 <% content_for(:title, "New Companion job") %>
 
 <div class="page-header">
-  <h1>New annotation job</h1>
+  <h1>Create a new annotation job</h1>
 </div>
 
 <%= form_for @job do |f| %>
@@ -12,17 +12,16 @@
     </div>
     <div class="panel-body">
       <div><p>First of all, please specify a free-text <b>name</b> for your new job. It should reflect the purpose of your job, and should probably include the name of the organism you are annotating.</p></div>
-    <div class="input-group">
-       <span class="input-group-addon" id="sizing-addon1">Job name</span>
-      <%= f.text_field :name, class: 'form-control', :aria => {:describedby => "sizing-addon1"}, required: true %>
-    </div>
-    <div style="padding-top: 20px;"><p> Please also give a short <b>species prefix</b> that will be used to name entities (such as genes, pseudochromosomes, etc.) generated during the annotation run. It should not contain spaces or special characters.</p>
-     <p> Example: <i>LFOO</i></p></div>
-    <div class="input-group">
-       <span class="input-group-addon" id="sizing-addon2">Species prefix</span>
-      <%= f.text_field :prefix, class: 'form-control', :placeholder => "LFOO", :aria => {:describedby => "sizing-addon2"}, required: true %>
-    </div>
-
+      <div class="input-group">
+         <span class="input-group-addon" id="sizing-addon1">Job name</span>
+        <%= f.text_field :name, class: 'form-control', :aria => {:describedby => "sizing-addon1"}, required: true %>
+      </div>
+      <div style="padding-top: 20px;"><p> Please also give a short <b>species prefix</b> that will be used to name entities (such as genes, pseudochromosomes, etc.) generated during the annotation run. It should not contain spaces or special characters.</p>
+       <p> Example: <i>LFOO</i></p></div>
+      <div class="input-group">
+         <span class="input-group-addon" id="sizing-addon2">Species prefix</span>
+        <%= f.text_field :prefix, class: 'form-control', :placeholder => "LFOO", :aria => {:describedby => "sizing-addon2"}, required: true %>
+      </div>
     </div>
   </div>
 

@@ -95,200 +95,255 @@ var phylocanvas;
 </ul>
 
 <div class="tab-content">
-<div id="stats" class="tab-pane fade in active">
-  <div class="row">
-    <table class="table table-striped">
-       <tbody>
-          <tr>
-              <td>Number of annotated regions/sequences</td>
-              <td><%= @job.genome_stat[:nof_regions]%></td>
-          </tr>
-          <tr>
-              <td>Number of genes</td>
-              <td><%= @job.genome_stat[:nof_genes]%></td>
-          </tr>
-          <tr>
-              <td>Number of coding genes</td>
-              <td><%= @job.genome_stat[:nof_coding_genes]%></td>
-          </tr>
-          <tr>
-              <td>Number of genes with function</td>
-              <td><%= @job.genome_stat[:nof_genes_with_function]%></td>
-          </tr>
-          <tr>
-              <td>Number of non-coding genes</td>
-              <td><%= @job.genome_stat[:nof_genes].to_i - @job.genome_stat[:nof_coding_genes].to_i %></td>
-          </tr>
-          <tr>
-              <td>Number of genes with multiple CDSs</td>
-              <td><%= @job.genome_stat[:nof_genes_with_mult_cds]%></td>
-          </tr>
-          <tr>
-              <td>Overall GC%</td>
-              <td><%= @job.genome_stat[:gc_overall].round(2)%></td>
-          </tr>
-          <tr>
-              <td>Coding GC%</td>
-              <td><%= @job.genome_stat[:gc_coding].round(2)%></td>
-          </tr>
-      </tbody>
-    </table>
-  </div>
-</div>
-
-<% if @job.result_files.size > 0 then %>
-<div id="result" class="tab-pane fade">
-       <table class="table table-striped">
-          <thead>
-              <tr>
-                  <th></th>
-                  <th class="text-right">Size</th>
-              </tr>
-          </thead>
-          <tbody>
-            <% @job.result_files.each do |file| %>
-              <tr>
-                  <td><%= link_to file.file.url do %>
-                      <i class="glyphicon glyphicon-download-alt"></i>
-                       <%= JobsHelper::file_description(file.file.name) %>
-                    <% end %></td>
-                  <td class="text-right"><%= number_to_human_size(file.file.size) %></td>
-              </tr>
-            <% end %>
-          </tbody>
-      </table>
-  </div>
-<% end %>
-
-<% if @job[:finished_at] then %>
-  <div id="orth" class="tab-pane fade">
+  <div id="stats" class="tab-pane fade in active">
     <div class="row">
-      <p>Click on the numbers to view clusters and singleton gene lists.</p>
-      <table class="small" style="width:700px;">
-        <tr>
-        <td style="width:12%;">
-          <%= link_to '', {:class => 'genome-singletons-link'} do %>
-            <span id="genome-singletons"></span> singletons
-          <% end %>
-        </td>
-        <td style="width:76%;"><div id="jvenn-container"></div></td>
-        <td style="width:12%;">
-          <%= link_to '', {:class => 'ref-singletons-link'} do %>
-            <span id="ref-singletons"></span> singletons
-          <% end %>
-        </td>
-        </tr>
+      <table class="table table-striped">
+         <tbody>
+            <tr>
+                <td>Number of annotated regions/sequences</td>
+                <td><%= @job.genome_stat[:nof_regions]%></td>
+            </tr>
+            <tr>
+                <td>Number of genes</td>
+                <td><%= @job.genome_stat[:nof_genes]%></td>
+            </tr>
+            <tr>
+                <td>Number of coding genes</td>
+                <td><%= @job.genome_stat[:nof_coding_genes]%></td>
+            </tr>
+            <tr>
+                <td>Number of genes with function</td>
+                <td><%= @job.genome_stat[:nof_genes_with_function]%></td>
+            </tr>
+            <tr>
+                <td>Number of non-coding genes</td>
+                <td><%= @job.genome_stat[:nof_genes].to_i - @job.genome_stat[:nof_coding_genes].to_i %></td>
+            </tr>
+            <tr>
+                <td>Number of genes with multiple CDSs</td>
+                <td><%= @job.genome_stat[:nof_genes_with_mult_cds]%></td>
+            </tr>
+            <tr>
+                <td>Overall GC%</td>
+                <td><%= @job.genome_stat[:gc_overall].round(2)%></td>
+            </tr>
+            <tr>
+                <td>Coding GC%</td>
+                <td><%= @job.genome_stat[:gc_coding].round(2)%></td>
+            </tr>
+        </tbody>
       </table>
     </div>
-    <div>
-      <%= link_to clusters_url(id: @job[:job_id]) do %>
-          <i class="glyphicon glyphicon-download-alt"></i> Cluster assignments
-     <% end %> as OrthoMCL 1.4 output file
-    </div>
   </div>
-<% end %>
 
-<% if @job[:finished_at] then %>
-  <div id="phylo" class="tab-pane fade">
-    <div class="row">
-      <div>
-        <p>Click and drag in the diagram below to pan around. Use the mouse wheel to zoom in and out.</p>
-        <div class="center-block col-md-4" style="float: none;">
-          <form>
-            <div class="btn-group" data-toggle="buttons">
-                <label onClick="phylocanvas.setTreeType('rectangular');" class="btn btn-default active">
-                    <input id="tree-rectangular" name="treetype" type="radio" checked="checked" /> Rectangular
-                </label>
-                <label onClick="phylocanvas.setTreeType('circular');" class="btn btn-default">
-                    <input id="tree-circular" name="treetype" type="radio" /> Circular
-                </label>
-                <label onClick="phylocanvas.setTreeType('radial');" class="btn btn-default">
-                    <input id="tree-radial" name="treetype" type="radio" /> Radial
-                </label>
-                <label onClick="phylocanvas.setTreeType('diagonal');" class="btn btn-default">
-                    <input id="tree-diagonal" name="treetype" type="radio"  /> Diagonal
-                </label>
-            </div>
-          </form>
-        </div>
-        <div id="PhyloCanvas" style="height: 400px; width=100%;"> </div>
-      </div>
-    </div>
-    <div class="row">
-      <div>
-        <%= link_to @job.tree.seq.url do %>
-          <i class="glyphicon glyphicon-download-alt"></i> Multiple sequence alignment
-        <% end %> for this tree (FASTA)<br />
-        <%= link_to '', {:class => 'tree_genes'} do %>
-          <i class="glyphicon glyphicon-list"></i> Core genes
-        <% end %> used to build this tree
-       </div>
-    </div>
-  </div>
-<% end %>
-
-<div id="synteny" class="tab-pane fade">
-  <% if @job[:do_contiguate] and @job.circos_images.size > 0 then %>
-    <div class="row">
-      <p>Each circle below represents a single target-reference pseudochromosome
-         alignment. Click on it to zoom in.</p>
-    </div>
-    <div class="row">
-      <ul class="media-list">
-        <% @job.circos_images.sort { |a,b| a.chromosome <=> b.chromosome }.each do |image| %>
-        <li class="media">
-          <div class="media-left">
-            <a href="#">
-              <%= image_tag image.file.thumb('70x70').url, class: "media-object chrthumb", :data => {:full_URL => image.file.url} %>
-            </a>
-          </div>
-          <div class="media-body">
-            <% if image.chromosome %>
-              <h4 class="media-heading">
-                <% if image.chromosome.match(/_0$/) %>
-                  Bin chromosome
-                <% else %>
-                  Chromosome <%= image.chromosome %>
-                <% end  %>
-              </h4>
-              <p>
-                <% if image.chromosome.match(/_0$/) %>
-                  This is the <i>bin chromosome</i>, a virtual concatenation of all uncontiguated scaffolds aligned against all <i><%= @ref.name %></i> reference sequences.
-                <% else %>
-                  This is pseudochromosome <%= image.chromosome %> generated from input file '<%= @file.file_name %>' aligned against its <i><%= @ref.name %></i> reference chromosome.
-                <% end  %>
-              </p>
-            <% end %>
-          </div>
-        </li>
-        <% end %>
-      </ul>
-    </div>
-  <% else %>
-    <div class="row">
-      <p>This job does not include reference-based contiguation.
-         No reference synteny plots are available.</p>
+  <% if @job.result_files.size > 0 then %>
+  <div id="result" class="tab-pane fade">
+         <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th class="text-right">Size</th>
+                </tr>
+            </thead>
+            <tbody>
+              <% @job.result_files.each do |file| %>
+                <tr>
+                    <td><%= link_to file.file.url do %>
+                        <i class="glyphicon glyphicon-download-alt"></i>
+                         <%= JobsHelper::file_description(file.file.name) %>
+                      <% end %></td>
+                    <td class="text-right"><%= number_to_human_size(file.file.size) %></td>
+                </tr>
+              <% end %>
+            </tbody>
+        </table>
     </div>
   <% end %>
-</div>
 
+  <% if @job[:finished_at] then %>
+    <div id="orth" class="tab-pane fade">
+      <div class="row">
+        <p>Click on the numbers to view clusters and singleton gene lists.</p>
+        <table class="small" style="width:700px;">
+          <tr>
+          <td style="width:12%;">
+            <%= link_to '', {:class => 'genome-singletons-link'} do %>
+              <span id="genome-singletons"></span> singletons
+            <% end %>
+          </td>
+          <td style="width:76%;"><div id="jvenn-container"></div></td>
+          <td style="width:12%;">
+            <%= link_to '', {:class => 'ref-singletons-link'} do %>
+              <span id="ref-singletons"></span> singletons
+            <% end %>
+          </td>
+          </tr>
+        </table>
+      </div>
+      <div>
+        <%= link_to clusters_url(id: @job[:job_id]) do %>
+            <i class="glyphicon glyphicon-download-alt"></i> Cluster assignments
+       <% end %> as OrthoMCL 1.4 output file
+      </div>
+    </div>
+  <% end %>
 
-<div id="logs" class="tab-pane fade">
-  <div class="row">
-    <h4>Standard output:</h4>
-    <pre class='span3'><%= @job[:stdout] %></pre>
-    <% if @job[:stderr] && @job[:stderr].length > 0 then %>
-    <h4>Standard error:</h4>
-    <pre class='span3'><%= @job[:stderr] %></pre>
+  <% if @job[:finished_at] then %>
+    <div id="phylo" class="tab-pane fade">
+      <div class="row">
+        <div>
+          <p>Click and drag in the diagram below to pan around. Use the mouse wheel to zoom in and out.</p>
+          <div class="center-block col-md-4" style="float: none;">
+            <form>
+              <div class="btn-group" data-toggle="buttons">
+                  <label onClick="phylocanvas.setTreeType('rectangular');" class="btn btn-default active">
+                      <input id="tree-rectangular" name="treetype" type="radio" checked="checked" /> Rectangular
+                  </label>
+                  <label onClick="phylocanvas.setTreeType('circular');" class="btn btn-default">
+                      <input id="tree-circular" name="treetype" type="radio" /> Circular
+                  </label>
+                  <label onClick="phylocanvas.setTreeType('radial');" class="btn btn-default">
+                      <input id="tree-radial" name="treetype" type="radio" /> Radial
+                  </label>
+                  <label onClick="phylocanvas.setTreeType('diagonal');" class="btn btn-default">
+                      <input id="tree-diagonal" name="treetype" type="radio"  /> Diagonal
+                  </label>
+              </div>
+            </form>
+          </div>
+          <div id="PhyloCanvas" style="height: 400px; width=100%;"> </div>
+        </div>
+      </div>
+      <div class="row">
+        <div>
+          <%= link_to @job.tree.seq.url do %>
+            <i class="glyphicon glyphicon-download-alt"></i> Multiple sequence alignment
+          <% end %> for this tree (FASTA)<br />
+          <%= link_to '', {:class => 'tree_genes'} do %>
+            <i class="glyphicon glyphicon-list"></i> Core genes
+          <% end %> used to build this tree
+         </div>
+      </div>
+    </div>
+  <% end %>
+
+  <div id="synteny" class="tab-pane fade">
+    <% if @job[:do_contiguate] and @job.circos_images.size > 0 then %>
+      <div class="row">
+        <p>Each circle below represents a single target-reference pseudochromosome
+           alignment. Click on it to zoom in.</p>
+      </div>
+      <div class="row">
+        <ul class="media-list">
+          <% @job.circos_images.sort { |a,b| a.chromosome <=> b.chromosome }.each do |image| %>
+          <li class="media">
+            <div class="media-left">
+              <a href="#">
+                <%= image_tag image.file.thumb('70x70').url, class: "media-object chrthumb", :data => {:full_URL => image.file.url} %>
+              </a>
+            </div>
+            <div class="media-body">
+              <% if image.chromosome %>
+                <h4 class="media-heading">
+                  <% if image.chromosome.match(/_0$/) %>
+                    Bin chromosome
+                  <% else %>
+                    Chromosome <%= image.chromosome %>
+                  <% end  %>
+                </h4>
+                <p>
+                  <% if image.chromosome.match(/_0$/) %>
+                    This is the <i>bin chromosome</i>, a virtual concatenation of all uncontiguated scaffolds aligned against all <i><%= @ref.name %></i> reference sequences.
+                  <% else %>
+                    This is pseudochromosome <%= image.chromosome %> generated from input file '<%= @sfile.file_name %>' aligned against its <i><%= @ref.name %></i> reference chromosome.
+                  <% end  %>
+                </p>
+              <% end %>
+            </div>
+          </li>
+          <% end %>
+        </ul>
+      </div>
+    <% else %>
+      <div class="row">
+        <p>This job does not include reference-based contiguation.
+           No reference synteny plots are available.</p>
+      </div>
     <% end %>
   </div>
-</div>
 
 
-<div id="params" class="tab-pane fade">
-  <div class="row">
-    <div>
-      The parameters you have chosen for your <b><%= @file.file_name %></b> vs. <b><%= @ref.name %></b> run are:
+  <div id="logs" class="tab-pane fade">
+    <div class="row">
+      <h4>Standard output:</h4>
+      <pre class='span3'><%= @job[:stdout] %></pre>
+      <% if @job[:stderr] && @job[:stderr].length > 0 then %>
+      <h4>Standard error:</h4>
+      <pre class='span3'><%= @job[:stderr] %></pre>
+      <% end %>
+    </div>
+  </div>
+
+
+  <div id="params" class="tab-pane fade">
+    <div class="row">
+      <div>
+        The parameters you have chosen for your <b><%= @sfile.file_name %></b> vs. <b><%= @ref.name %></b> run are:
+      </div>
+      <table class="table table-striped">
+          <tbody>
+            <tr>
+                <td>Pseudochromosomes</td>
+                <td>
+                    <% if @job[:do_contiguate] %>
+                      &#10003;
+                    <% else %>
+                      &#10007;
+                    <% end %>
+                </td>
+            </tr>
+            <tr>
+                <td>Protein evidence</td>
+                <td>
+                    <% if @job[:do_exonerate] %>
+                      &#10003;
+                    <% else %>
+                      &#10007;
+                    <% end %>
+                </td>
+            </tr>
+            <tr>
+                <td>RATT</td>
+                <td>
+                    <% if @job[:do_ratt] %>
+                      &#10003;
+                    <% else %>
+                      &#10007;
+                    <% end %>
+                </td>
+            </tr>
+            <tr>
+                <td>RATT transfer type</td>
+                <td><%= @job[:ratt_transfer_type] %></td>
+            </tr>
+            <tr>
+                <td>SNAP</td>
+                <td>
+                    <% if @job[:run_snap] %>
+                      &#10003;
+                    <% else %>
+                      &#10007;
+                    <% end %>
+                </td>
+            </tr>
+            <tr>
+                <td>Max gene length</td>
+                <td><%= @job[:max_gene_length] %></td>
+            </tr>
+            <tr>
+                <td>Score threshold</td>
+                <td><%= @job[:augustus_score_threshold].round(2) %></td>
+            </tr>
             <tr>
                 <td>Transcript evidence</td>
                 <td>
@@ -305,49 +360,9 @@ var phylocanvas;
                 <td><%= @tfile.file_name %></td>
             </tr>
             <% end %>
+        </tbody>
+      </table>
     </div>
-    <table class="table table-striped">
-        <tbody>
-          <tr>
-              <td>Pseudochromosomes</td>
-              <td>
-                  <% if @job[:do_contiguate] %>
-                    &#10003;
-                  <% else %>
-                    &#10007;
-                  <% end %>
-              </td>
-          </tr>
-          <tr>
-              <td>Protein evidence</td>
-              <td>
-                  <% if @job[:do_exonerate] %>
-                    &#10003;
-                  <% else %>
-                    &#10007;
-                  <% end %>
-              </td>
-          </tr>
-          <tr>
-              <td>RATT</td>
-              <td>
-                  <% if @job[:do_ratt] %>
-                    &#10003;
-                  <% else %>
-                    &#10007;
-                  <% end %>
-              </td>
-          </tr>
-          <tr>
-              <td>Max gene length</td>
-              <td><%= @job[:max_gene_length] %></td>
-          </tr>
-          <tr>
-              <td>Score threshold</td>
-              <td><%= @job[:augustus_score_threshold].round(2) %></td>
-          </tr>
-      </tbody>
-    </table>
   </div>
 </div>
 
