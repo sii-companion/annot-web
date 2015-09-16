@@ -102,7 +102,9 @@ class JobsController < ApplicationController
       @failed = Sidekiq::Status::failed?(params[:id])
       @complete = Sidekiq::Status::complete?(params[:id])
       @sfile = SequenceFile.find(@job[:sequence_file_id])
-      @tfile = TranscriptFile.find(@job[:transcript_file_id])
+      if @job[:transcript_file_id] then
+        @tfile = TranscriptFile.find(@job[:transcript_file_id])
+      end
       @ref = Reference.find(@job[:reference_id])
     end
   end
