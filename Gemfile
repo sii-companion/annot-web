@@ -17,7 +17,8 @@ gem 'coffee-rails', '~> 4.1.0'
 # gem 'therubyracer', platforms: :ruby
 
 # Use jquery as the JavaScript library
-gem 'jquery-rails' , '>= 4.0.4'
+# we cannot use a later version as DataTables still uses undocumented behaviour
+gem 'jquery-rails' , '= 3.1.3'
 
 # Turbolinks makes following links in your web application faster. Read more: https://github.com/rails/turbolinks
 gem 'turbolinks'
@@ -76,6 +77,9 @@ gem 'jquery.fileupload-rails'
 
 # for bulk import of data into ActiveRecord
 gem 'activerecord-import', '~> 0.4.0'
+
+# better tables
+gem 'jquery-datatables-rails', '~> 3.3.0'
 
 # for the reference definitions
 gem 'active_hash'
