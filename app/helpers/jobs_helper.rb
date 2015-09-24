@@ -89,6 +89,9 @@ module JobsHelper
       if ref[:maxintronlen] then
         @items["maxintronlen"] = ref[:maxintronlen]
       end
+      if ref[:fix_polycistrons] then
+        @items["fix_polycistrons"] = ref[:fix_polycistrons]
+      end
     end
 
     def get_target_seq(val)

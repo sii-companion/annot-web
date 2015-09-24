@@ -12,6 +12,9 @@ development:
   maxintronlengths:
     Kinetoplastida: 1
     Plasmodium: 20000
+  fix_polycistrons:
+    Kinetoplastida: "true"
+    Plasmodium: "false"
   dockerconf: "-with-docker satta/annot-nf"
   rootdir: "/Users/ss34/develop/annot-nf/"
   workdir: "/Users/ss34/develop/annot-nf/work"
@@ -31,6 +34,9 @@ production:
   maxintronlengths:
     Kinetoplastida: 1
     Plasmodium: 20000
+  fix_polycistrons:
+    Kinetoplastids: "true"
+    Plasmodium: "false"
   dockerconf: "-with-docker satta/annot-nf"
   rootdir: "/Users/ss34/develop/annot-nf/"
   workdir: "/Users/ss34/develop/annot-nf/work"
@@ -50,6 +56,9 @@ test:
   maxintronlengths:
     Kinetoplastida: 1
     Plasmodium: 20000
+  fix_polycistrons:
+    Kinetoplastids: "true"
+    Plasmodium: "false"
   dockerconf: "-with-docker satta/annot-nf"
   rootdir: "/Users/ss34/develop/annot-nf/"
   workdir: "/Users/ss34/develop/annot-nf/work"

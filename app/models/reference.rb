@@ -25,6 +25,10 @@ class Reference < ActiveFile::Base
           if CONFIG['maxintronlengths'] and CONFIG['maxintronlengths'][section] then
             newhash[:maxintronlen] = CONFIG['maxintronlengths'][section]
           end
+          # assign fix_polycistrons for this section, if configured
+          if CONFIG['fix_polycistrons'] and CONFIG['fix_polycistrons'][section] then
+            newhash[:fix_polycistrons] = CONFIG['fix_polycistrons'][section]
+          end
           # lift over properties from JSON
           v.each_pair do |k2,v2|
             if ref_key_map.has_key?(k2) then
