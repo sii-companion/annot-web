@@ -6,6 +6,33 @@
 var phylocanvas;
 var vtable;
 </script>
+
+<div class="modal fade" id="genelistmodal" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="gltabledesc"></h4>
+      </div>
+      <div class="modal-body">
+        <div class="span3">
+          <table class="table table-striped" id="glmtable">
+            <thead>
+              <tr>
+                <th data-field="id">Gene ID</th>
+                <th data-field="product">Product</th>
+              </tr>
+            </thead>
+          </table>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div class="modal fade" id="thumbmodal" tabindex="-1" role="dialog" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -451,9 +478,9 @@ $(document).ready(function(){
   });
   $('.tree_genes').click(function(event) {
     $.getJSON( "<%= @job[:job_id] %>/tree/genes", function(data) {
-      $("#gltable").empty();
+      $("#glmtable").empty();
       for(var i = 0; i < data.length; i++) {
-        $("#gltable").append("<tr><td>" + data[i].gene_id + "</td><td>"
+        $("#glmtable").append("<tr><td>" + data[i].gene_id + "</td><td>"
                                        + data[i].product + "</td></tr>");
       }
       $('#genelistmodal').modal();
