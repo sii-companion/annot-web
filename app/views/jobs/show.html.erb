@@ -4,61 +4,8 @@
 </div>
 <script>
 var phylocanvas;
+var vtable;
 </script>
-<div class="modal fade" id="jvennmodal" tabindex="-1" role="dialog" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="vtabledesc">Clusters</h4>
-      </div>
-      <div class="modal-body">
-        <div class="span3">
-          <table class="table table-striped" id="vtable">
-            <thead>
-              <tr>
-                <th data-field="id">Gene ID</th>
-                <th data-field="product">Product</th>
-                <th data-field="cluster">Cluster</th>
-              </tr>
-            </thead>
-          </table>
-        </div>
-        <div id="vdownloadlink-container" aria-hidden="true"><a id="vdownloadlink"><i class="glyphicon glyphicon-download-alt"></i> Download</a> as text file</div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="modal fade" id="genelistmodal" tabindex="-1" role="dialog" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="gltabledesc"></h4>
-      </div>
-      <div class="modal-body">
-        <div class="span3">
-          <table class="table table-striped" id="gltable">
-            <thead>
-              <tr>
-                <th data-field="id">Gene ID</th>
-                <th data-field="product">Product</th>
-              </tr>
-            </thead>
-          </table>
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-      </div>
-    </div>
-  </div>
-</div>
-
 <div class="modal fade" id="thumbmodal" tabindex="-1" role="dialog" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -180,11 +127,38 @@ var phylocanvas;
           </tr>
         </table>
       </div>
+      <h3 style="display: none" id='vtabledesc'></h3>
+      <div style="display: none" id="vtablediv">
+        <table  class="table table-striped display compact" cellspacing="0" id="vtable">
+          <thead>
+                <tr>
+                    <th>Cluster</th>
+                    <th>ID</th>
+                    <th>Product</th>
+                </tr>
+            </thead>
+        </table>
+      </div>
+      <div style="display: none" id="gltablediv">
+        <table class="table table-striped display compact" cellspacing="0" id="gltable">
+          <thead>
+                <tr>
+                    <th>Gene ID</th>
+                    <th>Sequence</th>
+                    <th>Start</th>
+                    <th>End</th>
+                    <th>Strand</th>
+                    <th>Product</th>
+                </tr>
+            </thead>
+        </table>
+      </div>
       <div>
         <%= link_to clusters_url(id: @job[:job_id]) do %>
             <i class="glyphicon glyphicon-download-alt"></i> Cluster assignments
        <% end %> as OrthoMCL 1.4 output file
       </div>
+
     </div>
   <% end %>
 
@@ -374,18 +348,26 @@ $(document).ready(function(){
       exporting: true,
       series: data,
       fnClickCallback: function() {
-        $('#vtable tbody').remove();
         var value = "";
         for (name in this.listnames) {
           value += this.listnames[name] + " ";
         }
+        value = value.trim();
         $.getJSON( "<%= @job[:job_id] %>/orths/cluster/" + value, function(data2) {
           $('#vtabledesc').text("Clusters in: " + value);
-          for(var i = 0; i < data2.length; i++) {
-            $("#vtable").append("<tr><td>" + data2[i].id + "</td><td>"
-                                           + data2[i].product + "</td><td>"
-                                           + data2[i].cluster + "</td></tr>");
-          }
+          $('#vtabledesc').show();
+          $('#gltablediv').hide();
+          $('#vtablediv').show();
+          var vtable = $('#vtable').DataTable( {
+            data: data2,
+            "columns": [
+                    { data: "cluster" },
+                    { data: "id" },
+                    { data: "product" }
+                ],
+            "destroy": true
+          });
+          vtable.columns.adjust().draw();
           if (data2.length > 0) {
             $('#vdownloadlink-container').show();
             $('#vdownloadlink').attr('href','<%= @job[:job_id] %>/orths/cluster/'+ value);
@@ -401,23 +383,43 @@ $(document).ready(function(){
     $('#ref-singletons').text(data.ref.length);
     $('#genome-singletons').text(data.this.length);
     $('.ref-singletons-link').click(function(event) {
-      $("#gltable").empty();
-      $('#gltabledesc').text("Singleton genes in reference");
-      for(var i = 0; i < data.ref.length; i++) {
-        $("#gltable").append("<tr><td>" + data.ref[i].gene_id + "</td><td>"
-                                       + data.ref[i].product + "</td></tr>");
-      }
-      $('#genelistmodal').modal();
+      $('#vtabledesc').text("Singleton genes in new genome");
+      $('#vtabledesc').show();
+      $('#vtablediv').hide();
+      $('#gltablediv').show();
+      var mytable = $('#gltable').DataTable( {
+            data: data.ref,
+            "columns": [
+                    { data: "gene_id" },
+                    { data: "seqid" },
+                    { data: "loc_start" },
+                    { data: "loc_end" },
+                    { data: "strand" },
+                    { data: "product" }
+                ],
+            "destroy": true
+          });
+      mytable.columns.adjust().draw();
       event.preventDefault();
     });
     $('.genome-singletons-link').click(function(event) {
-      $("#gltable").empty();
-      $('#gltabledesc').text("Singleton genes in new genome");
-      for(var i = 0; i < data.this.length; i++) {
-        $("#gltable").append("<tr><td>" + data.this[i].gene_id + "</td><td>"
-                                       + data.this[i].product + "</td></tr>");
-      }
-      $('#genelistmodal').modal();
+      $('#vtabledesc').text("Singleton genes in new genome");
+      $('#vtabledesc').show();
+      $('#vtablediv').hide();
+      $('#gltablediv').show();
+      var mytable = $('#gltable').DataTable( {
+            data: data.this,
+            "columns": [
+                    { data: "gene_id" },
+                    { data: "seqid" },
+                    { data: "loc_start" },
+                    { data: "loc_end" },
+                    { data: "strand" },
+                    { data: "product" }
+                ],
+            "destroy": true
+          });
+      mytable.columns.adjust().draw();
       event.preventDefault();
     });
   });
