@@ -27,6 +27,7 @@ class SequenceFilesController < ApplicationController
         @sequence_file.user = current_user
         if @sequence_file.save then
           @sequence_file.file.canonicalize_seq!
+          @sequence_file.save
         end
         format.js { render 'jobs/seq_file_line'}
       end
@@ -40,6 +41,10 @@ class SequenceFilesController < ApplicationController
       respond_to do |format|
         @sequence_file = SequenceFile.new(file_params)
         @sequence_file.user = current_user
+        if @sequence_file.save then
+          @sequence_file.file.canonicalize_seq!
+          @sequence_file.save
+        end
         format.html { redirect_to new_sequence_file_path }
         format.js
       end
