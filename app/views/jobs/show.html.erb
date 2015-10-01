@@ -137,62 +137,66 @@ var vtable;
   <% if @job[:finished_at] then %>
     <div id="orth" class="tab-pane fade">
       <div class="row">
+        <div style="display: none" id="orthoview">
         <p>Click on the numbers to view clusters and singleton gene lists.</p>
-        <table class="small" style="width:700px;">
-          <tr>
-          <td style="width:12%;">
-            <%= link_to '', {:class => 'genome-singletons-link'} do %>
-              <span id="genome-singletons"></span> singletons
-            <% end %>
-          </td>
-          <td style="width:76%;"><div id="jvenn-container"></div></td>
-          <td style="width:12%;">
-            <%= link_to '', {:class => 'ref-singletons-link'} do %>
-              <span id="ref-singletons"></span> singletons
-            <% end %>
-          </td>
-          </tr>
-        </table>
+          <table class="small" style="width:700px;">
+            <tr>
+            <td style="width:12%;">
+              <%= link_to '', {:class => 'genome-singletons-link'} do %>
+                <span id="genome-singletons"></span> singletons
+              <% end %>
+            </td>
+            <td style="width:76%;"><div id="jvenn-container"></div></td>
+            <td style="width:12%;">
+              <%= link_to '', {:class => 'ref-singletons-link'} do %>
+                <span id="ref-singletons"></span> singletons
+              <% end %>
+            </td>
+            </tr>
+          </table>
+        </div>
+        <div id="orthospinner">
+          <%= image_tag 'ajax-loader.gif' %>
+        </div>
+        <h3 style="display: none" id='vtabledesc'></h3>
+        <div style="display: none" id="vtablediv">
+          <table  class="table table-striped display compact" cellspacing="0" id="vtable">
+            <thead>
+                  <tr>
+                      <th>Cluster</th>
+                      <th>ID</th>
+                      <th>Product</th>
+                  </tr>
+              </thead>
+          </table>
+        </div>
+        <div style="display: none" id="gltablediv">
+          <table class="table table-striped display compact" cellspacing="0" id="gltable">
+            <thead>
+                  <tr>
+                      <th>Gene ID</th>
+                      <th>Sequence</th>
+                      <th>Start</th>
+                      <th>End</th>
+                      <th>Strand</th>
+                      <th>Product</th>
+                  </tr>
+              </thead>
+          </table>
+        </div>
+        <div>
+          <%= link_to clusters_url(id: @job[:job_id]) do %>
+              <i class="glyphicon glyphicon-download-alt"></i> Cluster assignments
+         <% end %> as OrthoMCL 1.4 output file
+        </div>
       </div>
-      <h3 style="display: none" id='vtabledesc'></h3>
-      <div style="display: none" id="vtablediv">
-        <table  class="table table-striped display compact" cellspacing="0" id="vtable">
-          <thead>
-                <tr>
-                    <th>Cluster</th>
-                    <th>ID</th>
-                    <th>Product</th>
-                </tr>
-            </thead>
-        </table>
-      </div>
-      <div style="display: none" id="gltablediv">
-        <table class="table table-striped display compact" cellspacing="0" id="gltable">
-          <thead>
-                <tr>
-                    <th>Gene ID</th>
-                    <th>Sequence</th>
-                    <th>Start</th>
-                    <th>End</th>
-                    <th>Strand</th>
-                    <th>Product</th>
-                </tr>
-            </thead>
-        </table>
-      </div>
-      <div>
-        <%= link_to clusters_url(id: @job[:job_id]) do %>
-            <i class="glyphicon glyphicon-download-alt"></i> Cluster assignments
-       <% end %> as OrthoMCL 1.4 output file
-      </div>
-
     </div>
   <% end %>
 
   <% if @job[:finished_at] then %>
     <div id="phylo" class="tab-pane fade">
       <div class="row">
-        <div>
+        <div id ="phyloview">
           <p>Click and drag in the diagram below to pan around. Use the mouse wheel to zoom in and out.</p>
           <div class="center-block col-md-4" style="float: none;">
             <form>
@@ -213,6 +217,9 @@ var vtable;
             </form>
           </div>
           <div id="PhyloCanvas" style="height: 400px; width=100%;"> </div>
+        </div>
+        <div id="phylospinner">
+          <%= image_tag 'ajax-loader.gif' %>
         </div>
       </div>
       <div class="row">
@@ -369,7 +376,10 @@ var vtable;
 
 <script>
 $(document).ready(function(){
+  $('#phyloview').hide();
   $.getJSON( "<%= @job[:job_id] %>/orths", function(data) {
+    $('#orthospinner').hide();
+    $('#orthoview').show();
     $('#jvenn-container').jvenn({
       displayStat: false,
       exporting: true,
@@ -401,7 +411,8 @@ $(document).ready(function(){
           } else {
             $('#vdownloadlink-container').hide();
           }
-          $('#jvennmodal').modal()
+          $('#orthospinner').hide();
+          $('#orthoview').show();
         });
       }
     });
@@ -453,14 +464,17 @@ $(document).ready(function(){
 
   var firstPhyloTabOpen = true;
   // hook into tab change events
-  $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+  $('a[data-toggle="tab"]').on('shown.bs.tab', function(e) {
     var target = $(e.target).attr("href");
     if (target == '#phylo' && firstPhyloTabOpen) {
-      phylocanvas = new PhyloCanvas.Tree('PhyloCanvas', { history_collapsed : true });
-      phylocanvas.setTreeType("rectangular");
-      phylocanvas.load('<%= @job[:job_id] %>/tree.nwk');
-      phylocanvas.draw();
-      //phylocanvas.setNodeColourAndShape('<%= @job[:prefix] %>', 'blue', 'x');
+      $.get('<%= @job[:job_id] %>/tree.nwk', function(tree) {
+        $('#phylospinner').hide();
+        $('#phyloview').show();
+        phylocanvas = new PhyloCanvas.Tree('PhyloCanvas', { history_collapsed : true });
+        phylocanvas.setTreeType("rectangular");
+        phylocanvas.load(tree);
+        phylocanvas.setNodeColourAndShape('<%= @job[:prefix] %>', '#0000FF', 'x');
+      });
       firstPhyloTabOpen = false;
     }
   });
