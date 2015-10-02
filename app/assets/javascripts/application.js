@@ -16,6 +16,5 @@
 //= require dataTables/bootstrap/3/jquery.dataTables.bootstrap
 //= require jquery.fileupload
 //= require jquery.remotipart
-//= require turbolinks
 //= require bootstrap
 //= require_tree .
