@@ -5,8 +5,8 @@ module SessionsHelper
 
   def remember(user)
     user.remember
-    cookies.permanent.signed[:user_id] = user.id
-    cookies.permanent[:remember_token] = user.remember_token
+    cookies.permanent.signed[:user_id] = { :value => user.id, :httponly => true }
+    cookies.permanent[:remember_token] = { :value => user.remember_token, :httponly => true }
   end
 
   def log_out
