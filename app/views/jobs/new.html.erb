@@ -1,6 +1,8 @@
-<h1>New annotation job</h1>
+<% content_for(:title, "New Companion job") %>
 
-<p>Please fill in the form below to specify the parameters for your annotation run.</p>
+<div class="page-header">
+  <h1>Create a new annotation job</h1>
+</div>
 
 <%= form_for @job do |f| %>
   <%= render 'errors', object: @job %>
@@ -10,27 +12,26 @@
     </div>
     <div class="panel-body">
       <div><p>First of all, please specify a free-text <b>name</b> for your new job. It should reflect the purpose of your job, and should probably include the name of the organism you are annotating.</p></div>
-    <div class="input-group">
-       <span class="input-group-addon" id="sizing-addon1">Job name</span>
-      <%= f.text_field :name, class: 'form-control', :aria => {:describedby => "sizing-addon1"}, required: true %>
-    </div>
-    <div style="padding-top: 20px;"><p> Please also give a short <b>species prefix</b> that will be used to name entities (such as genes, pseudochromosomes, etc.) generated during the annotation run. It should not contain spaces or special characters.</p>
-     <p> Example: <i>LFOO</i></p></div>
-    <div class="input-group">
-       <span class="input-group-addon" id="sizing-addon2">Species prefix</span>
-      <%= f.text_field :prefix, class: 'form-control', :placeholder => "LFOO", :aria => {:describedby => "sizing-addon2"}, required: true %>
-    </div>
-
+      <div class="input-group">
+         <span class="input-group-addon" id="sizing-addon1">Job name</span>
+        <%= f.text_field :name, class: 'form-control', :aria => {:describedby => "sizing-addon1"}, required: true %>
+      </div>
+      <div style="padding-top: 20px;"><p> Please also give a short <b>species prefix</b> that will be used to name entities (such as genes, pseudochromosomes, etc.) generated during the annotation run. It should not contain spaces or special characters.</p>
+       <p> Example: <i>LFOO</i></p></div>
+      <div class="input-group">
+         <span class="input-group-addon" id="sizing-addon2">Species prefix</span>
+        <%= f.text_field :prefix, class: 'form-control', :placeholder => "LFOO", :aria => {:describedby => "sizing-addon2"}, required: true %>
+      </div>
     </div>
   </div>
 
   <div class="panel panel-default">
     <div class="panel-heading">
-      <h3 class="panel-title">Step 2: Target sequence to annotate</h3>
+      <h3 class="panel-title">Step 2: Target sequence</h3>
     </div>
     <div class="panel-body">
-      <p>Please select a <b>target sequence file</b> to be annotated. If you have already uploaded sequence files before, please select one from the list below. If this is your first annotation run, choose a FASTA, EMBL or GenBank sequence file from your local filesystem using the 'Add new file...' button below, then select it after it has been added to the list. The file can be gzip- or bzip2-compressed, in this case it must have a <tt>.gz</tt> or <tt>.bz2</tt> suffix.</p>
-      <table class="table table-striped" id="file-list">
+      <p>Please select a <b>target sequence file</b> to be annotated. If you have already uploaded sequence files before, please select one from the list below. If this is your first annotation run, choose a FASTA, EMBL or GenBank sequence file from your local filesystem using the 'Add new sequence file...' button below, then select it after it has been added to the list. The file can be gzip- or bzip2-compressed, in this case it must have a <tt>.gz</tt> or <tt>.bz2</tt> suffix.</p>
+      <table class="table table-striped" id="seqfile-list">
           <thead>
               <tr>
                   <th></th>
@@ -39,30 +40,86 @@
               </tr>
           </thead>
           <tbody>
-    <% current_user.user_files.each do |ufile| %>
+    <% current_user.sequence_files.each do |sfile| %>
               <tr>
-                  <td> <%= f.radio_button :user_file_id, ufile[:id], required: true %></td>
-                  <td><%= ufile.file_name %></td>
-                  <td><%= number_to_human_size(ufile.file.size) %></td>
+                  <td> <%= f.radio_button :sequence_file_id, sfile[:id], required: true %></td>
+                  <td><%= sfile.file_name %></td>
+                  <td><%= number_to_human_size(sfile.file.size) %></td>
               </tr>
     <% end %>
-    <tr id="nosequences" <% if current_user.user_files.size > 0 then %> style="display: none;" <% end %>>
-      <td  colspan="3"> You do not have any sequence files at the moment. Use the 'Add new file...' button below to upload one. </td>
+    <tr id="snosequences" <% if current_user.sequence_files.size > 0 then %> style="display: none;" <% end %>>
+      <td  colspan="3"> You do not have any sequence files at the moment. Use the 'Add new sequence file...' button below to upload one. </td>
    </tr>
           </tbody>
       </table>
     <div class="form-group">
      <span class="btn btn-default btn-file">
-       <i class="glyphicon glyphicon-plus"></i> Add new file... <input type="file" name="user_file[file]" id="selectuserfile">
+       <i class="glyphicon glyphicon-plus"></i> Add new sequence file... <input type="file" name="sequence_file[file]" id="selectsequencefile">
      </span>
     </div>
-    <div id="progress-wrapper">
+    <div id="sprogress-wrapper">
       <div class="progress">
         <div class="progress-bar" role="progressbar">
           0%
         </div>
       </div>
     </div>
+    </div>
+  </div>
+
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h3 class="panel-title">Step 3: Transcript evidence</h3>
+    </div>
+    <div class="panel-body">
+      <div><p>The <i>Companion</i> pipeline can optionally make use of assembled
+            transcripts in the GTF format as created by Cufflinks.</p> </div>
+      <div class="form-group">
+        <div class="radio">
+          <label><%= f.radio_button :use_transcriptome_data, true, required: true, onClick: "$('#transcript-selection').slideDown();$('[id^=job_transcript_file_id]').prop('required', true);" %> Yes, use transcript evidence.</label>
+        </div>
+
+        <div id="transcript-selection">
+          <p>Please select a <b>transcript evidence file</b> to be used to improve the structural annotation. This file must be a GTF file with <tt>exon</tt> features, as delivered, for example, by the Cufflinks software. The sequence IDs in this file must correspond in name and coordinate system to the ones given in the target sequence file above.  If this is your first annotation run, choose a GTF file from your local filesystem using the 'Add new transcript file...' button below, then select it after it has been added to the list.</p>
+          <table class="table table-striped" id="transfile-list">
+            <thead>
+              <tr>
+                <th></th>
+                <th>Filename</th>
+                <th>Size</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% current_user.transcript_files.each do |tfile| %>
+                <tr>
+                  <td> <%= f.radio_button :transcript_file_id, tfile[:id], required: false %></td>
+                  <td><%= tfile.file_name %></td>
+                  <td><%= number_to_human_size(tfile.file.size) %></td>
+                </tr>
+              <% end %>
+              <tr id="tnosequences" <% if current_user.transcript_files.size > 0 then %> style="display: none;" <% end %>>
+                <td colspan="3"> You do not have any transcript files at the
+                  moment. Use the 'Add new transcript file...' button below to upload one. </td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="form-group">
+            <span class="btn btn-default btn-file">
+              <i class="glyphicon glyphicon-plus"></i> Add new transcript file... <input type="file" name="transcript_file[file]" id="selecttranscriptfile">
+            </span>
+          </div>
+          <div id="tprogress-wrapper">
+            <div class="progress">
+              <div class="progress-bar" role="progressbar">
+                0%
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="radio">
+          <label><%= f.radio_button :use_transcriptome_data, false, required: true, onClick: "$('#transcript-selection').slideUp();$('[id^=job_transcript_file_id]').prop('required', false);" %> No, do not use transcript evidence.</label>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -110,6 +167,15 @@
          <label><%= f.radio_button :do_exonerate, false, required: true %> No, do not use reference protein evidence.</label>
        </div>
      </div>
+     <div> <p>Do you want to perform pseudogene detection using frameshifted reference protein-DNA alignments? This will moderately increase your job's running time.</p> </div>
+     <div class="form-group">
+       <div class="radio">
+         <label><%= f.radio_button :do_pseudo, true, required: true %> Yes, perform pseudogene detection.</label>
+       </div>
+       <div class="radio">
+         <label><%= f.radio_button :do_pseudo, false, required: true %> No, do not try to call pseudogenes.</label>
+       </div>
+     </div>
      <div> <p>Do you want to use the <a href="http://nar.oxfordjournals.org/content/39/9/e57" target="_blank">Rapid Annotation Transfer Tool (RATT)</a> to directly map highly conserved genes from the reference to the target genome? This step can result in high quality gene models, but is not guaranteed to work for annotating genomes not closely related to the chosen reference.</p> </div>
      <div class="form-group">
        <div class="radio">
@@ -131,7 +197,7 @@
      <p> Example: <i>0.8</i></p></div>
     <div class="input-group">
        <span class="input-group-addon" id="sizing-addon2">AUGUSTUS score threshold</span>
-      <%= f.number_field :augustus_score_threshold, class: 'form-control', :aria => {:describedby => "sizing-addon2"}, required: true %>
+      <%= f.number_field :augustus_score_threshold, class: 'form-control', :aria => {:describedby => "sizing-addon2"}, required: true, :step => 'any' %>
     </div>
     <div style="padding-top: 20px;"><p>Please set the following values which are required for valid GAF output.</p>
      <p> Example: <i>5691 (for T. brucei)</i>, see <a href="http://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi" target="_blank">NCBI Taxonomy Browser</a>. The default is 5653 (Kinetoplastida).</p></div>
@@ -139,7 +205,7 @@
        <span class="input-group-addon" id="sizing-addon2">Taxon ID</span>
       <%= f.number_field :taxon_id, class: 'form-control', :aria => {:describedby => "sizing-addon2"}, required: true %>
     </div>
-    <p style="padding-top: 10px;"> Example: <i>Kingpin</i></p>
+    <p style="padding-top: 10px;"> Example: <i>Companion</i></p>
     <div class="input-group">
        <span class="input-group-addon" id="sizing-addon2">Database ID</span>
       <%= f.text_field :db_id, class: 'form-control', :aria => {:describedby => "sizing-addon2"}, required: true %>
@@ -147,7 +213,7 @@
   </div>
   </div>
 
-  <div class="panel panel-default">
+<!--  <div class="panel panel-default">
     <div class="panel-heading">
       <h3 class="panel-title">Caching</h3>
     </div>
@@ -162,39 +228,65 @@
      </div>
      </div>
     </div>
-  </div>
+  </div> -->
 
   <%= f.submit class: "btn btn-default" %>
 <% end %>
 
 <script type="text/javascript">
     $(document).ready(function() {
-      var user_file_form = $('#selectuserfile');
-      var wrapper = $('#progress-wrapper');
-      var nosequences = $('#nosequences');
-      var progress_bar = wrapper.find('.progress-bar');
-      var bitrate = wrapper.find('.bitrate');
-      wrapper.hide();
+      var sequence_file_form = $('#selectsequencefile');
+      var swrapper = $('#sprogress-wrapper');
+      var snosequences = $('#snosequences');
+      var sprogress_bar = swrapper.find('.progress-bar');
+      var sbitrate = swrapper.find('.bitrate');
+      swrapper.hide();
 
-      user_file_form.fileupload({dataType: 'script',
-        url: '<%= jobs_new_user_file_path %>' });
+      sequence_file_form.fileupload({dataType: 'script',
+        url: '<%= jobs_new_sequence_file_path %>' });
 
-      user_file_form.on('fileuploadstart', function() {
-        wrapper.show();
+      sequence_file_form.on('fileuploadstart', function() {
+        swrapper.show();
       });
 
-      user_file_form.on('fileuploaddone', function() {
-        wrapper.hide();
-        progress_bar.width(0);
+      sequence_file_form.on('fileuploaddone', function() {
+        swrapper.hide();
+        sprogress_bar.width(0);
       });
 
-      user_file_form.on('fileuploadprogressall', function (e, data) {
-        bitrate.text((data.bitrate / 1024).toFixed(2) + 'Kb/s');
+      sequence_file_form.on('fileuploadprogressall', function (e, data) {
+        sbitrate.text((data.bitrate / 1024).toFixed(2) + 'Kb/s');
         var progress = parseInt(data.loaded / data.total * 100, 10);
-        progress_bar.css('width', progress + '%').text(progress + '%');
+        sprogress_bar.css('width', progress + '%').text(progress + '%');
+      });
+
+      var transcript_file_form = $('#selecttranscriptfile');
+      var twrapper = $('#tprogress-wrapper');
+      var tnotranscripts = $('#tnosequences');
+      var tprogress_bar = twrapper.find('.progress-bar');
+      var tbitrate = twrapper.find('.bitrate');
+      twrapper.hide();
+
+      transcript_file_form.fileupload({dataType: 'script',
+        url: '<%= jobs_new_transcript_file_path %>' });
+
+      transcript_file_form.on('fileuploadstart', function() {
+        twrapper.show();
+      });
+
+      transcript_file_form.on('fileuploaddone', function() {
+        twrapper.hide();
+        tprogress_bar.width(0);
+      });
+
+      transcript_file_form.on('fileuploadprogressall', function (e, data) {
+        tbitrate.text((data.bitrate / 1024).toFixed(2) + 'Kb/s');
+        var progress = parseInt(data.loaded / data.total * 100, 10);
+        tprogress_bar.css('width', progress + '%').text(progress + '%');
       });
 
       $('#advanced-panel').slideUp();
+      $('#transcript-selection').slideUp();
       $('.panel-heading span.clickable').addClass('panel-collapsed');
       $('.panel-heading span.clickable').find('i').removeClass('glyphicon-chevron-up').addClass('glyphicon-chevron-down');
     });

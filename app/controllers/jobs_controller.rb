@@ -8,11 +8,13 @@ class JobsController < ApplicationController
       @job[:do_contiguate] = true
       @job[:do_exonerate] = false
       @job[:do_ratt] = true
+      @job[:do_pseudo] = true
+      @job[:use_transcriptome_data] = false
       @job[:no_resume] = false
       @job[:max_gene_length] = 20000
       @job[:augustus_score_threshold] = 0.8
-      @job[:taxon_id] = 5653                    # 'Kinetoplastida'
-      @job[:db_id] = "Kingpin"
+      @job[:taxon_id] = 5653
+      @job[:db_id] = "Companion"
       @job[:ratt_transfer_type] = 'Species'
       @user_file = UserFile.new
     end
@@ -24,19 +26,30 @@ class JobsController < ApplicationController
     else
       jobs = current_user.jobs
       @outjobs = []
-      puts @outjobs
+      @running = 0
       if jobs then
         jobs.each do |job|
+          jobname = Sidekiq::Status::get(job[:job_id], :name)
+          if not jobname then
+            jobname = job[:name]
+          end
           @outjobs <<  {:job_id => job[:job_id],
                         :id => job[:id],
                         :created_at => job[:created_at],
                         :started_at => job[:started_at],
                         :finished_at => job[:finished_at],
-                        :name => Sidekiq::Status::get(job[:job_id], :name),
+                        :name => jobname,
                         :queued => Sidekiq::Status::queued?(job[:job_id]),
                         :working => Sidekiq::Status::working?(job[:job_id]),
                         :failed => Sidekiq::Status::failed?(job[:job_id]),
                         :complete => Sidekiq::Status::complete?(job[:job_id])}
+          @running = @outjobs.reduce(0) do |a,job|
+            if job[:working] then
+              a + 1
+            else
+              a
+            end
+          end
         end
       end
     end
@@ -71,6 +84,9 @@ class JobsController < ApplicationController
         queue.each do |job|
           job.delete if job.jid == params[:id]
         end
+        if File.exist?("#{thisjob.job_directory}") then
+          FileUtils.rm_rf("#{thisjob.job_directory}")
+        end
       end
       redirect_to action: "index"
     end
@@ -85,7 +101,10 @@ class JobsController < ApplicationController
       @working = Sidekiq::Status::working?(params[:id])
       @failed = Sidekiq::Status::failed?(params[:id])
       @complete = Sidekiq::Status::complete?(params[:id])
-      @file = UserFile.find(@job[:user_file_id])
+      @sfile = SequenceFile.find(@job[:sequence_file_id])
+      if @job[:transcript_file_id] then
+        @tfile = TranscriptFile.find(@job[:transcript_file_id])
+      end
       @ref = Reference.find(@job[:reference_id])
     end
   end
@@ -99,9 +118,10 @@ class JobsController < ApplicationController
         render plain: "job #{params[:id]} not found or completed", status: 404
       else
         ref = Reference.find(job[:reference_id])
-        # XXX: this could be made more efficient
         cl_a = job.clusters.joins(:genes).where(:genes => {:species => job[:prefix]}).distinct.collect {|c| c[:cluster_id]}
+        #cl_a = Cluster.find_by_sql("select * from clusters c join clusters_genes cg on cg.cluster_id = c.id join genes g on g.id = cg.gene_id where c.job_id = '#{job[:id]}' and g.species = '#{job[:prefix]}'")
         cl_b = job.clusters.joins(:genes).where(:genes => {:species => ref[:abbr]}).distinct.collect {|c| c[:cluster_id]}
+        #cl_b = Cluster.find_by_sql("select * from clusters c join clusters_genes cg on cg.cluster_id = c.id join genes g on g.id = cg.gene_id where c.job_id = ''#{job[:id]}'' and g.species = '#{ref[:abbr]}'")
         a = cl_a - cl_b
         b = cl_b - cl_a
         ab = cl_a & cl_b
@@ -227,8 +247,10 @@ class JobsController < ApplicationController
   private
 
   def jobs_params(params)
-    params.require(:job).permit(:name, :user_file_id, :reference_id, :prefix, \
+    params.require(:job).permit(:name, :sequence_file_id, :transcript_file_id, \
+                                :reference_id, :prefix, :do_pseudo, \
                                 :do_contiguate, :do_exonerate, :do_ratt, \
+                                :use_transcriptome_data, \
                                 :max_gene_length, :augustus_score_threshold, \
                                 :taxon_id, :db_id, :ratt_transfer_type, \
                                 :no_resume)

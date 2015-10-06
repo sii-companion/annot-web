@@ -1,5 +1,13 @@
-  <h1>Jobs for <%= current_user[:name] %> <small> (<%= @outjobs.reduce(0) { |a,job| if job[:working] then a + 1 else a end } %> currently running)</small></h1>
-    <table style="white-space:nowrap;" class="table table-striped">
+  <% content_for(:title, "#{current_user[:fullname]}'s jobs") %>
+
+  <div class="page-header">
+    <h1><%= current_user[:fullname] %>'s jobs
+      <% if @running > 0 %>
+        <small> (<%= @running %> currently running)</small>
+      <% end %>
+    </h1>
+  </div>
+  <table style="white-space:nowrap;" class="table table-striped">
         <thead>
             <tr>
                 <th>Name</th>
@@ -26,7 +34,7 @@
                 </td>
                 <td style="padding-left: 20px; padding-right: 20px;">
                     <% if job[:queued] then %>
-                        <span class="label label-info">Queued</span>
+                        <span class="label label-default">Queued</span>
                     <% elsif job[:working] then %>
                         <span class="label label-info">Working</span>
                     <% elsif job[:failed] then %>
@@ -39,13 +47,13 @@
                 </td>
                 <td>
                    <div class="btn-group">
-                   <% if job[:job_id] then %>
+                   <% if job[:job_id] and not job[:working] then %>
                      <%= link_to job_path(id: job[:job_id]), method: :delete, data: { confirm: "Are you sure?" } do %>
                        <i class="glyphicon glyphicon-trash"></i> Delete
                      <% end %>&nbsp;
                      <% if job[:complete] then %>
                        <%= link_to job_path(id: job[:job_id]) do %>
-                         <i class="glyphicon glyphicon-eye-open"></i> Show
+                         <i class="glyphicon glyphicon-eye-open"></i> Results
                        <% end %>
                      <% end %>
                    <% end %>

@@ -1,6 +1,6 @@
 class StaticPagesController < ApplicationController
-  def about
-    render "about"
+  def faq
+    render "faq"
   end
 
   def examples

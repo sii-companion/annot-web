@@ -7,7 +7,7 @@ Rails.application.routes.draw do
   root 'welcome#index'
 
   # static pages
-  get 'about' => 'static_pages#about'
+  get 'faq' => 'static_pages#faq'
   get 'examples' => 'static_pages#examples'
   get 'how_it_works' => 'static_pages#how_it_works'
 
@@ -22,7 +22,8 @@ Rails.application.routes.draw do
 
   # jobs
   resources :jobs
-  post 'jobs/new_user_file' => 'user_files#create_for_jobform'
+  post 'jobs/new_sequence_file' => 'sequence_files#create_for_jobform'
+  post 'jobs/new_transcript_file' => 'transcript_files#create_for_jobform'
   get 'jobs/:id/orths' => 'jobs#orths'
   get 'jobs/:id/orths/cluster/:cluster' => 'jobs#orths_for_cluster', :constraints => { :cluster => /.*/ }
   get 'jobs/:id/clusters' => 'jobs#get_clusters', as: :clusters

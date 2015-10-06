@@ -1,7 +1,7 @@
 # config valid only for current version of Capistrano
 lock '3.4.0'
 
-set :application, 'Kingpin'
+set :application, 'Companion'
 set :repo_url, 'git@example.com:me/my_repo.git'
 
 # Default branch is :master

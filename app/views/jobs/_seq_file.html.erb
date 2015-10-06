@@ -1,0 +1,5 @@
+<tr>
+    <td> <%= radio_button :job, :sequence_file_id, @sequence_file[:id], required: true %>
+    <td><%= @sequence_file.file_name %></td>
+    <td><%= number_to_human_size(@sequence_file.file.size) %></td>
+</tr>

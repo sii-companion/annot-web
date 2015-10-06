@@ -6,12 +6,9 @@
   <body>
     <h1>Your job has started!</h1>
     <p>
-      Dear <%= @user[:fullname] %>, your job "<%= @job[:name] %>" has just been
-      started! Please expect another email once the job has finished. <br>
+      Dear <%= @user[:fullname] %>, your job "<%= @job[:name] %>" has just
+      started running! Please expect another email once the job has finished. <br>
     </p>
-    <p>
-      To login to the site, just follow <%= link_to "this link", jobs_url %>.
-    </p>
-    <p>Thanks for using the software and have a great day!</p>
+    <p>Thanks for using <i>Companion</i> and have a great day!</p>
   </body>
 </html>

@@ -2,56 +2,40 @@
                 <div class="panel panel-info">
                     <div class="panel-heading">
                         <div class="panel-title">Sign Up</div>
-                        <div style="float:right; font-size: 85%; position: relative; top:-10px"><a id="signinlink" href="#" onclick="$('#signupbox').hide(); $('#loginbox').show()">Sign In</a></div>
                     </div>
                     <div class="panel-body" >
                         <%= form_for(@user, :id => "signupform", :class => "form-horizontal") do |f| %>
                             <%= render 'shared/errors' %>
 
-                            <div class="form-group">
-                                <label for="name" class="col-md-3 control-label">User name</label>
-                                <div class="col-md-9">
-                                    <%= f.text_field :name, :class => "form-control", :placeholder => "User name" %>
-                                </div>
+                            Choose a short user name, e.g. <tt>jsmith</tt>:
+                            <div style="margin-bottom: 25px" class="input-group">
+                                <span class="input-group-addon">User name</span>
+                                <%= f.text_field :name, :class => "form-control", :placeholder => "username" %>
                             </div>
-
-
-                            <div class="form-group">
-                                <label for="email" class="col-md-3 control-label">Email</label>
-                                <div class="col-md-9">
-                                    <%= f.text_field :email, :class => "form-control", :placeholder => "Email address" %>
-                                </div>
+                            This username will be used for future logins into this site. If you like, you can also give us your full name:
+                            <div style="margin-bottom: 25px" class="input-group">
+                                <span class="input-group-addon">Full name</span>
+                                <%= f.text_field :fullname, :class => "form-control", :placeholder => "full name" %>
                             </div>
-
-                            <div class="form-group">
-                                <label for="fullname" class="col-md-3 control-label">Full Name</label>
-                                <div class="col-md-9">
-                                    <%= f.text_field :fullname, :class => "form-control", :placeholder => "Full Name" %>
-                                </div>
+                            To notify you of the state of your job, we also need your email address:
+                            <div style="margin-bottom: 25px" class="input-group">
+                                <span class="input-group-addon">Email address</span>
+                                <%= f.text_field :email, :class => "form-control", :placeholder => "me@example.com" %>
                             </div>
-                            <div class="form-group">
-                                <label for="institution" class="col-md-3 control-label">Institution</label>
-                                <div class="col-md-9">
-                                    <%= f.text_field :institution, :class => "form-control", :placeholder => "Institution" %>
-                                </div>
+                            Please choose a password:
+                            <div style="margin-bottom: 25px" class="input-group">
+                                <span class="input-group-addon">Password</span>
+                                <%= f.password_field :password, :class => "form-control", :placeholder => "password" %>
                             </div>
-                            <div class="form-group">
-                                <label for="password" class="col-md-3 control-label">Password</label>
-                                <div class="col-md-9">
-                                    <%= f.password_field :password, :class => "form-control", :placeholder => "Password" %>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label for="password" class="col-md-3 control-label">Password confirmation</label>
-                                <div class="col-md-9">
-                                    <%= f.password_field :password_confirmation, :class => "form-control", :placeholder => "Password (again)" %>
-                                </div>
+                            Please repeat your password for confirmation:
+                            <div style="margin-bottom: 25px" class="input-group">
+                                <span class="input-group-addon">Password</span>
+                                <%= f.password_field :password_confirmation, :class => "form-control", :placeholder => "password (again)" %>
                             </div>
 
                             <div class="form-group">
-                                <!-- Button -->
                                 <div class="col-md-offset-3 col-md-9">
-                                    <%= button_tag( :class => "btn btn-info") do %>
+                                    <%= button_tag( :class => "btn btn-default") do %>
                                       <i class="glyphicon glyphicon-user"></i> Sign up
                                     <% end %>
                                 </div>
