@@ -235,6 +235,8 @@ class HardWorker
       # send finish notification email
       JobMailer.finish_success_job_email(job.user, job).deliver_later
     rescue => e
+      job[:finished_at] = DateTime.now
+      job.save!
       # send error notification email
       JobMailer.finish_failure_job_email(job.user, job).deliver_later
       raise e

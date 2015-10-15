@@ -40,16 +40,7 @@
               </tr>
           </thead>
           <tbody>
-    <% current_user.sequence_files.each do |sfile| %>
-              <tr>
-                  <td> <%= f.radio_button :sequence_file_id, sfile[:id], required: true %></td>
-                  <td><%= sfile.file_name %></td>
-                  <td><%= number_to_human_size(sfile.file.size) %></td>
-              </tr>
-    <% end %>
-    <tr id="snosequences" <% if current_user.sequence_files.size > 0 then %> style="display: none;" <% end %>>
-      <td  colspan="3"> You do not have any sequence files at the moment. Use the 'Add new sequence file...' button below to upload one. </td>
-   </tr>
+
           </tbody>
       </table>
     <div class="form-group">
@@ -90,17 +81,6 @@
               </tr>
             </thead>
             <tbody>
-              <% current_user.transcript_files.each do |tfile| %>
-                <tr>
-                  <td> <%= f.radio_button :transcript_file_id, tfile[:id], required: false %></td>
-                  <td><%= tfile.file_name %></td>
-                  <td><%= number_to_human_size(tfile.file.size) %></td>
-                </tr>
-              <% end %>
-              <tr id="tnosequences" <% if current_user.transcript_files.size > 0 then %> style="display: none;" <% end %>>
-                <td colspan="3"> You do not have any transcript files at the
-                  moment. Use the 'Add new transcript file...' button below to upload one. </td>
-              </tr>
             </tbody>
           </table>
           <div class="form-group">
@@ -230,7 +210,9 @@
     </div>
   </div> -->
 
-  <%= f.submit class: "btn btn-default" %>
+  <%= recaptcha_tags %><br />
+
+  <%= f.submit "Submit job", class: "btn btn-default"  %>
 <% end %>
 
 <script type="text/javascript">
