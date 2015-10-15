@@ -1,9 +1,5 @@
 Rails.application.routes.draw do
 
-  # The priority is based upon order of creation: first created -> highest priority.
-  # See how all your routes lay out with "rake routes".
-
-  # You can have the root of your site routed with "root"
   root 'welcome#index'
 
   # static pages
@@ -24,6 +20,8 @@ Rails.application.routes.draw do
   resources :jobs
   post 'jobs/new_sequence_file' => 'sequence_files#create_for_jobform'
   post 'jobs/new_transcript_file' => 'transcript_files#create_for_jobform'
+  get 'job/:id' => 'jobs#show'
+  get 'jobs/:id' => 'jobs#show'
   get 'jobs/:id/orths' => 'jobs#orths'
   get 'jobs/:id/orths/cluster/:cluster' => 'jobs#orths_for_cluster', :constraints => { :cluster => /.*/ }
   get 'jobs/:id/clusters' => 'jobs#get_clusters', as: :clusters

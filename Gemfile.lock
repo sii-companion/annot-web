@@ -175,6 +175,7 @@ GEM
     rake (10.4.2)
     rdoc (4.2.0)
       json (~> 1.4)
+    recaptcha (0.4.0)
     redis (3.2.1)
     redis-namespace (1.5.2)
       redis (~> 3.0, >= 3.0.4)
@@ -245,6 +246,7 @@ DEPENDENCIES
   open4
   rack-cache
   rails (>= 4.2.0)
+  recaptcha
   remotipart (~> 1.2)
   sass-rails (>= 3.2)
   sdoc (~> 0.4.0)

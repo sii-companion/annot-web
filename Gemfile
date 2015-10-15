@@ -87,3 +87,6 @@ gem 'json'
 
 # Production replacement for WEBrick
 gem 'thin'
+
+# Captcha
+gem "recaptcha", :require => "recaptcha/rails"

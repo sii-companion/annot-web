@@ -1,7 +1,7 @@
-  <% content_for(:title, "#{current_user[:fullname]}'s jobs") %>
+  <% content_for(:title, "Jobs") %>
 
   <div class="page-header">
-    <h1><%= current_user[:fullname] %>'s jobs
+    <h1>List of Companion jobs
       <% if @running > 0 %>
         <small> (<%= @running %> currently running)</small>
       <% end %>
@@ -47,14 +47,12 @@
                 </td>
                 <td>
                    <div class="btn-group">
-                   <% if job[:job_id] and not job[:working] then %>
+                   <% if job[:job_id] then %>
                      <%= link_to job_path(id: job[:job_id]), method: :delete, data: { confirm: "Are you sure?" } do %>
                        <i class="glyphicon glyphicon-trash"></i> Delete
                      <% end %>&nbsp;
-                     <% if job[:complete] then %>
-                       <%= link_to job_path(id: job[:job_id]) do %>
-                         <i class="glyphicon glyphicon-eye-open"></i> Results
-                       <% end %>
+                     <%= link_to job_path(id: job[:job_id]) do %>
+                       <i class="glyphicon glyphicon-eye-open"></i> Results
                      <% end %>
                    <% end %>
                    </div>

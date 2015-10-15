@@ -1,4 +1,4 @@
-<% content_for(:title, "#{@job[:name]} results (#{@job.genome_stat[:nof_genes]} genes)") %>
+<% content_for(:title, "#{@job[:name]} results") %>
 <div class="page-header">
   <h1><%= @job[:name] %><span class="small"> (<%= @job[:prefix] %>)</span></h1>
 </div>
@@ -44,11 +44,17 @@ var vtable;
 
 <div class="row">
   <p>This job was submitted <b><%= distance_of_time_in_words(Time.now,@job[:created_at]) %></b> ago
-    <% if @job[:finished_at] then %>
+    <% if @complete then %>
       and ran for <b><%= distance_of_time_in_words(@job[:started_at],@job[:finished_at])%></b>, finally finishing at <b><%= @job[:finished_at] %></b>.
+    <% elsif @working then %>
+      and is running now for <b><%= distance_of_time_in_words(Time.now,@job[:created_at]) %></b>.
+    <% elsif @failed then %>
+      and failed <b><%= distance_of_time_in_words(Time.now,@job[:created_at]) %></b> ago.
     <% end %>
   </p>
 </div>
+
+<%  if @job[:finished_at] then %>
 
 <div style="margin-top:20px;">&nbsp;</div>
 
@@ -503,3 +509,5 @@ $(document).ready(function(){
   });
 });
 </script>
+
+<% end %>
