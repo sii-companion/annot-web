@@ -51,6 +51,9 @@ class HardWorker
   end
 
   def perform(id)
+    # wait a bit
+    Kernel.sleep(2)
+
     job = Job.find(id)
     store name: job[:name]
     store job_id: @jid
@@ -64,7 +67,9 @@ class HardWorker
     job.save!
 
     # send job start notification email
-    JobMailer.start_job_email(job.user, job).deliver_later
+    if job[:email].length > 0 then
+      JobMailer.start_job_email(job).deliver_later
+    end
 
     begin
       # make necessary run directories
@@ -72,14 +77,14 @@ class HardWorker
 
       # prepare starting Sidekiq job
       cf = JobsHelper::ConfigFactory.new
-      uf = SequenceFile.find(job[:sequence_file_id])
+      uf = job.sequence_file
       cf.use_target_seq(uf)
       r = Reference.find(job[:reference_id])
       cf.select_reference(r)
       cf.use_prefix(job[:prefix])
       cf.do_contiguation(job[:do_contiguate])
       if job[:use_transcriptome_data] then
-        tf = TranscriptFile.find(job[:transcript_file_id])
+        tf = job.transcript_file
         if tf then
           cf.use_transcript_file(tf)
         end
@@ -198,8 +203,11 @@ class HardWorker
             # HACK! needs to be done correctly for all possible transcript namings!
             memb_id = memb[0].gsub(/(:.+$|\.\d+$|\.mRNA$)/,"")
             g = Gene.where(["gene_id LIKE ? AND (job_id = #{job[:id]} OR job_id IS NULL)", "#{memb_id}%"]).take
-            raise "#{memb[0]}: #{memb_id} (with job ID #{job[:id]}) not found!" unless g
-            c.genes << g
+            if g then
+              c.genes << g
+            else
+              STDERR.puts("#{memb[0]}: #{memb_id} (with job ID #{job[:id]}) not found!")
+            end
           end
           c.save!
         end
@@ -218,8 +226,11 @@ class HardWorker
             # HACK! needs to be done correctly for all possible transcript namings!
             memb_id = memb.gsub(/(:[^:]+$|\.\d+$)/,"")
             g = Gene.where(["gene_id LIKE ? AND (job_id = #{job[:id]} OR job_id IS NULL)", "#{memb_id}%"]).take
-            raise "#{memb}: #{memb_id} (with job ID #{job[:id]}) not found!" unless g
-            t.genes << g
+            if g then
+              t.genes << g
+            else
+              STDERR.puts("#{memb}: #{memb_id} (with job ID #{job[:id]}) not found!")
+            end
           end
           t.save!
         end
@@ -233,12 +244,18 @@ class HardWorker
       FileUtils.rm_rf(job.work_directory)
 
       # send finish notification email
-      JobMailer.finish_success_job_email(job.user, job).deliver_later
+      if job[:email].length > 0 then
+        JobMailer.finish_success_job_email(job).deliver_later
+      end
     rescue => e
       job[:finished_at] = DateTime.now
+      job[:stderr] = e.to_s
+
       job.save!
       # send error notification email
-      JobMailer.finish_failure_job_email(job.user, job).deliver_later
+      if job[:email].length > 0 then
+        JobMailer.finish_failure_job_email(job).deliver_later
+      end
       raise e
     end
   end

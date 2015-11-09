@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150914114728) do
+ActiveRecord::Schema.define(version: 20151016152810) do
 
   create_table "circos_images", force: :cascade do |t|
     t.string   "file_uid"
@@ -130,6 +130,7 @@ ActiveRecord::Schema.define(version: 20150914114728) do
     t.integer  "transcript_file_id"
     t.boolean  "use_transcriptome_data"
     t.boolean  "do_pseudo"
+    t.string   "email"
   end
 
   create_table "result_files", force: :cascade do |t|
@@ -155,6 +156,7 @@ ActiveRecord::Schema.define(version: 20150914114728) do
     t.string   "file_uid"
     t.string   "file_name"
     t.string   "type"
+    t.integer  "job_id"
   end
 
   create_table "users", force: :cascade do |t|

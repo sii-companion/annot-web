@@ -9,6 +9,10 @@ class Job < ActiveRecord::Base
     has_many :genes
     has_many :clusters
     has_one :tree
+    validates_format_of :email, :with => /\A\z|\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\z/i
+    validates_presence_of :sequence_file
+    accepts_nested_attributes_for :sequence_file, allow_destroy: true
+    accepts_nested_attributes_for :transcript_file, allow_destroy: true
 
     def job_directory
       if not self[:job_id] then

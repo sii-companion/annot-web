@@ -12,3 +12,13 @@ Rails.application.config.assets.version = '1.0'
 
 Rails.application.config.assets.precompile += %w( jquery-ui/ui-bg_flat_75_ffffff_40x100.png jquery-ui/animated-overlay.gif jquery-ui/ui-bg_flat_0_aaaaaa_40x100.png jquery-ui/ui-bg_glass_55_fbf9ee_1x400.png jquery-ui/ui-bg_glass_65_ffffff_1x400.png jquery-ui/ui-bg_glass_75_dadada_1x400.png jquery-ui/ui-bg_glass_75_e6e6e6_1x400.png jquery-ui/ui-bg_glass_95_fef1ec_1x400.png jquery-ui/ui-bg_highlight-soft_75_cccccc_1x100.png jquery-ui/ui-icons_222222_256x240.png jquery-ui/ui-icons_2e83ff_256x240.png jquery-ui/ui-icons_454545_256x240.png jquery-ui/ui-icons_888888_256x240.png jquery-ui/ui-icons_cd0a0a_256x240.png )
 Rails.application.config.assets.precompile += %w( jquery.iframe-transport.js )
+Rails.application.config.assets.precompile += %w( iconic_stroke.eot )
+Rails.application.config.assets.precompile += %w( iconic_stroke.woff )
+Rails.application.config.assets.precompile += %w( iconic_stroke.ttf )
+Rails.application.config.assets.precompile += %w( iconic_stroke.svg )
+Rails.application.config.assets.precompile += %w( iconic_stroke.otf )
+Rails.application.config.assets.precompile += %w( iconic_fill.eot )
+Rails.application.config.assets.precompile += %w( iconic_fill.woff )
+Rails.application.config.assets.precompile += %w( iconic_fill.ttf )
+Rails.application.config.assets.precompile += %w( iconic_fill.svg )
+Rails.application.config.assets.precompile += %w( iconic_fill.otf )

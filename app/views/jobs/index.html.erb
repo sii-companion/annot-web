@@ -2,7 +2,7 @@
 
   <div class="page-header">
     <h1>List of Companion jobs
-      <% if @running > 0 %>
+      <% if @running and @running > 0 %>
         <small> (<%= @running %> currently running)</small>
       <% end %>
     </h1>

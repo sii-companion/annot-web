@@ -30,31 +30,10 @@
       <h3 class="panel-title">Step 2: Target sequence</h3>
     </div>
     <div class="panel-body">
-      <p>Please select a <b>target sequence file</b> to be annotated. If you have already uploaded sequence files before, please select one from the list below. If this is your first annotation run, choose a FASTA, EMBL or GenBank sequence file from your local filesystem using the 'Add new sequence file...' button below, then select it after it has been added to the list. The file can be gzip- or bzip2-compressed, in this case it must have a <tt>.gz</tt> or <tt>.bz2</tt> suffix.</p>
-      <table class="table table-striped" id="seqfile-list">
-          <thead>
-              <tr>
-                  <th></th>
-                  <th>Filename</th>
-                  <th>Size</th>
-              </tr>
-          </thead>
-          <tbody>
-
-          </tbody>
-      </table>
-    <div class="form-group">
-     <span class="btn btn-default btn-file">
-       <i class="glyphicon glyphicon-plus"></i> Add new sequence file... <input type="file" name="sequence_file[file]" id="selectsequencefile">
-     </span>
-    </div>
-    <div id="sprogress-wrapper">
-      <div class="progress">
-        <div class="progress-bar" role="progressbar">
-          0%
-        </div>
-      </div>
-    </div>
+      <p>Please upload a <b>target sequence file</b> to be annotated from your local filesystem using the 'Upload sequence file' button below. The file (FASTA, EMBL or GenBank format) can be gzip- or bzip2-compressed. In this case it must have a <tt>.gz</tt> or <tt>.bz2</tt> suffix.</p>
+      <%= f.fields_for :sequence_file do |s_f| %>
+        <%= s_f.file_field :file, required: true %>
+      <% end %>
     </div>
   </div>
 
@@ -72,30 +51,11 @@
 
         <div id="transcript-selection">
           <p>Please select a <b>transcript evidence file</b> to be used to improve the structural annotation. This file must be a GTF file with <tt>exon</tt> features, as delivered, for example, by the Cufflinks software. The sequence IDs in this file must correspond in name and coordinate system to the ones given in the target sequence file above.  If this is your first annotation run, choose a GTF file from your local filesystem using the 'Add new transcript file...' button below, then select it after it has been added to the list.</p>
-          <table class="table table-striped" id="transfile-list">
-            <thead>
-              <tr>
-                <th></th>
-                <th>Filename</th>
-                <th>Size</th>
-              </tr>
-            </thead>
-            <tbody>
-            </tbody>
-          </table>
-          <div class="form-group">
-            <span class="btn btn-default btn-file">
-              <i class="glyphicon glyphicon-plus"></i> Add new transcript file... <input type="file" name="transcript_file[file]" id="selecttranscriptfile">
-            </span>
-          </div>
-          <div id="tprogress-wrapper">
-            <div class="progress">
-              <div class="progress-bar" role="progressbar">
-                0%
-              </div>
-            </div>
-          </div>
+          <%= f.fields_for :transcript_file do |t_f| %>
+            <%= t_f.file_field :file %>
+          <% end %>
         </div>
+
         <div class="radio">
           <label><%= f.radio_button :use_transcriptome_data, false, required: true, onClick: "$('#transcript-selection').slideUp();$('[id^=job_transcript_file_id]').prop('required', false);" %> No, do not use transcript evidence.</label>
         </div>
@@ -193,6 +153,19 @@
   </div>
   </div>
 
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h3 class="panel-title">Your contact information (optional)</h3>
+    </div>
+    <div class="panel-body">
+      <div><p>You can leave your email address if you want to be notified when your job starts and finishes. This is absolutely optional, if you choose not to share your email address, you can always manually check the status of your job using a private link provided by us after submission.</p></div>
+      <div class="input-group">
+         <span class="input-group-addon" id="sizing-addon1">Email</span>
+        <%= f.text_field :email, class: 'form-control', :aria => {:describedby => "sizing-addon1"}, required: false %>
+      </div>
+    </div>
+  </div>
+
 <!--  <div class="panel panel-default">
     <div class="panel-heading">
       <h3 class="panel-title">Caching</h3>
@@ -210,6 +183,8 @@
     </div>
   </div> -->
 
+  <div><p>To protect the service from automated bots, please prove that you are a human by ticking the box
+     below.</p></div>
   <%= recaptcha_tags %><br />
 
   <%= f.submit "Submit job", class: "btn btn-default"  %>

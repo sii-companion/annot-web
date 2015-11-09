@@ -13,34 +13,42 @@ class JobsController < ApplicationController
     @job[:taxon_id] = 5653
     @job[:db_id] = "Companion"
     @job[:ratt_transfer_type] = 'Species'
-    @user_file = UserFile.new
+    @job.build_sequence_file
+    @job.build_transcript_file
   end
 
   def index
-    jobs = Job.all
-    @outjobs = []
-    @running = 0
-    if jobs then
-      jobs.each do |job|
-        jobname = Sidekiq::Status::get(job[:job_id], :name)
-        if not jobname then
-          jobname = job[:name]
-        end
-        @outjobs <<  {:job_id => job[:job_id],
-                      :id => job[:id],
-                      :created_at => job[:created_at],
-                      :started_at => job[:started_at],
-                      :finished_at => job[:finished_at],
-                      :name => jobname,
-                      :queued => Sidekiq::Status::queued?(job[:job_id]),
-                      :working => Sidekiq::Status::working?(job[:job_id]),
-                      :failed => Sidekiq::Status::failed?(job[:job_id]),
-                      :complete => Sidekiq::Status::complete?(job[:job_id])}
-        @running = @outjobs.reduce(0) do |a,job|
-          if job[:working] then
-            a + 1
-          else
-            a
+    if !logged_in? then
+      flash[:info] = "You do not have permission to view all jobs in the " + \
+                     "queue. Please access your job using the URL you were " + \
+                     "given or the job ID."
+      redirect_to :welcome
+    else
+      jobs = Job.all
+      @outjobs = []
+      @running = 0
+      if jobs then
+        jobs.each do |job|
+          jobname = Sidekiq::Status::get(job[:job_id], :name)
+          if not jobname then
+            jobname = job[:name]
+          end
+          @outjobs <<  {:job_id => job[:job_id],
+                        :id => job[:id],
+                        :created_at => job[:created_at],
+                        :started_at => job[:started_at],
+                        :finished_at => job[:finished_at],
+                        :name => jobname,
+                        :queued => Sidekiq::Status::queued?(job[:job_id]),
+                        :working => Sidekiq::Status::working?(job[:job_id]),
+                        :failed => Sidekiq::Status::failed?(job[:job_id]),
+                        :complete => Sidekiq::Status::complete?(job[:job_id])}
+          @running = @outjobs.reduce(0) do |a,job|
+            if job[:working] then
+              a + 1
+            else
+              a
+            end
           end
         end
       end
@@ -48,29 +56,51 @@ class JobsController < ApplicationController
   end
 
   def create
-    @job = Job.create(jobs_params(params))
-    if verify_recaptcha(:model => @job, :message => "Oh! It's error with reCAPTCHA!") then
-      @job.save
+    @job = Job.new(jobs_params(params))
+    if verify_recaptcha(:model => @job, :message => "The captcha you entered was invalid.") && @job.save then
       puts @job.inspect
+      STDOUT.flush
+      file = @job.sequence_file
+      file.file.canonicalize_seq!
       # start job and record Sidekiq ID
       jobid = HardWorker.perform_async(@job[:id])
       @job[:job_id] = jobid
       @job.save!
+      url = Rails.application.routes.url_helpers.job_url(id: @job[:job_id], :host => request.host_with_port)
+      flash[:success] = "Your job with ID <b>#{jobid}</b> has just been successfully
+           created and enqueued. You can go back to this page and check the
+           status of your job using the following URL:
+           <a href=\"#{url}\">#{url}</a>."
       redirect_to job_path(id: @job[:job_id])
     else
       render 'new'
     end
   end
 
-  def update
-    # these do the same
-    create
-  end
-
   def destroy
     thisjob = Job.find_by(:job_id => params[:id])
     if thisjob then
-      flash[:info] = "Deleted job #{thisjob[:name]}"
+      flash[:info] = "Job '#{thisjob[:name]}' was deleted."
+      thisjob.destroy
+      queue = Sidekiq::Queue.new
+      queue.each do |job|
+        job.delete if job.jid == params[:id]
+      end
+      if File.exist?("#{thisjob.job_directory}") then
+        FileUtils.rm_rf("#{thisjob.job_directory}")
+      end
+    end
+    if logged_in? then
+      redirect_to :jobs
+    else
+      redirect_to "welcome/index"
+    end
+  end
+
+  def destroy_by_int_id
+    thisjob = Job.find_by(:job_id => params[:id])
+    if thisjob then
+      flash.now[:info] = "Deleted job #{thisjob[:name]}"
       thisjob.destroy
       queue = Sidekiq::Queue.new
       queue.each do |job|
@@ -86,19 +116,19 @@ class JobsController < ApplicationController
   def show
     @job = Job.find_by(:job_id => params[:id])
     if not @job then
-      render plain: "job #{params[:id]} not found", status: 404
+      flash.now[:danger] = "The job with ID '#{params[:id]}' could not be found."
+      render "welcome/index" , status: 404
     else
       @queued = Sidekiq::Status::queued?(params[:id])
       @working = Sidekiq::Status::working?(params[:id])
       @failed = Sidekiq::Status::failed?(params[:id])
       @complete = Sidekiq::Status::complete?(params[:id])
-      if @job[:sequence_file_id] then
-        @sfile = SequenceFile.find(@job[:sequence_file_id])
-      end
-      if @job[:transcript_file_id] then
-        @tfile = TranscriptFile.find(@job[:transcript_file_id])
-      end
       @ref = Reference.find(@job[:reference_id])
+      if @failed then
+        render 'jobs/show_failed'
+      else
+        render 'jobs/show'
+      end
     end
   end
 
@@ -216,13 +246,14 @@ class JobsController < ApplicationController
   private
 
   def jobs_params(params)
-    params.require(:job).permit(:name, :sequence_file_id, :transcript_file_id, \
+    params.require(:job).permit(:name, :sequence_file, :transcript_file_id, \
                                 :reference_id, :prefix, :do_pseudo, \
                                 :do_contiguate, :do_exonerate, :do_ratt, \
                                 :use_transcriptome_data, \
-                                :max_gene_length, :augustus_score_threshold, \
+                                :max_gene_length, :augustus_score_threshold , \
                                 :taxon_id, :db_id, :ratt_transfer_type, \
-                                :no_resume)
+                                :no_resume, :email, sequence_file_attributes: [:id, :file],
+                                transcript_file_attributes: [:id, :file])
 
   end
 end
