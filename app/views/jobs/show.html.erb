@@ -211,7 +211,7 @@ var vtable;
     </div>
   <% end %>
 
-  <% if @job[:finished_at] then %>
+  <% if @job[:finished_at] and @job.tree then %>
     <div id="phylo" class="tab-pane fade">
       <div id ="phyloview">
         <p>Click and drag in the diagram below to pan around. Use the mouse wheel to zoom in and out.</p>
