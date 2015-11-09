@@ -64,12 +64,13 @@ group :production, :development do
 end
 
 gem 'bootstrap-sass', '~> 3.3.3'
-gem 'remotipart', '~> 1.2'
+# gem 'remotipart', '~> 1.2'
 gem 'autoprefixer-rails'
 
 # JQuery extensions
 gem 'jquery-ui-rails'
-gem 'jquery.fileupload-rails'
+# gem 'jquery.fileupload-rails'
+gem 'jasny_bootstrap_extension_rails'
 
 # OAuth2 (e.g. Google)
 #gem 'omniauth', '~> 1.2.2'
