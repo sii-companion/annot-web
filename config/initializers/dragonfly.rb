@@ -4,6 +4,7 @@ class GFF3Analyser
   def call(content)
     path = content.path
     rval = system("gt gff3 -retainids -tidy -show no #{path}")
+    puts "GFF3 is valid: " + rval.to_s
     rval
   end
 end
@@ -12,7 +13,7 @@ class SequenceValidAnalyser
   def call(content)
     path = content.path
     rval = system("gt convertseq -noseq #{path}")
-    puts rval
+    puts "sequence #{path} is valid: #{rval.to_s}"
     rval
   end
 end
