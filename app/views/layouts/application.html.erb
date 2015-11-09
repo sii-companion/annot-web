@@ -40,7 +40,7 @@
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
-          <p class="navbar-text"><%= Sidekiq::Queue.new.size %> jobs queued, <%= Sidekiq::Queue.new.reduce(0) { |a,j| if Sidekiq::Status::working?(j.jid ) then a = a + 1 end } %> running</p>
+          <p class="navbar-text"><%= pluralize(Sidekiq::Queue.new.size, "job") %> queued</p>
         </li>
         <% if logged_in? then %>
           <li class="dropdown">
