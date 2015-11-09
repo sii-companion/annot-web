@@ -1,0 +1,30 @@
+<% content_for(:title, "#{@job[:name]} results") %>
+<div class="page-header">
+  <h1><%= @job[:name] %><span class="small"> (<%= @job[:prefix] %>)</span>
+    <% if @queued then %>
+        <span class="label label-default pull-right">Queued</span>
+    <% elsif @working then %>
+        <span class="label label-info pull-right">Working</span>
+    <% elsif @failed then %>
+        <span class="label label-danger pull-right">Failed</span>
+    <% elsif @complete then %>
+        <span class="label label-success pull-right">Completed</span>
+    <% else %>
+        <span class="label label-default pull-right">No status available</span>
+    <% end %>
+  </h1>
+</div>
+
+<div class="row">
+  <p>Your job was submitted <b><%= distance_of_time_in_words(Time.now,@job[:created_at]) %></b> ago
+      and failed <b><%= distance_of_time_in_words(Time.now,@job[:created_at]) %></b> ago.
+  </p>
+</div>
+
+<% if @job[:stderr].length > 0 then %>
+Here are some details of why the job failed:
+<pre class='span3'><%= @job[:stderr] %></pre>
+<% end %>
+
+The Companion maintainers have been notified of the problem and will look into
+it. Sorry for the inconvenience.
