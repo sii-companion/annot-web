@@ -15,13 +15,11 @@
   </h1>
 </div>
 
-<div class="row">
-  <p>Your job was submitted <b><%= distance_of_time_in_words(Time.now,@job[:created_at]) %></b> ago
+<p>Your job was submitted <b><%= distance_of_time_in_words(Time.now,@job[:created_at]) %></b> ago
       and failed <b><%= distance_of_time_in_words(Time.now,@job[:created_at]) %></b> ago.
-  </p>
-</div>
 
-<% if @job[:stderr].length > 0 then %>
+</p>
+<% if @job and @job[:stderr] and @job[:stderr].length > 0 then %>
 Here are some details of why the job failed:
 <pre class='span3'><%= @job[:stderr] %></pre>
 <% end %>
