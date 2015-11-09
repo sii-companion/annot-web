@@ -52,7 +52,7 @@ class HardWorker
 
   def perform(id)
     # wait a bit
-    Kernel.sleep(2)
+    Kernel.sleep(5)
 
     job = Job.find(id)
     store name: job[:name]
