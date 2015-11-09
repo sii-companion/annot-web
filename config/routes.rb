@@ -20,6 +20,7 @@ Rails.application.routes.draw do
   resources :jobs
   post 'jobs/new_sequence_file' => 'sequence_files#create_for_jobform'
   post 'jobs/new_transcript_file' => 'transcript_files#create_for_jobform'
+  get 'find' => 'jobs#show', as: :job_find
   get 'job/:id' => 'jobs#show'
   get 'jobs/:id' => 'jobs#show'
   get 'jobs/:id/orths' => 'jobs#orths'
