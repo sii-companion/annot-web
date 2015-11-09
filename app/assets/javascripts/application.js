@@ -14,7 +14,6 @@
 //= require jquery_ujs
 //= require dataTables/jquery.dataTables
 //= require dataTables/bootstrap/3/jquery.dataTables.bootstrap
-//= require jquery.fileupload
-//= require jquery.remotipart
+//= require jasny-bootstrap
 //= require bootstrap
 //= require_tree .
