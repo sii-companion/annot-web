@@ -14,4 +14,4 @@ Rails.application.configure do
     authentication:       :login,
     enable_starttls_auto: true,
     ssl: true  }
-  end
+end
