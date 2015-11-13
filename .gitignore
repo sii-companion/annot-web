@@ -46,3 +46,7 @@ config/secrets.yml
 bower.json
 
 .nextflow*
+
+ref_*
+public/jobs/*
+public/assets/*
