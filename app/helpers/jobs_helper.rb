@@ -119,6 +119,7 @@ module JobsHelper
       add_item("RATT_TRANSFER_TYPE", job[:ratt_transfer_type])
       add_item("MAX_GENE_LENGTH", job[:max_gene_length])
       add_item("AUGUSTUS_GENEMODEL", 'partial')
+      add_item("SPECK_TEMPLATE", "#{CONFIG['rootdir']}/data/speck/companion_html")
       add_item("AUGUSTUS_HINTS_MAXINTRONLEN", '1')
       add_item("AUGUSTUS_SCORE_THRESHOLD", job[:augustus_score_threshold].round(2))
       add_item("TAXON_ID", job[:taxon_id])
