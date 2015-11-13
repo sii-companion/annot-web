@@ -21,7 +21,7 @@ class JobsController < ApplicationController
     if !logged_in? then
       flash[:info] = "You do not have permission to view all jobs in the " + \
                      "queue. Please access your job using the URL you were " + \
-                     "given or the job ID."
+                     "given or by searching for your job ID."
       redirect_to :welcome
     else
       jobs = Job.all
@@ -241,6 +241,20 @@ class JobsController < ApplicationController
     if job and File.exist?("#{job.job_directory}/tree.out") then
       data = File.open("#{job.job_directory}/tree.out").read
       send_data data, :filename => "#{job[:job_id]}.nwk"
+    else
+      render plain: "job #{params[:id]} not found or completed", status: 404
+    end
+  end
+
+  def get_report
+    job = Job.find_by(:job_id => params[:id])
+    if job then
+      if File.exist?("#{job.job_directory}/pseudo.report.html") then
+        data = File.open("#{job.job_directory}/pseudo.report.html").read
+        send_data data, :filename => "#{job[:job_id]}.pseudo.report.html"
+      else
+        render html: "No report found for this job."
+      end
     else
       render plain: "job #{params[:id]} not found or completed", status: 404
     end
