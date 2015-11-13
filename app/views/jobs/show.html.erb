@@ -82,6 +82,7 @@ var vtable;
   <li><a data-toggle="tab" href="#synteny">Synteny</a></li>
   <li><a data-toggle="tab" href="#params">Job parameters</a></li>
   <li><a data-toggle="tab" href="#logs">Pipeline logs</a></li>
+  <li><a data-toggle="tab" href="#report">Validator report</a></li>
 </ul>
 
 <div class="tab-content">
@@ -380,6 +381,11 @@ var vtable;
         </tbody>
       </table>
     </div>
+
+    <div id="report" class="tab-pane fade">
+      <div id="report_text">
+      </div>
+    </div>
 </div>
 
 <script>
@@ -471,6 +477,7 @@ $(document).ready(function(){
   });
 
   var firstPhyloTabOpen = true;
+  var firstReportTabOpen = true;
   // hook into tab change events
   $('a[data-toggle="tab"]').on('shown.bs.tab', function(e) {
     var target = $(e.target).attr("href");
@@ -484,6 +491,13 @@ $(document).ready(function(){
         phylocanvas.setNodeColourAndShape('<%= @job[:prefix] %>', '#0000FF', 'x');
       });
       firstPhyloTabOpen = false;
+    }
+    if (target == '#report' && firstReportTabOpen) {
+      $.get('<%= job_path(:id => @job[:job_id]) %>/report.html', function(report) {
+        $('#report_text').html(report)
+        $('[data-toggle="popover"]').popover();
+      });
+      firstReportTabOpen = false;
     }
   });
 
