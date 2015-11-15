@@ -28,6 +28,7 @@ Rails.application.routes.draw do
   get 'jobs/:id/clusters' => 'jobs#get_clusters', as: :clusters
   get 'jobs/:id/singletons' => 'jobs#get_singletons', as: :singletons
   get 'jobs/:id/tree.nwk' => 'jobs#get_tree', as: :tree
+  get 'jobs/:id/report.html' => 'jobs#get_report', as: :report
   get 'jobs/:id/tree/genes' => 'jobs#get_tree_genes', as: :tree_genes
 
   # uploaded files
