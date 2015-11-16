@@ -23,9 +23,11 @@ class HardWorker
   end
 
   def add_result_file(job, file)
-    if File.exist?("#{job.job_directory}/#{file}") then
+    file_path = "#{job.job_directory}/#{file}"
+    if File.exist?(file_path) then
       rf = ResultFile.new
-      rf.file = File.new("#{job.job_directory}/#{file}")
+      rf.file = File.new(file_path)
+      rf.md5 = Digest::MD5.file(file_path).hexdigest
       rf.save!
       job.result_files << rf
     else
