@@ -500,7 +500,7 @@ $(document).ready(function(){
         $('#phylospinner').hide();
         $('#phyloview').show();
         phylocanvas = new PhyloCanvas.Tree('PhyloCanvas', { history_collapsed : true });
-        phylocanvas.setTreeType("rectangular");
+        phylocanvas.setTreeType("radial");
         phylocanvas.load(tree);
         phylocanvas.setNodeColourAndShape('<%= @job[:prefix] %>', '#0000FF', 'x');
       });
