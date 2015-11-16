@@ -104,6 +104,10 @@ var vtable;
                 <td class="text-right"><%= @job.genome_stat[:nof_genes]%></td>
             </tr>
             <tr>
+                <td>Gene density (genes/megabase)</td>
+                <td class="text-right"><%= @job.genome_stat[:gene_density]%></td>
+            </tr>
+            <tr>
                 <td>Number of coding genes</td>
                 <td class="text-right"><%= @job.genome_stat[:nof_coding_genes]%></td>
             </tr>
