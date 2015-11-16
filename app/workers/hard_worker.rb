@@ -53,7 +53,7 @@ class HardWorker
   end
 
   def perform(id)
-    # wait a bit
+    # wait a bit to minimize timing issues
     Kernel.sleep(5)
 
     job = Job.find(id)
