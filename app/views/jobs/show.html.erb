@@ -137,6 +137,7 @@ var vtable;
         <thead>
             <tr>
                 <th></th>
+                <th class="text-right">MD5</th>
                 <th class="text-right">Size</th>
             </tr>
         </thead>
@@ -146,7 +147,19 @@ var vtable;
                 <td><%= link_to file.file.url do %>
                     <i class="glyphicon glyphicon-download-alt"></i>
                      <%= JobsHelper::file_description(file.file.name) %>
-                  <% end %></td>
+                <% end %></td>
+                <% if file.md5 then %>
+                <td class="text-right">
+                  <a data-toggle="popover"
+                     data-placement="left"
+                     data-trigger="hover"
+                     data-content="<%= file.md5 %>">
+                     <i class="glyphicon glyphicon-barcode"></i>
+                  </a>
+                </td>
+                <% else %>
+                <td class="text-right">n/a</td>
+                <% end %>
                 <td class="text-right"><%= number_to_human_size(file.file.size) %></td>
             </tr>
           <% end %>
@@ -391,6 +404,7 @@ var vtable;
 <script>
 $(document).ready(function(){
   $('#phyloview').hide();
+  $('[data-toggle="popover"]').popover();
   $.getJSON( "<%= job_path(:id => @job[:job_id]) %>/orths", function(data) {
     $('#orthospinner').hide();
     $('#orthoview').show();
