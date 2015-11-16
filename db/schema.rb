@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151016152810) do
+ActiveRecord::Schema.define(version: 20151116132845) do
 
   create_table "circos_images", force: :cascade do |t|
     t.string   "file_uid"
@@ -139,6 +139,7 @@ ActiveRecord::Schema.define(version: 20151016152810) do
     t.integer  "job_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string   "md5"
   end
 
   create_table "trees", force: :cascade do |t|
