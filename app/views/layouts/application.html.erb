@@ -4,6 +4,7 @@
   <title><%= content_for?(:title) ? yield(:title) : "Companion" %></title>
   <%= stylesheet_link_tag 'application', media: 'all' %>
   <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
   <%= csrf_meta_tags %>
 </head>
 <body>
@@ -25,17 +26,23 @@
       <ul class="nav navbar-nav">
         <li class="<%= 'active' if current_page?(new_job_path) %>">
            <%= link_to new_job_path do  %>
-             <span class="text-info"><span class="glyphicon glyphicon-cloud-upload"></span> Submit job</span>
+             <span class="glyphicon glyphicon-cloud-upload"></span> Submit job
            <% end %>
         </li>
-        <li class="<%= 'active' if current_page?(examples_path) %>">
-          <%= link_to "Examples", examples_path %>
-        </li>
         <li class="<%= 'active' if current_page?(how_it_works_path) %>">
-          <%= link_to "How it works", how_it_works_path %>
+          <%= link_to how_it_works_path do  %>
+             <i class="fa fa-cogs"></i> How it works
+          <% end %>
+        </li>
+        <li class="<%= 'active' if current_page?(examples_path) %>">
+          <%= link_to examples_path do  %>
+             <i class="fa fa-list-alt"></i> Example results
+          <% end %>
         </li>
         <li class="<%= 'active' if current_page?(faq_path) %>">
-          <%= link_to "FAQ", faq_path %>
+          <%= link_to faq_path do  %>
+             <i class="fa fa-question"></i> FAQ
+          <% end %>
         </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
