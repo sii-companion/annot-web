@@ -1,72 +1,80 @@
 <% content_for(:title, "Companion FAQ") %>
 
 <div class="page-header">
-    <h1>Frequently Asked Questions</h1>
+  <h1>Frequently Asked Questions</h1>
 </div>
 
 <div class="row">
-<h4 id="size">Can I upload large genomes?</h4>
-<p>The current limit for uploaded files is 64MB. If you need to annotate input
+  <h4 id="size">Can I upload large genomes?</h4>
+  <p>The current limit for uploaded files is 64MB. If you need to annotate input
     genomes larger than that, it makes sense to run a stand-alone version of
     <i>Companion</i> on a sufficiently powerful machine, as it hits the limit
     of this web server. You can find the standalone version of <i>Companion</i>
     on <a href="https://github.com/sanger-pathogens/companion">GitHub</a>.
     Please follow the instructions there to set up your stand-alone instance.
-</p>
+  </p>
 </div>
 
 <div class="row">
-<h4 id="references">What species are offered as references?</h4>
-<p>We import annotated parasite genomes from external sources like
+  <h4 id="references">What species are offered as references?</h4>
+  <p>We import annotated parasite genomes from external sources like
    <a href="http://www.genedb.org">GeneDB</a> and
    <a href="http://www.eupathdb.org">EuPathDB</a> and preprocess them for use
    as references. Currently, we are offering the following
    <%= Reference.count %> reference species:
-  <ul>
-  <% Reference.all.each do |ref| %>
+   <ul>
+    <% Reference.all.sort {|a,b| a[:name] <=> b[:name]}.each do |ref| %>
     <li><i><%= ref[:name] %></i></li>
-  <% end %>
+    <% end %>
   </ul>
 </p>
 </div>
 
 <div class="row">
-<h4 id="simultaneous_jobs">How many jobs can I run at once?</h4>
-<p>You can submit as many jobs as you like. They will all be added to the
+  <h4 id="simultaneous_jobs">How many jobs can I run at once?</h4>
+  <p>You can submit as many jobs as you like. They will all be added to the
    global queue and executed sequentially one after another. This server is a
    shared resource, so please refrain from submitting many jobs that compute
    protein-DNA alignments.
-</p>
+ </p>
 </div>
 
 <div class="row">
-<h4 id="rnaseq_format">What format do the transcript evidence files need to have?</h4>
-<p>Transcript evidence must be provided in GTF format, for example
+  <h4 id="rnaseq_format">What format do the transcript evidence files need to have?</h4>
+  <p>Transcript evidence must be provided in GTF format, for example
     as produced by <a href="http://cole-trapnell-lab.github.io/cufflinks/tools/">Cufflinks</a>
     (e.g. <tt>cufflinks</tt>, <tt>cuffmerge</tt> or <tt>cuffcompare</tt>). Here is an example:</p>
-<pre>
-Pf3D7_01_v3     Cufflinks       exon    29108   34762   .       +       .       gene_id "XLOC_000001"; transcript_id "TCONS_00000001"; exon_number "1"; oId "CUFF.2.1"; tss_id "TSS1";
-Pf3D7_01_v3     Cufflinks       exon    35888   37610   .       +       .       gene_id "XLOC_000001"; transcript_id "TCONS_00000001"; exon_number "2"; oId "CUFF.2.1"; tss_id "TSS1";
-Pf3D7_01_v3     Cufflinks       exon    35202   37610   .       +       .       gene_id "XLOC_000001"; transcript_id "TCONS_00000002"; exon_number "1"; oId "CUFF.2.2"; tss_id "TSS2";
-Pf3D7_01_v3     Cufflinks       exon    38222   39773   .       +       .       gene_id "XLOC_000002"; transcript_id "TCONS_00000003"; exon_number "1"; oId "CUFF.4.1"; tss_id "TSS3";
-Pf3D7_01_v3     Cufflinks       exon    97430   99013   .       +       .       gene_id "XLOC_000003"; transcript_id "TCONS_00000004"; exon_number "1"; oId "CUFF.9.1"; tss_id "TSS4";
-Pf3D7_01_v3     Cufflinks       exon    99220   104775  .       +       .       gene_id "XLOC_000003"; transcript_id "TCONS_00000004"; exon_number "2"; oId "CUFF.9.1"; tss_id "TSS4";
-Pf3D7_01_v3     Cufflinks       exon    104928  105838  .       +       .       gene_id "XLOC_000003"; transcript_id "TCONS_00000004"; exon_number "3"; oId "CUFF.9.1"; tss_id "TSS4";
-Pf3D7_01_v3     Cufflinks       exon    106191  108971  .       +       .       gene_id "XLOC_000004"; transcript_id "TCONS_00000005"; exon_number "1"; oId "CUFF.10.1"; tss_id "TSS5";
-[...]
-</pre>
-<p>Please note that the coordinates in this file must match the coordinate system of the corresponding uploaded sequence file and the IDs in the first column must match the sequence headers in the uploaded sequence.</p>
-</div>
+    <pre>
+      Pf3D7_01_v3     Cufflinks       exon    29108   34762   .       +       .       gene_id "XLOC_000001"; transcript_id "TCONS_00000001"; exon_number "1"; oId "CUFF.2.1"; tss_id "TSS1";
+      Pf3D7_01_v3     Cufflinks       exon    35888   37610   .       +       .       gene_id "XLOC_000001"; transcript_id "TCONS_00000001"; exon_number "2"; oId "CUFF.2.1"; tss_id "TSS1";
+      Pf3D7_01_v3     Cufflinks       exon    35202   37610   .       +       .       gene_id "XLOC_000001"; transcript_id "TCONS_00000002"; exon_number "1"; oId "CUFF.2.2"; tss_id "TSS2";
+      Pf3D7_01_v3     Cufflinks       exon    38222   39773   .       +       .       gene_id "XLOC_000002"; transcript_id "TCONS_00000003"; exon_number "1"; oId "CUFF.4.1"; tss_id "TSS3";
+      Pf3D7_01_v3     Cufflinks       exon    97430   99013   .       +       .       gene_id "XLOC_000003"; transcript_id "TCONS_00000004"; exon_number "1"; oId "CUFF.9.1"; tss_id "TSS4";
+      Pf3D7_01_v3     Cufflinks       exon    99220   104775  .       +       .       gene_id "XLOC_000003"; transcript_id "TCONS_00000004"; exon_number "2"; oId "CUFF.9.1"; tss_id "TSS4";
+      Pf3D7_01_v3     Cufflinks       exon    104928  105838  .       +       .       gene_id "XLOC_000003"; transcript_id "TCONS_00000004"; exon_number "3"; oId "CUFF.9.1"; tss_id "TSS4";
+      Pf3D7_01_v3     Cufflinks       exon    106191  108971  .       +       .       gene_id "XLOC_000004"; transcript_id "TCONS_00000005"; exon_number "1"; oId "CUFF.10.1"; tss_id "TSS5";
+      [...]
+    </pre>
+    <p>Please note that the coordinates in this file must match the coordinate system of the corresponding uploaded sequence file and the IDs in the first column must match the sequence headers in the uploaded sequence.</p>
+  </div>
 
-<div class="row">
-<h4 id="missing_reference">What do I do if I can't find a related species in the reference list, or there is no reference yet?</h4>
-<p>You need to pick one of the given references to provide models for the gene finders as well as a set of chromosomes for input contiguation. If you can't use any of the references, just disable the contiguation option (which will leave your initial sequence untouched) and pick the closest reference in the list.</p>
-<p>We aim to continually extend the list of supported references by importing
-annotations from databases like EuPathDB. If your reference is annotated and of
-reasonable size it is quite likely that it will be added in the future.</p>
-</div>
+  <div class="row">
+    <h4 id="missing_reference">What do I do if I can't find a related species in the reference list, or there is no reference yet?</h4>
+    <p>You need to pick one of the given references to provide models for the gene finders as well as a set of chromosomes for input contiguation. If you can't use any of the references, just disable the contiguation option (which will leave your initial sequence untouched) and pick the closest reference in the list.</p>
+    <p>We aim to continually extend the list of supported references by importing
+      annotations from databases like EuPathDB. If your reference is annotated and of
+      reasonable size it is quite likely that it will be added in the future.</p>
+    </div>
 
-<div class="row">
-<h4 id="question">I have a question but it is not here on this list!</h4>
-<p>Please send an email to <a href="mailto:ss34@sanger.ac.uk">us</a> with your inquiry, we will get back to you shortly.</p>
-</div>
+    <div class="row">
+      <h4 id="software">What software is <i>Companion</i> built on?</h4>
+      <p>The following diagrams illustrate how <i>Companion</i> works and what software components are used:<br /><br />
+        <%= image_tag 'pipe1.png', width: "100%" %>
+        <%= image_tag 'pipe2.png', width: "100%" %>
+
+      </div>
+
+      <div class="row">
+        <h4 id="question">I have a question but it is not here on this list!</h4>
+        <p>Please send an email to <a href="mailto:ss34@sanger.ac.uk">us</a> with your inquiry, we will get back to you shortly.</p>
+      </div>

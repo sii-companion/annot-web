@@ -15,6 +15,7 @@ class StaticPagesController < ApplicationController
   end
 
   def how_it_works
+    examples
     render "how_it_works"
   end
 end
