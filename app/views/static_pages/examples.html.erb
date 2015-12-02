@@ -1,15 +1,21 @@
 <% content_for(:title, "Companion example") %>
 
 <div class="page-header">
-    <h1>Example results</h1>
+<% if @job then %>
+  <h1>Example results</h1>
+<% else %>
+  <h1>Results output</h1>
+<% end %>
 </div>
 <% if @job then %>
 <p>
-    This section contains some example results from a prepared run.
-    The tabs below display live data and behave exactly like an actual job
-    result page (in fact, they are the result of an
-    <%= link_to "actual job", job_url(id: @job[:job_id]) %> that was
-    run <%= distance_of_time_in_words(Time.now,@job[:finished_at]) %> ago!)
+  This page contains some example results from a previously prepared
+  <i>Companion</i> run.
+  The tabs below display live data and behave exactly like an actual job
+  result page (in fact, they are the result of an
+  <%= link_to "actual job", job_url(id: @job[:job_id]) %> that was
+  run <%= distance_of_time_in_words(Time.now,@job[:finished_at]) %> ago!).
+  Click the tabs to see what data they contain.
 </p>
 <%= render "jobs/tabs" %>
 <% end %>
@@ -19,71 +25,71 @@
   <div class="col-md-6">
     <h4>Genome statistics</h4>
     <p>
-        The <span class="text-info">Genome statistics</span> tab summarizes
-        basic numeric statistics about the annotated genome, such as
+      The <span class="text-info">Genome statistics</span> tab summarizes
+      basic numeric statistics about the annotated genome, such as
     </p>
     <ul>
-        <li>gene counts</li>
-        <li>gene density</li>
-        <li>GC content</li>
+      <li>gene counts</li>
+      <li>gene density</li>
+      <li>GC content</li>
     </ul>
     <p>
-        This summary is useful to quickly assess the success of the annotation
-        job: does the amount of annotated features match the expectations?
+      This summary is useful to quickly assess the success of the annotation
+      job: does the amount of annotated features match the expectations?
     </p>
   </div><!--
-    -->
-  <div class="col-md-6"><%= image_tag 'ss_stats.png', width: "90%" %></div>
+-->
+<div class="col-md-6"><%= image_tag 'ss_stats.png', width: "90%" %></div>
 </div>
 <hr />
 <div class="row vertical-ctr">
   <div class="col-md-6"><%= image_tag 'ss_results.png', width: "90%" %></div><!--
-    -->
-  <div class="col-md-6">
-    <h4>Result files</h4>
-    <p>
-        The next tab (<span class="text-info">Result files</span>) allows the user to
-        download the results of the annotation jobs to their own computer, e.g. for
-        further downstream analyses, manual curation or preparation for
-        database submission. These are offered in the following formats:
-    </p>
-    <ul>
-        <li><a href="http://www.sequenceontology.org/gff3.shtml">GFF3</a> and
-          <a href="ftp://ftp.ebi.ac.uk/pub/databases/embl/doc/usrman.txt">EMBL</a>
-          format for annotated features</li>
-        <li>FASTA format for sequences</li>
-        <li><a href="http://geneontology.org/page/go-annotation-file-gaf-format-10">GAF format</a> for GO terms for each functionally annotated gene</li>
-        <li><a href="https://www.ncbi.nlm.nih.gov/assembly/agp/AGP_Specification/">AGP format</a> files for pseudochromosome layouts</li>
+-->
+<div class="col-md-6">
+  <h4>Result files</h4>
+  <p>
+    The next tab (<span class="text-info">Result files</span>) allows the user to
+    download the results of the annotation jobs to their own computer, e.g. for
+    further downstream analyses, manual curation or preparation for
+    database submission. These are offered in the following formats:
+  </p>
+  <ul>
+    <li><a href="http://www.sequenceontology.org/gff3.shtml">GFF3</a> and
+      <a href="ftp://ftp.ebi.ac.uk/pub/databases/embl/doc/usrman.txt">EMBL</a>
+      format for annotated features</li>
+      <li>FASTA format for sequences</li>
+      <li><a href="http://geneontology.org/page/go-annotation-file-gaf-format-10">GAF format</a> for GO terms for each functionally annotated gene</li>
+      <li><a href="https://www.ncbi.nlm.nih.gov/assembly/agp/AGP_Specification/">AGP format</a> files for pseudochromosome layouts</li>
     </ul>
     <p>
-        If no pseudochromosome contiguation was selected, files for both levels
-        are identical. We also calculate
-        <a href="https://en.wikipedia.org/wiki/MD5#Applications">MD5</a> tags
-        which may be required at the time of submission in case there is no
-        need for further curation.
+      If no pseudochromosome contiguation was selected, files for both levels
+      are identical. We also calculate
+      <a href="https://en.wikipedia.org/wiki/MD5#Applications">MD5</a> tags
+      which may be required at the time of submission in case there is no
+      need for further curation.
     </p>
   </div>
 </div>
 <hr />
 <div class="row vertical-ctr">
   <div class="col-md-6">
-    <h4>Phylogeny</h4>
+    <h4>Orthology</h4>
     <p>
-        The Venn diagram on the <span class="text-info">Phylogeny</span> tab
-        depicts shared gene cluster membership between the
-        newly annotated genome and the reference to easily assess the amount
-        of species-specific gene content. The set on the left (green)
-        represents the target genome while the one on the right (blue) represents
-        the reference. The numbers in the set circles specify the number of shared
-        or species-specific clusters with at least two genes. The amount of genes not
-        appearing in any cluster (singletons) is shown outside both sets.
+      The Venn diagram on the <span class="text-info">Orthology</span> tab
+      depicts shared gene cluster membership between the
+      newly annotated genome and the reference to easily assess the amount
+      of species-specific gene content. The set on the left (green)
+      represents the target genome while the one on the right (blue) represents
+      the reference. The numbers in the set circles specify the number of shared
+      or species-specific clusters with at least two genes. The amount of genes not
+      appearing in any cluster (singletons) is shown outside both sets.
     </p>
     <p>
-        By clicking on the numbers in the diagram, it is possible to browse
-        the content of the sets using interactive tables. These paginated and
-        searchable tables are shown below the Venn diagram when a number is
-        clicked. A flat text file (in OrthoMCL 1.4 format) is also provided for
-        custom analyses.
+      By clicking on the numbers in the diagram, it is possible to browse
+      the content of all sets using interactive tables. These paginated and
+      searchable tables are shown below the Venn diagram when a number is
+      clicked. A flat text file (in OrthoMCL 1.4 format) is also provided for
+      custom analyses.
     </p>
   </div>
   <div class="col-md-6"><%= image_tag 'ss_venn.png', width: "90%", class: "center-block" %></div>
@@ -94,19 +100,38 @@
   <div class="col-md-6">
     <h4>Phylogeny</h4>
     <p>
-        <span class="text-info">Phylogeny</span>
-    </p>
-  </div>
+     The tree on the <span class="text-info">Phylogeny</span> tab shows how the
+     newly annotated target genome fits into the phylogeny of related species.
+     From a set of up to 50 single-copy genes shared among all these species,
+     a quick tree is built and visualized in an interactive tree, supporting
+     various tree styles. All data used to build the tree are also available
+     for download.
+   </p>
+ </div>
 </div>
 <hr />
 <div class="row vertical-ctr">
   <div class="col-md-6">
     <h4>Synteny</h4>
     <p>
-        The <span class="text-info">Synteny</span> tab
+      The <span class="text-info">Synteny</span> tab contains circular plots
+      showing alignments between each reference chromosome and their newly
+      annotated counterpart. The reference chromosome is shown at the top and
+      the new pseudochromosome is shown at the bottom. Grey ribbons between
+      both represent similar regions as identified by BLASTN matches. Genes on
+      the forward strand (blue) and the reverse strand (red) are annotated on
+      the chromosomes, as well as gaps (yellow), singletons (black) and
+      missing core genes (green), each in separate tracks. A similar output is
+      created for uncontiguated input sequences concatenated into a 'bin'
+      sequence (not drawn to scale) compared to all reference chromosomes.
+    </p>
+    <p>
+      These plots are useful to visualize the reference-target colinearity, which helps in
+      identifying potential problems in pseudochromosome contiguation or large-scale chromosomal
+      rearrangements at a glance.
     </p>
   </div>
-  <div class="col-md-6"><%= image_tag 'ss_circos.png', height: "300px", class: "center-block" %></div>
+  <div class="col-md-6"><%= image_tag 'ss_circos.png', width: "100%", class: "center-block" %></div>
 </div>
 <hr />
 <div class="row vertical-ctr">
@@ -114,21 +139,22 @@
   <div class="col-md-6">
     <h4>Validator results</h4>
     <p>
-         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean
-         dignissim tincidunt maximus. Duis sodales elementum nulla eu ultricies.
-         Praesent at tortor sed nibh venenatis pretium quis quis enim. Fusce eu
-         auctor tortor. Aliquam mattis cursus eleifend. Nam finibus et lacus a
-         dignissim. Aenean accumsan, arcu quis rhoncus maximus, nunc tellus
-         gravida lacus, et ullamcorper est ipsum eget justo. Mauris egestas
-         libero leo, mattis feugiat metus luctus sit amet. In sed auctor nibh.
-
-        Nullam placerat, est at consectetur cursus, sapien ipsum euismod erat, vel
-        sodales massa nibh vel tortor. Quisque turpis justo, molestie elementum est sed,
-        tempor rutrum lacus. Donec ullamcorper leo magna, in ultricies massa tempus ac.
-        Pellentesque et condimentum dolor, eu egestas neque. Donec in tellus eget justo
-        mattis blandit a sit amet magna. Sed congue tellus leo, sit amet tristique
-        mauris mollis sed. Cras sollicitudin nisi vitae varius egestas. Vivamus maximus
-        malesuada quam eu rutrum. Etiam nec ante et nisl dignissim egestas.
-    </p>
-  </div>
+      We are trying to ensure that gene annotation files delivered by
+      <i>Companion</i> are both syntactically and semantically (=biologically)
+      valid and do not contain any major issues. But but to the complexity of the
+      process and the high variability of input data, it is always possible to
+      end up with less than perfect gene models. Often such remaining issues can be
+      quickly addressed by a human curator.
+    </p><p>
+    To make the best use of curator time as
+    a scarce resource, we perform thorough automatic checking of our generated
+    annotations, given as annotation graphs in GFF3 format. The results of
+    this check are presented in a table, grouped by feature type.
+    The number of successful and failed checks is concisely presented and for
+    each failed check, the ID of the questionable feature is reported by
+    clicking on the red labels denoting checking failures.
+    This makes it easy to quickly estimate the amount of required curation
+    and allows to work in a directed and focused fashion.
+  </p>
+</div>
 </div>
