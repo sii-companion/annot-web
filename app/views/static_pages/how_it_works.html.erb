@@ -61,7 +61,7 @@
 
 <h3 id="wait"><i class="glyphicon glyphicon-hourglass"></i> Wait for your job to finish</h3>
 <p>
-    After a job has been successfully enqueued, the system will assign your job an alphanumerical ID (e.g. <tt><%= @job[:job_id] %></tt>) and a URL to check your job status (e.g. <%= link_to job_url(id: @job[:job_id]), job_url(id: @job[:job_id]) %>). If no other jobs have been enqueued before yours, then it will start processing right away and you can visit the URL regularly to check on the progress of your job. There are the following states:
+    After a job has been successfully enqueued, the system will assign your job an alphanumerical ID <% if @job then %> (e.g. <tt><%= @job[:job_id] %></tt>)<% end %> and a URL to check your job status<% if @job then %> (e.g. <%= link_to job_url(id: @job[:job_id]), job_url(id: @job[:job_id]) %>)<% end %>. If no other jobs have been enqueued before yours, then it will start processing right away and you can visit the URL regularly to check on the progress of your job. There are the following states:
 
     <ul>
         <li><span class="label label-default">Queued</span>, meaning that your job is waiting for execution and will start as soon as the previous ones have finished</li>
