@@ -19,7 +19,8 @@
   <% if @complete then %>
     and ran for <b><%= distance_of_time_in_words(@job[:started_at],@job[:finished_at])%></b>, finally finishing at <b><%= @job[:finished_at] %></b>.
   <% elsif @working then %>
-    and is running now for <b><%= distance_of_time_in_words(Time.now,@job[:started_at]) %></b>.
+    and is running now<% if @job[:started_at] then %>
+      for <b><%= distance_of_time_in_words(Time.now,@job[:started_at]) %></b><% end %>.
   <% elsif @failed then %>
     and failed <b><%= distance_of_time_in_words(Time.now,@job[:finished_at]) %></b> ago.
   <% end %>
