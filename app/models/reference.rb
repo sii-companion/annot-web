@@ -48,4 +48,17 @@ class Reference < ActiveFile::Base
       out
     end
   end
+
+  def has_chromosomes?
+    return (self[:nof_chromosomes] and self[:nof_chromosomes] > 0 \
+      and File.exist?(File.join(self[:referencedir], self[:abbr], 'chromosomes.fasta')))
+  end
+
+  def name_with_genes
+    out = "#{self[:name]} (#{self[:nof_genes]} genes"
+    if self.has_chromosomes? then
+      out = out + ", #{self[:nof_chromosomes]} chromosomes"
+    end
+    out = out + ")"
+  end
 end
