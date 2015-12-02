@@ -32,10 +32,10 @@ module JobsHelper
 
     def use_prefix(prefix)
       @items["GENOME_PREFIX"] = prefix
-      @items["CHR_PATTERN"] = "#{prefix}_(%d+)"
+      @items["CHR_PATTERN"] = "#{prefix}_(%w+)"
       @items["ABACAS_CHR_PREFIX"] = prefix
       @items["ABACAS_SEQ_PREFIX"] = prefix
-      @items["ABACAS_BIN_CHR"] = "#{prefix}_0"
+      @items["ABACAS_BIN_CHR"] = "#{prefix}_00"
     end
 
     def do_exonerate(val = true)
@@ -76,7 +76,7 @@ module JobsHelper
 
     def select_reference(ref)
       @items["ref_species"] = ref[:abbr]
-      @items["ABACAS_CHR_PATTERN"] = ref[:chromosome_pattern]
+      #@items["ABACAS_CHR_PATTERN"] = ref[:chromosome_pattern]
       @items["ref_dir"] = ref[:referencedir]
       if ref[:snap_model] then
         @items["run_snap"] = "true"
@@ -87,7 +87,7 @@ module JobsHelper
         @items["WEIGHT_FILE"] = ref[:weightfile]
       end
       if ref[:maxintronlen] then
-        @items["maxintronlen"] = ref[:maxintronlen]
+        @items["AUGUSTUS_HINTS_MAXINTRONLEN"] = ref[:maxintronlen]
       end
       if ref[:fix_polycistrons] then
         @items["fix_polycistrons"] = ref[:fix_polycistrons]
@@ -120,7 +120,6 @@ module JobsHelper
       add_item("MAX_GENE_LENGTH", job[:max_gene_length])
       add_item("AUGUSTUS_GENEMODEL", 'partial')
       add_item("SPECK_TEMPLATE", "#{CONFIG['rootdir']}/data/speck/companion_html")
-      add_item("AUGUSTUS_HINTS_MAXINTRONLEN", '1')
       add_item("AUGUSTUS_SCORE_THRESHOLD", job[:augustus_score_threshold].round(2))
       add_item("TAXON_ID", job[:taxon_id])
       add_item("DB_ID", job[:db_id])
@@ -133,13 +132,6 @@ module JobsHelper
         else
           out += "    #{k}  =  '#{v}'\n"
         end
-      end
-      if @omcl_pepfiles.size > 0 then
-        out +=  "    OMCL_PEPFILES  =  ["
-        out += @omcl_pepfiles.collect do |v|
-          "['#{v[0]}','#{v[1]}']"
-        end.join(",")
-        out +=  "]\n"
       end
       out += "}\n"
       puts out

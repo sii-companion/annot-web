@@ -70,7 +70,7 @@ gem 'autoprefixer-rails'
 # JQuery extensions
 gem 'jquery-ui-rails'
 # gem 'jquery.fileupload-rails'
-gem 'jasny_bootstrap_extension_rails'
+# gem 'jasny_bootstrap_extension_rails'
 
 # OAuth2 (e.g. Google)
 #gem 'omniauth', '~> 1.2.2'

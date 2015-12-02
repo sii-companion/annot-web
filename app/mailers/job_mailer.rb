@@ -1,5 +1,5 @@
 class JobMailer < ApplicationMailer
-  default from: 'ss34@sanger.ac.uk'
+  default from: 'Companion Server <companion@sanger.ac.uk>'
 
   def start_job_email(job)
     @url = jobs_url(:only_path => :true)
