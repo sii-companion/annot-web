@@ -84,7 +84,9 @@ class HardWorker
       r = Reference.find(job[:reference_id])
       cf.select_reference(r)
       cf.use_prefix(job[:prefix])
-      cf.do_contiguation(job[:do_contiguate])
+      if r.has_chromosomes? then
+        cf.do_contiguation(job[:do_contiguate])
+      end
       if job[:use_transcriptome_data] then
         tf = job.transcript_file
         if tf then
