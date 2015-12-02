@@ -9,8 +9,8 @@ task :load_references => :environment do |t, args|
     Rake::Task["db:create"].execute
     Rake::Task["db:migrate"].execute
     Rake::Task["db:seed"].execute
-    genes = []
     CONFIG['referencedirs'].each do |section, refdir|
+      genes = []
       puts "loading references for #{section}..."
       jsondata = File.open("#{refdir}/references.json").read
       json = JSON.parse(jsondata)
@@ -36,8 +36,8 @@ task :load_references => :environment do |t, args|
         end
         File.unlink("1")
       end
+      STDERR.print "read #{genes.length} genes, importing..."
+      Gene.import(genes)
     end
-    STDERR.print "read #{genes.length} genes, importing..."
-    Gene.import(genes)
     STDERR.puts "done"
 end
