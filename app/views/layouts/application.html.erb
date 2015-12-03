@@ -50,9 +50,9 @@
       <ul class="nav navbar-nav navbar-right">
         <li>
           <p class="navbar-text">
-           <span title="<%= Sidekiq::Queue.new.size %> queued jobs">
+           <span title="<%= @n_working %> jobs running, <%= @n_queued %> queued">
             <i class="fa fa-server"></i>
-            <%= Sidekiq::Queue.new.size %>
+            <%= @n_working %>/<%= @n_queued %>
           </span>
         </p>
       </li>
