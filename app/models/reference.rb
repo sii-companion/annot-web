@@ -39,7 +39,7 @@ class Reference < ActiveFile::Base
           end
           # we need at least an AUGUSTUS model to use this species as a
           # direct reference
-          if newhash.has_key?('augustus_model') then
+          if newhash.has_key?('augustus_model') and newhash.has_key?('is_reference_strain') then
             out << newhash
             i += 1
           end
