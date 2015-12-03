@@ -1,17 +1,7 @@
 <% content_for(:title, "#{@job[:name]} results") %>
 <div class="page-header">
-  <h1><%= @job[:name] %><span class="small"> (<%= @job[:prefix] %>)</span>
-    <% if @queued then %>
-        <span class="label label-default pull-right">Queued</span>
-    <% elsif @working then %>
-        <span class="label label-info pull-right">Working</span>
-    <% elsif @failed then %>
-        <span class="label label-danger pull-right">Failed</span>
-    <% elsif @complete then %>
-        <span class="label label-success pull-right">Completed</span>
-    <% else %>
-        <span class="label label-default pull-right">No status available</span>
-    <% end %>
+  <h1><%= @job[:name] %> <span class="small">(<%= @job[:prefix] %>)</span>
+    <%= render partial: "badge", locals: {:job => @job_hash, :extraclass => "pull-right"} %>
   </h1>
 </div>
 
