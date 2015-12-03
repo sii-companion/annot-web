@@ -1,0 +1,11 @@
+<% if job[:queued] then %>
+    <span class="label label-default <%= extraclass if defined? extraclass %>">Not started yet</span>
+<% elsif job[:working] then %>
+    <span class="label label-info <%= extraclass if defined? extraclass %>">Working</span>
+<% elsif job[:failed] then %>
+    <span class="label label-danger <%= extraclass if defined? extraclass %>">Failed</span>
+<% elsif job[:complete] then %>
+    <span class="label label-success <%= extraclass if defined? extraclass %>">Completed</span>
+<% else %>
+    <span class="label label-default <%= extraclass if defined? extraclass %>">Not started yet</span>
+<% end %>
