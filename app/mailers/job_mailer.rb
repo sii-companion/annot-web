@@ -18,4 +18,10 @@ class JobMailer < ApplicationMailer
     @job = job
     mail(to: @job.email, subject: "Your job '#{job[:name]}' has failed")
   end
+
+  def finish_failure_job_email_notify_dev(job)
+    @url = jobs_url(:only_path => :true)
+    @job = job
+    mail(to: 'companion@sanger.ac.uk', subject: "User job '#{job[:name]}' (#{job[:job_id]}) has failed")
+  end
 end

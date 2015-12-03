@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+  </head>
+  <body>
+    <h1>A user job failed!</h1>
+    <p>
+      The user job "<%= @job[:name] %>" <% if @job[:job_id] then %>with ID <%= @job[:job_id] %> <% end %> failed at <%= @job[:finished_at] %>.
+    </p>
+    <p><pre>
+      <%= @job.job_directory %>
+    </pre></p>
+    <p><pre>
+      <%= @job[:stdout] %>
+    </pre></p>
+    <p><pre>
+      <%= @job[:stderr] %>
+    </pre></p>
+  </body>
+</html>
