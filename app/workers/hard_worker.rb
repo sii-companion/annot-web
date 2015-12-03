@@ -253,13 +253,14 @@ class HardWorker
       end
     rescue => e
       job[:finished_at] = DateTime.now
-      job[:stderr] = e.to_s
+      job[:stderr] = job[:stderr] + "\n" + e.to_s
 
       job.save!
       # send error notification email
       if job[:email].length > 0 then
         JobMailer.finish_failure_job_email(job).deliver_later
       end
+      JobMailer.finish_failure_job_email_notify_dev(job).deliver_later
       raise e
     end
   end
