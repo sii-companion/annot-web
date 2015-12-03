@@ -131,12 +131,12 @@ class JobsController < ApplicationController
       flash.now[:danger] = "The job with ID '#{params[:id]}' could not be found."
       render "welcome/index" , status: 404
     else
-      @queued = Sidekiq::Status::queued?(params[:id])
-      @working = Sidekiq::Status::working?(params[:id])
-      @failed = Sidekiq::Status::failed?(params[:id])
-      @complete = Sidekiq::Status::complete?(params[:id])
+      @job_hash = {:queued => Sidekiq::Status::queued?(@job[:job_id]),
+                   :working => Sidekiq::Status::working?(@job[:job_id]),
+                   :failed => Sidekiq::Status::failed?(@job[:job_id]),
+                   :complete => Sidekiq::Status::complete?(@job[:job_id])}
       @ref = Reference.find(@job[:reference_id])
-      if @failed then
+      if @job_hash[:failed] then
         render 'jobs/show_failed'
       else
         render 'jobs/show'

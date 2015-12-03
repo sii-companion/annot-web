@@ -33,22 +33,14 @@
                   <% end %>
                 </td>
                 <td style="padding-left: 20px; padding-right: 20px;">
-                    <% if job[:queued] then %>
-                        <span class="label label-default">Queued</span>
-                    <% elsif job[:working] then %>
-                        <span class="label label-info">Working</span>
-                    <% elsif job[:failed] then %>
-                        <span class="label label-danger">Failed</span>
-                    <% elsif job[:complete] then %>
-                        <span class="label label-success">Completed</span>
-                    <% else %>
-                        <span class="label label-default">No status available</span>
-                    <% end %>
+                    <%= render partial: 'badge', locals: {:job => job} %>
                 </td>
                 <td>
                    <div class="btn-group">
                    <% if job[:job_id] then %>
-                     <%= link_to job_path(id: job[:job_id]), method: :delete, data: { confirm: "Are you sure?" } do %>
+                     <%= link_to job_path(id: job[:job_id]),
+                                        method: :delete,
+                                        data: { confirm: "Are you sure?" } do %>
                        <i class="glyphicon glyphicon-trash"></i> Delete
                      <% end %>&nbsp;
                      <%= link_to job_path(id: job[:job_id]) do %>
