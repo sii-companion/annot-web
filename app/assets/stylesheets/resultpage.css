@@ -14,6 +14,8 @@
   }
   .modal-content {
       border-radius:0;
+      height:720px;
+      width:515px;
   }
   .modal-dialog img {
       text-align:center;
