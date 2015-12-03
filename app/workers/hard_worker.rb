@@ -253,7 +253,11 @@ class HardWorker
       end
     rescue => e
       job[:finished_at] = DateTime.now
-      job[:stderr] = job[:stderr] + "\n" + e.to_s
+      if job[:stderr] then
+        job[:stderr] = job[:stderr] + "\n" + e.to_s
+      else
+        job[:stderr] = e.to_s
+      end
 
       job.save!
       # send error notification email
