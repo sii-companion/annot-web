@@ -3,8 +3,10 @@
 <head>
   <title><%= content_for?(:title) ? yield(:title) : "Companion" %></title>
   <%= stylesheet_link_tag 'application', media: 'all' %>
-  <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.css" />
+  <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
+  <script src="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.js"></script>
   <%= csrf_meta_tags %>
 </head>
 <body>

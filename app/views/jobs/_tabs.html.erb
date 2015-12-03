@@ -3,6 +3,12 @@ var phylocanvas;
 var vtable;
 </script>
 
+<style>
+.leaflet-container {
+    background: #ffffff;
+}
+</style>
+
 <div class="modal fade" id="genelistmodal" tabindex="-1" role="dialog" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -29,20 +35,7 @@ var vtable;
   </div>
 </div>
 
-<div class="modal fade" id="thumbmodal" tabindex="-1" role="dialog" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-body">
-      </div>
-    </div>
-  </div>
-</div>
-
-
-
-
-
-<div style="margin-top:20px;">&nbsp;</div>
+<div style="margin-top:10px;">&nbsp;</div>
 
 <ul class="nav nav-tabs">
   <li class="active"><a data-toggle="tab" href="#stats">Genome statistics</a></li>
@@ -249,23 +242,36 @@ var vtable;
 
   <div id="synteny" class="tab-pane fade">
     <% if @job[:do_contiguate] and @job.circos_images.size > 0 then %>
+      <div class="row" id="map-row" style="display:none">
+      <style>
+          #image-map {
+            width: 100%;
+            height: 400px;
+            border: 1px solid #ccc;
+            margin-bottom: 10px;
+          }
+          </style>
+          <p>
+            This is <span id='map-header'></span>. Use the mouse to pan around in the image. Zooming in and out is
+            possible using the icons or the mouse wheel.
+          </p>
+          <div id="image-map"></div>
+      </div>
       <div class="row">
         <p>Each circle below represents a single target-reference pseudochromosome
            alignment. Click on it to zoom in.</p>
-      </div>
-      <div class="row">
         <ul class="media-list">
           <% @job.circos_images.sort { |a,b| a.chromosome <=> b.chromosome }.each do |image| %>
           <li class="media">
             <div class="media-left">
               <a href="#">
-                <%= image_tag image.file.thumb('70x70').url, class: "media-object chrthumb", :data => {:full_URL => image.file.url} %>
+                <%= image_tag image.file.thumb('70x70').url, class: "media-object chrthumb", :data => {:full_URL => image.file.url, :chr => image.chromosome } %>
               </a>
             </div>
             <div class="media-body">
               <% if image.chromosome %>
                 <h4 class="media-heading">
-                  <% if image.chromosome.match(/_0$/) %>
+                  <% if image.chromosome.match(/_0?0$/) %>
                     Bin chromosome
                   <% else %>
                     Chromosome <%= image.chromosome %>
@@ -292,7 +298,6 @@ var vtable;
     <% end %>
   </div>
 
-
   <div id="logs" class="tab-pane fade">
     <div class="row">
       <h4>Standard output:</h4>
@@ -303,7 +308,6 @@ var vtable;
       <% end %>
     </div>
   </div>
-
 
   <div id="params" class="tab-pane fade">
     <div class="row">
@@ -396,8 +400,25 @@ var vtable;
 
 <script>
 $(document).ready(function(){
+  // initialize Leaflet
+  var map = L.map('image-map', {
+      minZoom: 1,
+      maxZoom: 7,
+      center: [0, 0],
+      zoom: 5,
+      crs: L.CRS.Simple,
+      attributionControl: false
+    });
+  $('#image-map').resizable();
+  map.setView(new L.LatLng(0, -2));
+
+  // hide Phylocanvas
   $('#phyloview').hide();
+
+  // activate popovers
   $('[data-toggle="popover"]').popover();
+
+  // pre-load ortholog data
   $.getJSON( "<%= job_path(:id => @job[:job_id]) %>/orths", function(data) {
     $('#orthospinner').hide();
     $('#orthoview').show();
@@ -513,17 +534,19 @@ $(document).ready(function(){
     }
   });
 
-  $('.chrthumb').on('click',function(){
-    var src = $(this).attr('data-full-URL');
-    var img = '<img src="' + src + '" class="img-responsive"/>';
-    $('#thumbmodal').modal();
-    $('#thumbmodal').on('shown.bs.modal', function(){
-        $('#thumbmodal .modal-body').html(img);
-    });
-    $('#thumbmodal').on('hidden.bs.modal', function(){
-        $('#thumbmodal .modal-body').html('');
-    });
+  $('.chrthumb').on('click',function(event){
+    var chr = $(this).attr('data-chr');
+    var w = 2000, h = 2000, url = $(this).attr('data-full-URL');
+    var southWest = map.unproject([0, h], map.getMaxZoom()-1);
+    var northEast = map.unproject([w, 0], map.getMaxZoom()-1);
+    var bounds = new L.LatLngBounds(southWest, northEast);
+    L.imageOverlay(url, bounds).addTo(map);
+    $('#map-row').fadeIn();
+    $('#map-header').html("Chromosome " + chr)
+    event.preventDefault();
+    return false;
   });
+
   $('.tree_genes').click(function(event) {
     $.getJSON( "<%= job_path(:id => @job[:job_id]) %>/tree/genes", function(data) {
       $("#glmtable").empty();
@@ -534,6 +557,7 @@ $(document).ready(function(){
       $('#genelistmodal').modal();
     });
     event.preventDefault();
+    return false;
   });
 });
 </script>
