@@ -127,7 +127,6 @@ class JobsController < ApplicationController
 
   def show
     @job = Job.find_by(:job_id => params[:id])
-    expires_in 1.month, :public => true
     if not @job then
       flash.now[:danger] = "The job with ID '#{params[:id]}' could not be found."
       render "welcome/index" , status: 404
@@ -243,6 +242,7 @@ class JobsController < ApplicationController
 
   def get_tree
     job = Job.find_by(:job_id => params[:id])
+    expires_in 1.month, :public => true
     if job and File.exist?("#{job.job_directory}/tree.out") then
       data = File.open("#{job.job_directory}/tree.out").read
       send_data data, :filename => "#{job[:job_id]}.nwk"
@@ -253,6 +253,7 @@ class JobsController < ApplicationController
 
   def get_report
     job = Job.find_by(:job_id => params[:id])
+    expires_in 1.month, :public => true
     if job then
       if File.exist?("#{job.job_directory}/pseudo.report.html") then
         data = File.open("#{job.job_directory}/pseudo.report.html").read
@@ -267,6 +268,7 @@ class JobsController < ApplicationController
 
   def get_tree_genes
     job = Job.find_by(:job_id => params[:id])
+    expires_in 1.month, :public => true
     if job then
       render json: job.tree.genes.order(:product)
     else
