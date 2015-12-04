@@ -127,6 +127,7 @@ class JobsController < ApplicationController
 
   def show
     @job = Job.find_by(:job_id => params[:id])
+    expires_in 1.month, :public => true
     if not @job then
       flash.now[:danger] = "The job with ID '#{params[:id]}' could not be found."
       render "welcome/index" , status: 404
@@ -146,6 +147,7 @@ class JobsController < ApplicationController
 
   def orths
     job = Job.find_by(:job_id => params[:id])
+    expires_in 1.month, :public => true
     if not job then
       render plain: "job #{params[:id]} not found", status: 404
     else
@@ -166,6 +168,7 @@ class JobsController < ApplicationController
   def orths_for_cluster
     clusters = params[:cluster]
     job = Job.find_by(:job_id => params[:id])
+    expires_in 1.month, :public => true
     if not job then
       render plain: "job #{params[:id]} not found", status: 404
     else
@@ -205,6 +208,7 @@ class JobsController < ApplicationController
 
   def get_clusters
     job = Job.find_by(:job_id => params[:id])
+    expires_in 1.month, :public => true
     if job and File.exist?("#{job.job_directory}/orthomcl_out") then
       render file: "#{job.job_directory}/orthomcl_out", layout: false, \
         content_type: 'text/plain'
@@ -215,6 +219,7 @@ class JobsController < ApplicationController
 
   def get_singletons
     job = Job.find_by(:job_id => params[:id])
+    expires_in 1.month, :public => true
     if job then
       ref = Reference.find(job[:reference_id])
       this_s = job.genes.includes(:clusters).where(:clusters => {id: nil})
