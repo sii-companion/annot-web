@@ -408,6 +408,7 @@ var vtable;
 
 <script>
 $(document).ready(function(){
+  <% if @job[:do_contiguate] and @job.circos_images.size > 0 then %>
   // initialize Leaflet
   var map = L.map('image-map', {
       minZoom: 1,
@@ -419,6 +420,7 @@ $(document).ready(function(){
     });
   $('#image-map').resizable();
   map.setView(new L.LatLng(0, -2));
+  <% end %>
 
   // hide Phylocanvas
   $('#phyloview').hide();
