@@ -34,6 +34,7 @@ end
 Dragonfly.app.configure do
   plugin :imagemagick
   secret "b2909acc0dbe34c4a88d89c8c465f0f45b4a7b1d4e0a957b3181e6ac1063e2d3"
+  response_header "Cache-Control", "public, max-age=2592000"
 
   url_format "/media/:job/:name"
 
