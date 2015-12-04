@@ -4,21 +4,38 @@ development:
   locationconfig: "/nfs/users/nfs_s/ss34/annot-nf/loc_web.config"
   extrinsicconfig: "/nfs/users/nfs_s/ss34/annot-nf/data/augustus/extrinsic.cfg"
   referencedirs:
-    Kinetoplastida: "/www/ss34/ref_kinetoplastids"
-    Plasmodium: "/www/ss34/ref_plasmodium"
+    Kinetoplastida: "/Users/ss34/rails/testapp/ref_kinetoplastids"
+    Plasmodium: "/Users/ss34/rails/testapp/ref_plasmodium"
+    CryptoDB: "/Users/ss34/rails/testapp/CryptoDB.org"
+    PiroplasmaDB: "/Users/ss34/rails/testapp/PiroplasmaDB.org"
+    AmoebaDB: "/Users/ss34/rails/testapp/AmoebaDB.org"
+    ToxoDB: "/Users/ss34/rails/testapp/ToxoDB.org"
   weightfiles:
-    Kinetoplastida: "/nfs/users/nfs_s/ss34/annot-nf/data/weight/weight_kinetoplastid.lua"
-    Plasmodium: "/nfs/users/nfs_s/ss34/annot-nf/data/weight/weight_plasmodium.lua"
+    Kinetoplastida: "/Users/ss34/develop/annot-nf/data/weight/weight_kinetoplastid.lua"
+    Plasmodium: "/Users/ss34/develop/annot-nf/data/weight/weight_plasmodium.lua"
+    CryptoDB: "/Users/ss34/develop/annot-nf/data/weight/weight_plasmodium.lua"
+    PiroplasmaDB: "/Users/ss34/develop/annot-nf/data/weight/weight_plasmodium.lua"
+    AmoebaDB: "/Users/ss34/develop/annot-nf/data/weight/weight_plasmodium.lua"
+    ToxoDB: "/Users/ss34/develop/annot-nf/data/weight/weight_plasmodium.lua"
   maxintronlengths:
     Kinetoplastida: 1
-    Plasmodium: 20000
+    Plasmodium: 120000
+    CryptoDB: 120000
+    PiroplasmaDB: 120000
+    AmoebaDB: 120000
+    ToxoDB: 120000
   fix_polycistrons:
     Kinetoplastida: "true"
     Plasmodium: "false"
-  dockerconf: ""
-  rootdir: "/nfs/users/nfs_s/ss34/annot-nf/"
-  workdir: "/www/ss34/work"
+    CryptoDB: "false"
+    PiroplasmaDB: "false"
+    AmoebaDB: "false"
+    ToxoDB: "false"
+  dockerconf: "-with-docker satta/companion"
+  rootdir: "/Users/ss34/develop/annot-nf/"
+  workdir: "/Users/ss34/develop/annot-nf/work"
   tmpdir: "/tmp"
+  example_job_id: "b2e79c6b5f8495fe52ca297d"
 
 production:
   nextflowpath: "/nfs/users/nfs_s/ss34/"
@@ -37,10 +54,11 @@ production:
   fix_polycistrons:
     Kinetoplastida: "true"
     Plasmodium: "false"
-  dockerconf: ""
-  rootdir: "/nfs/users/nfs_s/ss34/annot-nf/"
-  workdir: "/www/ss34/work"
+  dockerconf: "-with-docker satta/companion"
+  rootdir: "/Users/ss34/develop/annot-nf/"
+  workdir: "/Users/ss34/develop/annot-nf/work"
   tmpdir: "/tmp"
+  example_job_id: "b2e79c6b5f8495fe52ca297d"
 
 test:
   nextflowpath: "/Users/ss34/"
@@ -59,7 +77,8 @@ test:
   fix_polycistrons:
     Kinetoplastids: "true"
     Plasmodium: "false"
-  dockerconf: "-with-docker satta/annot-nf"
+  dockerconf: "-with-docker satta/companion"
   rootdir: "/Users/ss34/develop/annot-nf/"
   workdir: "/Users/ss34/develop/annot-nf/work"
   tmpdir: "/tmp"
+  example_job_id: "b2e79c6b5f8495fe52ca297d"
