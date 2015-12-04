@@ -5,8 +5,8 @@
   </h1>
 </div>
 
-<p>Your job was submitted <b><%= distance_of_time_in_words(Time.now,@job[:created_at]) %></b> ago
-      and failed <b><%= distance_of_time_in_words(Time.now,@job[:created_at]) %></b> ago.
+<p>Your job was submitted <b><%= distance_of_time_in_words(Time.now, @job[:created_at]) %></b> ago
+      and failed <b><%= distance_of_time_in_words(Time.now, @job[:created_at]) %></b> ago.
 
 </p>
 <% if @job and @job[:stderr] and @job[:stderr].length > 0 then %>
