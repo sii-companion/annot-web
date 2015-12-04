@@ -144,53 +144,58 @@ var vtable;
   <% if @job[:finished_at] then %>
     <div id="orth" class="tab-pane fade">
         <div style="display: none" id="orthoview">
-        <div class="row">
-          <p>Click on the numbers to view clusters and singleton gene lists.</p>
-        </div>
-          <table class="small" style="width:700px;">
-            <tr>
-            <td style="width:12%;">
-              <%= link_to '', {:class => 'genome-singletons-link'} do %>
-                <span id="genome-singletons"></span> singletons
-              <% end %>
-            </td>
-            <td style="width:76%;"><div id="jvenn-container"></div></td>
-            <td style="width:12%;">
-              <%= link_to '', {:class => 'ref-singletons-link'} do %>
-                <span id="ref-singletons"></span> singletons
-              <% end %>
-            </td>
-            </tr>
-          </table>
+          <div class="row">
+            <p>These Venn diagrams show shared and species-specific gene clusters in the target genome <%= @job[:prefix] %> (left, green) and the <%= @ref.name %> reference (right, blue). Singletons, i.e. genes without orthologs and paralogs, are shown outside the Venn diagram to the left and right.</p>
+            <p>Click on the numbers to view clusters and singleton gene lists.</p>
+          </div>
+          <div class="center-block" style="width:700px;float:none;">
+            <table class="small" style="width:700px;float:none;">
+              <tr>
+              <td style="width:12%;">
+                <%= link_to '', {:class => 'genome-singletons-link'} do %>
+                  <span id="genome-singletons"></span> singletons
+                <% end %>
+              </td>
+              <td style="width:76%;"><div id="jvenn-container"></div></td>
+              <td style="width:12%;">
+                <%= link_to '', {:class => 'ref-singletons-link'} do %>
+                  <span id="ref-singletons"></span> singletons
+                <% end %>
+              </td>
+              </tr>
+            </table>
+          </div>
         </div>
         <div id="orthospinner">
           <%= image_tag 'ajax-loader.gif' %><br /><br />
         </div>
-        <h3 style="display: none" id='vtabledesc'></h3>
-        <div style="display: none" id="vtablediv">
-          <table  class="table table-striped display compact" cellspacing="0" id="vtable">
-            <thead>
-                  <tr>
-                      <th>Cluster</th>
-                      <th>ID</th>
-                      <th>Product</th>
-                  </tr>
-              </thead>
-          </table>
-        </div>
-        <div style="display: none" id="gltablediv">
-          <table class="table table-striped display compact" cellspacing="0" id="gltable">
-            <thead>
-                  <tr>
-                      <th>Gene ID</th>
-                      <th>Sequence</th>
-                      <th>Start</th>
-                      <th>End</th>
-                      <th>Strand</th>
-                      <th>Product</th>
-                  </tr>
-              </thead>
-          </table>
+        <div id="orthotable">
+          <h3 style="display: none" id='vtabledesc'></h3>
+          <div style="display: none" id="vtablediv">
+            <table  class="table table-striped display compact" cellspacing="0" id="vtable">
+              <thead>
+                    <tr>
+                        <th>Cluster</th>
+                        <th>ID</th>
+                        <th>Product</th>
+                    </tr>
+                </thead>
+            </table>
+          </div>
+          <div style="display: none" id="gltablediv">
+            <table class="table table-striped display compact" cellspacing="0" id="gltable">
+              <thead>
+                    <tr>
+                        <th>Gene ID</th>
+                        <th>Sequence</th>
+                        <th>Start</th>
+                        <th>End</th>
+                        <th>Strand</th>
+                        <th>Product</th>
+                    </tr>
+                </thead>
+            </table>
+          </div>
         </div>
         <div>
           <%= link_to clusters_url(id: @job[:job_id]) do %>
@@ -254,6 +259,9 @@ var vtable;
           <p>
             This is <span id='map-header'></span>. Use the mouse to pan around in the image. Zooming in and out is
             possible using the icons or the mouse wheel.
+          </p>
+          <p>
+            <span class='fa fa-stop' style='color: #fb6a4a'></span> = forward strand gene  &emsp; <span class='fa fa-stop' style='color: #6aadd5'></span> = reverse strand gene &emsp; <span class='fa fa-stop' style='color: #74c476'></span> = missing core gene &emsp; <span class='fa fa-stop' style='color: #0000000'></span> = singleton gene &emsp; <span class='fa fa-stop' style='color: #fff64a'></span> = gap
           </p>
           <div id="image-map"></div>
       </div>
@@ -432,6 +440,8 @@ $(document).ready(function(){
           value += this.listnames[name] + " ";
         }
         value = value.trim();
+        $('#orthotable').hide();
+        $('#orthospinner').show();
         $.getJSON( "<%= job_path(:id => @job[:job_id]) %>/orths/cluster/" + value, function(data2) {
           $('#vtabledesc').text("Clusters in: " + value);
           $('#vtabledesc').show();
@@ -454,10 +464,12 @@ $(document).ready(function(){
             $('#vdownloadlink-container').hide();
           }
           $('#orthospinner').hide();
-          $('#orthoview').show();
+          $('#orthotable').show();
         });
       }
     });
+    $('#orthospinner').hide();
+    $('#orthoview').show();
   });
   $.getJSON( "<%= job_path(:id => @job[:job_id]) %>/singletons", function(data) {
     $('#ref-singletons').text(data.ref.length);
@@ -467,6 +479,7 @@ $(document).ready(function(){
       $('#vtabledesc').show();
       $('#vtablediv').hide();
       $('#gltablediv').show();
+      $('#orthotable').show();
       var mytable = $('#gltable').DataTable( {
             data: data.ref,
             "columns": [
@@ -487,6 +500,7 @@ $(document).ready(function(){
       $('#vtabledesc').show();
       $('#vtablediv').hide();
       $('#gltablediv').show();
+      $('#orthotable').show();
       var mytable = $('#gltable').DataTable( {
             data: data.this,
             "columns": [
