@@ -244,8 +244,10 @@ class HardWorker
       job.save!
 
       # clean up directories
-      FileUtils.rm_rf(job.temp_directory)
-      FileUtils.rm_rf(job.work_directory)
+      if not CONFIG['keep_work_directories'] then
+        FileUtils.rm_rf(job.temp_directory)
+        FileUtils.rm_rf(job.work_directory)
+      end
 
       # send finish notification email
       if job[:email].length > 0 then
