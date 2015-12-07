@@ -247,56 +247,39 @@ var vtable;
 
   <div id="synteny" class="tab-pane fade">
     <% if @job[:do_contiguate] and @job.circos_images.size > 0 then %>
-      <div class="row" id="map-row" style="display:none">
-      <style>
-          #image-map {
-            width: 100%;
-            height: 400px;
-            border: 1px solid #ccc;
-            margin-bottom: 10px;
-          }
-          </style>
-          <p>
-            This is <span id='map-header'></span>. Use the mouse to pan around in the image. Zooming in and out is
-            possible using the icons or the mouse wheel.
-          </p>
-          <p>
-            <span class='fa fa-stop' style='color: #fb6a4a'></span> = forward strand gene  &emsp; <span class='fa fa-stop' style='color: #6aadd5'></span> = reverse strand gene &emsp; <span class='fa fa-stop' style='color: #74c476'></span> = missing core gene &emsp; <span class='fa fa-stop' style='color: #0000000'></span> = singleton gene &emsp; <span class='fa fa-stop' style='color: #fff64a'></span> = gap
-          </p>
-          <div id="image-map"></div>
-      </div>
       <div class="row">
-        <p>Each circle below represents a single target-reference pseudochromosome
-           alignment. Click on it to zoom in.</p>
-        <ul class="media-list">
+        <p>Each circle below represents a single target-reference
+           pseudochromosome alignment. Click on it to zoom in.</p>
+        <ul class="horizontal-slide">
           <% @job.circos_images.sort { |a,b| a.chromosome <=> b.chromosome }.each do |image| %>
-          <li class="media">
-            <div class="media-left">
+          <li class="span2">
+            <div class="item">
               <a href="#">
                 <%= image_tag image.file.thumb('70x70').url, class: "media-object chrthumb", :data => {:full_URL => image.file.url, :chr => image.chromosome } %>
               </a>
-            </div>
-            <div class="media-body">
-              <% if image.chromosome %>
-                <h4 class="media-heading">
-                  <% if image.chromosome.match(/_0?0$/) %>
-                    Bin chromosome
-                  <% else %>
-                    Chromosome <%= image.chromosome %>
-                  <% end  %>
-                </h4>
-                <p>
-                  <% if image.chromosome.match(/_0$/) %>
-                    This is the <i>bin chromosome</i>, a virtual concatenation of all uncontiguated scaffolds aligned against all <i><%= @ref.name %></i> reference sequences.
-                  <% else %>
-                    This is pseudochromosome <%= image.chromosome %> generated from input file '<%= @job.sequence_file.file_name %>' aligned against its <i><%= @ref.name %></i> reference chromosome.
-                  <% end  %>
-                </p>
-              <% end %>
+              <span class="caption"><%= image.chromosome %></span>
             </div>
           </li>
           <% end %>
         </ul>
+      </div>
+      <div class="row" id="map-row" style="display:none">
+        <style>
+            #image-map {
+              width: 100%;
+              height: 800px;
+              border: 1px solid #ccc;
+              margin-bottom: 10px;
+            }
+        </style>
+        <p>
+          This is <span id='map-header'></span>. Click and drag in the diagram below to pan around. Use the mouse wheel or the <span class='glyphicon glyphicon-plus'></span>/<span class='glyphicon glyphicon-minus'></span> icons to zoom in and out.
+        </p>
+        <p>
+          top: reference chromosome from <i><%= @ref[:name] %></i>, bottom: <i> <%= @job[:name] %></i> contiguated pseudochromosome <br />
+          <span class='fa fa-stop' style='color: #fb6a4a'></span> = forward strand gene  &emsp; <span class='fa fa-stop' style='color: #6aadd5'></span> = reverse strand gene &emsp; <span class='fa fa-stop' style='color: #74c476'></span> = missing core gene &emsp; <span class='fa fa-stop' style='color: #0000000'></span> = singleton gene &emsp; <span class='fa fa-stop' style='color: #fff64a'></span> = gap
+        </p>
+        <div id="image-map"></div>
       </div>
     <% else %>
       <div class="row">
