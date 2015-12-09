@@ -134,7 +134,7 @@ module JobsHelper
         end
       end
       out += "}\n"
-      puts out
+      logger.debug out
       t = File.new("#{job.job_directory}/config", "w+")
       t.write(out)
       t.close

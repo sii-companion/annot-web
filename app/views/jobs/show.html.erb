@@ -13,6 +13,8 @@
       for <b><%= distance_of_time_in_words(Time.now, @job[:started_at]) %></b><% end %>.
   <% elsif @job_hash[:failed] then %>
     and failed <b><%= distance_of_time_in_words(Time.now, @job[:finished_at]) %></b> ago.
+  <% else %>
+    and has not started yet.
   <% end %>
 </p>
 

@@ -1,0 +1,6 @@
+Name:   _companion_session
+Domain: companion.sanger.ac.uk
+Purpose: Session ID, for user notifications across multiple pages
+Necessary: Yes (otherwise users won't get important notifications)
+Accessible to Script:   No (HttpOnly)
+aExpires:    When the browsing session ends

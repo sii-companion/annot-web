@@ -58,8 +58,7 @@ class JobsController < ApplicationController
   def create
     @job = Job.new(jobs_params(params))
     if verify_recaptcha(:model => @job, :message => "The captcha you entered was invalid.") && @job.save then
-      puts @job.inspect
-      STDOUT.flush
+      logger.info @job.inspect
       file = @job.sequence_file
       file.file.canonicalize_seq!
       # start job and record Sidekiq ID
@@ -85,8 +84,13 @@ class JobsController < ApplicationController
     else
       thisjob = Job.find_by(:job_id => params[:id])
       if thisjob then
+        if thisjob.sequence_file then
+          thisjob.sequence_file.destroy
+        end
+        if thisjob.transcript_file then
+          thisjob.transcript_file.destroy
+        end
         flash[:info] = "Job '#{thisjob[:name]}' was deleted."
-        thisjob.destroy
         queue = Sidekiq::Queue.new
         queue.each do |job|
           job.delete if job.jid == params[:id]
@@ -95,6 +99,7 @@ class JobsController < ApplicationController
           FileUtils.rm_rf("#{thisjob.job_directory}")
         end
       end
+      thisjob.destroy
       if logged_in? then
         redirect_to :jobs
       else

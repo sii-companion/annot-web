@@ -107,7 +107,7 @@ class HardWorker
             "#{CONFIG['nextflowscript']} #{CONFIG['dockerconf']} " + \
             "#{'-resume' unless job[:no_resume]} " + \
             "-pool-size 5 --dist_dir #{job.job_directory}"
-      puts run
+      logger.info run
       with_environment("ROOTDIR" => "#{CONFIG['rootdir']}",
                        "NXF_WORK" => job.work_directory,
                        "NXF_TEMP" => job.temp_directory) do
@@ -116,12 +116,11 @@ class HardWorker
           my_stderr = stderr.readlines.join
         end
       end
-      puts "STDOUT:"
-      puts my_stdout
-      puts "STDERR:"
-      puts my_stderr
+      logger.info "STDOUT:"
+      logger.info my_stdout
+      logger.info "STDERR:"
+      logger.info my_stderr
 
-      job[:finished_at] = DateTime.now
       job[:stderr] = my_stderr
       job[:stdout] = my_stdout
       job.save!
@@ -208,7 +207,7 @@ class HardWorker
             if g then
               c.genes << g
             else
-              STDERR.puts("#{memb[0]}: #{memb_id} (with job ID #{job[:id]}) not found!")
+              logger.info("#{memb[0]}: #{memb_id} (with job ID #{job[:id]}) not found!")
             end
           end
           c.save!
@@ -231,7 +230,7 @@ class HardWorker
             if g then
               t.genes << g
             else
-              STDERR.puts("#{memb}: #{memb_id} (with job ID #{job[:id]}) not found!")
+              logger.info("#{memb}: #{memb_id} (with job ID #{job[:id]}) not found!")
             end
           end
           t.save!
