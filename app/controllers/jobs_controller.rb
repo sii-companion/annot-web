@@ -85,8 +85,13 @@ class JobsController < ApplicationController
     else
       thisjob = Job.find_by(:job_id => params[:id])
       if thisjob then
+        if thisjob.sequence_file then
+          thisjob.sequence_file.destroy
+        end
+        if thisjob.transcript_file then
+          thisjob.transcript_file.destroy
+        end
         flash[:info] = "Job '#{thisjob[:name]}' was deleted."
-        thisjob.destroy
         queue = Sidekiq::Queue.new
         queue.each do |job|
           job.delete if job.jid == params[:id]
@@ -95,6 +100,7 @@ class JobsController < ApplicationController
           FileUtils.rm_rf("#{thisjob.job_directory}")
         end
       end
+      thisjob.destroy
       if logged_in? then
         redirect_to :jobs
       else
