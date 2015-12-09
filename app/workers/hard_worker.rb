@@ -107,7 +107,7 @@ class HardWorker
             "#{CONFIG['nextflowscript']} #{CONFIG['dockerconf']} " + \
             "#{'-resume' unless job[:no_resume]} " + \
             "-pool-size 5 --dist_dir #{job.job_directory}"
-      logger.info run
+      Rails.logger.info run
       with_environment("ROOTDIR" => "#{CONFIG['rootdir']}",
                        "NXF_WORK" => job.work_directory,
                        "NXF_TEMP" => job.temp_directory) do
@@ -116,10 +116,10 @@ class HardWorker
           my_stderr = stderr.readlines.join
         end
       end
-      logger.info "STDOUT:"
-      logger.info my_stdout
-      logger.info "STDERR:"
-      logger.info my_stderr
+      Rails.logger.info "STDOUT:"
+      Rails.logger.info my_stdout
+      Rails.logger.info "STDERR:"
+      Rails.logger.info my_stderr
 
       job[:stderr] = my_stderr
       job[:stdout] = my_stdout
@@ -207,7 +207,7 @@ class HardWorker
             if g then
               c.genes << g
             else
-              logger.info("#{memb[0]}: #{memb_id} (with job ID #{job[:id]}) not found!")
+              Rails.logger.info("#{memb[0]}: #{memb_id} (with job ID #{job[:id]}) not found!")
             end
           end
           c.save!
@@ -230,7 +230,7 @@ class HardWorker
             if g then
               t.genes << g
             else
-              logger.info("#{memb}: #{memb_id} (with job ID #{job[:id]}) not found!")
+              Rails.logger.info("#{memb}: #{memb_id} (with job ID #{job[:id]}) not found!")
             end
           end
           t.save!
