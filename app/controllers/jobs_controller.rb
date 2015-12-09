@@ -58,8 +58,7 @@ class JobsController < ApplicationController
   def create
     @job = Job.new(jobs_params(params))
     if verify_recaptcha(:model => @job, :message => "The captcha you entered was invalid.") && @job.save then
-      puts @job.inspect
-      STDOUT.flush
+      logger.info @job.inspect
       file = @job.sequence_file
       file.file.canonicalize_seq!
       # start job and record Sidekiq ID
