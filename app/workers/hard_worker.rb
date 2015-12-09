@@ -121,7 +121,6 @@ class HardWorker
       puts "STDERR:"
       puts my_stderr
 
-      job[:finished_at] = DateTime.now
       job[:stderr] = my_stderr
       job[:stdout] = my_stdout
       job.save!
