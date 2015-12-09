@@ -19,8 +19,11 @@
           <span class="icon-bar"></span>
           <span class="icon-bar"></span>
         </button>
+        <a href="http://www.sanger.ac.uk" class="navbar-brand">
+          <%= image_tag 'sang_logo.png' %>
+        </a>
         <%= link_to root_url, :class => "navbar-brand" do %>
-        <%= image_tag 'companion_logo.png', width: "80" %>
+        <%= image_tag 'companion_logo.png' %>
         <% end %>
       </div>
 
@@ -47,33 +50,33 @@
           <% end %>
         </li>
       </ul>
-      <ul class="nav navbar-nav navbar-right">
-        <li>
-          <p class="navbar-text">
-           <span title="<%= @n_working %> jobs running, <%= @n_queued %> queued">
+      <div class="navbar-right">
+        <p class="navbar-text">
+          <span title="<%= @n_working %> jobs running, <%= @n_queued %> queued">
             <i class="fa fa-server"></i>
             <%= @n_working %>/<%= @n_queued %>
           </span>
         </p>
-      </li>
-      <% if logged_in? then %>
-      <li class="dropdown">
-        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-          <div>
-            <%= gravatar_for current_user %> <%= current_user[:fullname] %>
-            <span class="caret"></span>
-          </div>
-        </a>
-        <ul class="dropdown-menu" role="menu">
-          <li><%= link_to "Manage jobs", jobs_url %></li>
-          <li class="divider"></li>
-          <li><%= link_to "Log out", logout_path, method: "delete" %></li>
-        </ul>
-      </li>
-      <% end %>
-    </ul>
+      </div>
+      <ul class="nav navbar-nav navbar-right">
+        <% if logged_in? then %>
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+            <div>
+              <%= gravatar_for current_user %> <%= current_user[:fullname] %>
+              <span class="caret"></span>
+            </div>
+          </a>
+          <ul class="dropdown-menu" role="menu">
+            <li><%= link_to "Manage jobs", jobs_url %></li>
+            <li class="divider"></li>
+            <li><%= link_to "Log out", logout_path, method: "delete" %></li>
+          </ul>
+        </li>
+        <% end %>
+      </ul>
+    </div>
   </div>
-</div>
 </nav>
 <div class="container">
   <% flash.each do |message_type, message| %>
@@ -83,15 +86,12 @@
 </div>
 
 <footer class="footer">
-  <div class="pull-right" style="margin-right: 20px">
-    <a href="http://www.sanger.ac.uk/research/projects/parasitegenomics">
-      <%= image_tag 'sang_logo.png', height: "32" %>
-    </a>
-  </div>
   <div class="copyright">
+    <p class="pull-right">
+      <a href="http://www.sanger.ac.uk/legal/">Terms and conditions</a> &middot; <a href="http://www.sanger.ac.uk/legal/cookiespolicy.html">Cookies policy</a>
+    </p>
     <p>
-      Companion is developed and maintained by the <a href="http://www.sanger.ac.uk/science/groups/berriman-group">Parasite Genomics group</a> at the Wellcome Trust Sanger Institute.<br />
-      Copyright &copy; 2015 Genome Research Limited. <a href="http://www.sanger.ac.uk/legal/">Terms and conditions</a> apply.
+      Companion is developed by the <a href="http://www.sanger.ac.uk/science/groups/berriman-group">Parasite Genomics group</a> at the WTSI. Copyright &copy; 2015 Genome Research Limited.
     </p>
   </div>
 </footer>
