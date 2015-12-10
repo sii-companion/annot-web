@@ -9,6 +9,47 @@ class GFF3Analyser
   end
 end
 
+class TranscriptGTFAnalyser
+  def call(content)
+    valid = true
+    seen_exon = false
+    path = content.path
+    File.open(path, 'r').each_line  do |l|
+      next if l[0] == "#"
+      seqid, src, type, start, stop, score, strand, phase, attribs = l.split("\t")
+      if attribs.nil? then
+        return false
+      end
+      if not seen_exon and type == 'exon' then
+        seen_exon = true
+      end
+      if not /[-+.?]/.match(strand) then
+        return false
+      end
+      if not /[0-3]/.match(phase) then
+        return false
+      end
+      begin
+        if start.to_i > stop.to_i then
+            return false
+        end
+      rescue
+        return false
+      end
+      if not /gene_id ['"].+['"];?/.match(attribs) then
+        return false
+      end
+      if not /transcript_id ['"].+['"];?/.match(attribs) then
+        return false
+      end
+    end
+    if not seen_exon then
+      valid = false
+    end
+    return valid
+  end
+end
+
 class SequenceValidAnalyser
   def call(content)
     path = content.path
@@ -55,6 +96,7 @@ Dragonfly.app.configure do
   end
 
   analyser :valid_gff3, GFF3Analyser.new
+  analyser :valid_transcript, TranscriptGTFAnalyser.new
   analyser :valid_sequence, SequenceValidAnalyser.new
   analyser :number_of_sequences, SequenceNumberAnalyser.new
 end
