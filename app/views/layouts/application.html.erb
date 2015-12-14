@@ -80,7 +80,9 @@
 </nav>
 <div class="container">
   <% flash.each do |message_type, message| %>
-  <div class="alert alert-<%= message_type %>"><%= message.html_safe %></div>
+  <% if not /verification_/.match(message) then %>
+    <div class="alert alert-<%= message_type %>"><%= message.html_safe %></div>
+  <% end %>
   <% end %>
   <%= yield %>
 </div>
