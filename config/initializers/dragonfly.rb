@@ -26,7 +26,7 @@ class TranscriptGTFAnalyser
       if not /[-+.?]/.match(strand) then
         return false
       end
-      if not /[0-3]/.match(phase) then
+      if not /[0-3]./.match(phase) then
         return false
       end
       begin
