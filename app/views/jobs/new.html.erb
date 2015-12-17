@@ -31,10 +31,11 @@
   </div>
   <div class="panel-body">
     <p>Please upload a <b>target sequence file</b> to be annotated from your
-       local filesystem using the 'Browse...' button below. The file (FASTA,
+       local filesystem using the button below. The file (FASTA,
        EMBL or GenBank format) can be gzip- or bzip2-compressed. In this case
        it must have a <tt>.gz</tt> or <tt>.bz2</tt> suffix.</p>
-       <p class="alert alert-warning">Note: The maximal size of your uploaded file is <b>64 MB</b>, and the
+       <p class="alert alert-warning">Note: The maximal size of your uploaded
+       file is <b>64 MB</b>, and the
        maximum number of individual sequences in it is <b>3000</b>.</p>
        <%= f.fields_for :sequence_file do |s_f| %>
          <%= s_f.file_field :file, required: true %>
@@ -43,8 +44,8 @@
        input file for a <i>Plasmodium falciparum</i> IT chromosome 5 sequence
        that can be used with the <i>Plasmodium falciparum</i> 3D7 example
        reference set (choose below in step 4) for a quick example run.
-       Just save it to your local machine and upload it using the button
-       above.</p>
+       To use it, please download it to your local machine and upload it using
+       the button above.</p>
   </div>
 </div>
 
@@ -61,7 +62,7 @@
         </div>
 
         <div id="transcript-selection">
-          <p>Please select a <b>transcript evidence file</b> to be used to improve the structural annotation. This file must be a GTF file with <tt>exon</tt> features, as delivered, for example, by the Cufflinks software. The sequence IDs in this file must correspond in name and coordinate system to the ones given in the target sequence file above.  If this is your first annotation run, choose a GTF file from your local filesystem using the 'Browse...' button below, then select it after it has been added to the list.</p>
+          <p>Please select a <b>transcript evidence file</b> to be used to improve the structural annotation. This file must be a GTF file with <tt>exon</tt> features, as delivered, for example, by the Cufflinks software. The sequence IDs in this file must correspond in name and coordinate system to the ones given in the target sequence file above. Choose a GTF file from your local filesystem using the button below.</p>
           <p class="alert alert-warning">Please do <b>not</b> upload raw reads (e.g. FASTQ) or alignment (e.g. BAM) files here.</p>
           <%= f.fields_for :transcript_file do |t_f| %>
           <%= t_f.file_field :file %>
