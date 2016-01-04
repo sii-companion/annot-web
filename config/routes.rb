@@ -13,8 +13,8 @@ Rails.application.routes.draw do
   get 'welcome/clear' => 'welcome#clear'
 
   # sign up
-  get 'signup' => 'users#new'
-  #resources :users
+  # get 'signup' => 'users#new'
+  # resources :users
 
   # jobs
   resources :jobs
