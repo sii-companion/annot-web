@@ -251,7 +251,7 @@ var vtable;
         <p>Each circle below represents a single target-reference
            pseudochromosome alignment. Click on the thumbnail to zoom in.
            <span class="pull-right">
-             <%= link_to :all_synteny_images do %>
+             <%= link_to all_synteny_images_url(id: @job[:job_id]) do %>
                <i class="glyphicon glyphicon-download-alt"></i>
                Download all <%= @job.circos_images.size %> images (ZIP)
              <% end %>
