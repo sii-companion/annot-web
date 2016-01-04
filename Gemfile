@@ -77,3 +77,6 @@ gem 'thin'
 
 # Captcha
 gem "recaptcha", :require => "recaptcha/rails"
+
+# for efficient on-the-fly zipping
+gem "rubyzip", :require => 'zip'
