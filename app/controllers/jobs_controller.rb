@@ -281,6 +281,29 @@ class JobsController < ApplicationController
     end
   end
 
+  def get_all_synteny_images
+    job = Job.find_by(:job_id => params[:id])
+    if job then
+      if job.circos_images and job.circos_images.size > 0 then
+        t = Tempfile.new(job.job_id)
+        Zip::OutputStream.open(t.path) do |zos|
+          job.circos_images.each do |image|
+            zos.put_next_entry("#{image.chromosome}.png")
+            zos.print IO.read(image.file.path)
+          end
+        end
+        send_file t.path, :type => 'application/zip',
+                          :disposition => 'attachment',
+                          :filename => "#{job.name.parameterize}.zip"
+        t.close
+      else
+        render html: "No synteny plots found for this job."
+      end
+    else
+      render plain: "job #{params[:id]} not found or completed", status: 404
+    end
+  end
+
   private
 
   def jobs_params(params)

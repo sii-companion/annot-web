@@ -79,6 +79,10 @@ Dragonfly.app.configure do
 
   url_format "/media/:job/:name"
 
+  response_header 'Content-Disposition' do |job, request, headers|
+    "attachment; #{headers['Content-Disposition']}"
+  end
+
   datastore :file,
     root_path: Rails.root.join('public/system/dragonfly', Rails.env),
     server_root: Rails.root.join('public')

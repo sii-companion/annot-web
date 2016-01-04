@@ -249,7 +249,14 @@ var vtable;
     <% if @job[:do_contiguate] and @job.circos_images.size > 0 then %>
       <div class="row">
         <p>Each circle below represents a single target-reference
-           pseudochromosome alignment. Click on it to zoom in.</p>
+           pseudochromosome alignment. Click on the thumbnail to zoom in.
+           <span class="pull-right">
+             <%= link_to :all_synteny_images do %>
+               <i class="glyphicon glyphicon-download-alt"></i>
+               Download all <%= @job.circos_images.size %> images (ZIP)
+             <% end %>
+           </span>
+        </p>
         <ul class="horizontal-slide">
           <% @job.circos_images.sort { |a,b| a.chromosome <=> b.chromosome }.each do |image| %>
           <li class="span2">
@@ -257,7 +264,14 @@ var vtable;
               <a href="#">
                 <%= image_tag image.file.thumb('70x70').url, class: "media-object chrthumb", :data => {:full_URL => image.file.url, :chr => image.chromosome } %>
               </a>
-              <span class="caption"><%= image.chromosome %></span>
+              <span class="caption">
+                <%= image.chromosome %>
+                <%= link_to image.file.url,
+                            title: "Download hi-res image for chromosome #{image.chromosome} ",
+                            rel: "tooltip" do %>
+                  <i class="glyphicon glyphicon-download-alt" ></i>
+                <% end %>
+              </span>
             </div>
           </li>
           <% end %>
