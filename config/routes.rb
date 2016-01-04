@@ -14,7 +14,7 @@ Rails.application.routes.draw do
 
   # sign up
   get 'signup' => 'users#new'
-  resources :users
+  #resources :users
 
   # jobs
   resources :jobs
@@ -30,6 +30,7 @@ Rails.application.routes.draw do
   get 'jobs/:id/tree.nwk' => 'jobs#get_tree', as: :tree
   get 'jobs/:id/report.html' => 'jobs#get_report', as: :report
   get 'jobs/:id/tree/genes' => 'jobs#get_tree_genes', as: :tree_genes
+  get 'jobs/:id/plots.zip' => 'jobs#get_all_synteny_images', as: :all_synteny_images
 
   # uploaded files
   get 'user_files/index'
