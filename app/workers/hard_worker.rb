@@ -247,7 +247,7 @@ class HardWorker
       end
 
       # send finish notification email
-      if job[:email].length > 0 then
+      if job[:email] and job[:email].length > 0 then
         JobMailer.finish_success_job_email(job).deliver_later
       end
     rescue => e
@@ -260,7 +260,7 @@ class HardWorker
 
       job.save!
       # send error notification email
-      if job[:email].length > 0 then
+      if job[:email] and job[:email].length > 0 then
         JobMailer.finish_failure_job_email(job).deliver_later
       end
       JobMailer.finish_failure_job_email_notify_dev(job).deliver_later
