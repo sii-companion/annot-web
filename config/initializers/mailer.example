@@ -1,7 +1,7 @@
 Rails.application.configure do
   config.action_mailer.default_url_options = {
-    :host => 'companion.sanger.ac.uk',
-    :port => 80
+    :host => 'localhost',
+    :port => 8000
   }
 
   config.action_mailer.delivery_method = :smtp
