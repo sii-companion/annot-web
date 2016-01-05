@@ -252,10 +252,12 @@ class HardWorker
       end
     rescue => e
       job[:finished_at] = DateTime.now
+      errstr = "#{e.backtrace.first}: #{e.message} (#{e.class})\n"
+      errstr += e.backtrace.drop(1).map{|s| "\t#{s}"}
       if job[:stderr] then
-        job[:stderr] = job[:stderr] + "\n" + e.to_s
+        job[:stderr] = job[:stderr] + "\n" + errstr
       else
-        job[:stderr] = e.to_s
+        job[:stderr] = errstr
       end
 
       job.save!
