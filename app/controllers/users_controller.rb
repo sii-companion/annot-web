@@ -23,5 +23,4 @@ class UsersController < ApplicationController
       render :signup
     end
   end
-
 end

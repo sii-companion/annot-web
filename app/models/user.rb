@@ -15,7 +15,6 @@ class User < ActiveRecord::Base
   has_many :transcript_files
   has_many :user_files
 
-
   def User.digest(string)
     cost = ActiveModel::SecurePassword.min_cost ? BCrypt::Engine::MIN_COST :
                                                   BCrypt::Engine.cost
