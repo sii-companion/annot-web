@@ -4,8 +4,12 @@
   <div class="row">
     <%= form_tag(:job_find, method: "get", class: "form-inline") do %>
       <div class="form-group">
-        <a class="btn btn-lg btn-primary" href="/jobs/new" role="button">Annotate <i>your</i> sequence!</a><br /><br />
-         or find your job by ID:<br /><br />
+        <% if not @space_low then %>
+          <a class="btn btn-lg btn-primary" href="/jobs/new" role="button">Annotate <i>your</i> sequence!</a> <br /><br /> or find
+        <% else %>
+          <a class="btn btn-lg btn-danger disabled" href="#" role="button">New job submission is temporarily closed for technical reasons.<br />Please try again later.</a> <br /><br /> Find
+        <% end %>
+        your job by ID:<br /><br />
         <%= text_field_tag(:id, nil, :class => "form-control input-lg", :style => "width: 350px",
                            :placeholder => "e.g. 9b0a42358d208bb061cbf2d3" ) %>
       </div>

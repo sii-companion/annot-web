@@ -1,20 +1,26 @@
 class JobsController < ApplicationController
   def new
-    # set defaults
-    @job = Job.new
-    @job[:do_contiguate] = true
-    @job[:do_exonerate] = false
-    @job[:do_ratt] = true
-    @job[:do_pseudo] = true
-    @job[:use_transcriptome_data] = false
-    @job[:no_resume] = false
-    @job[:max_gene_length] = 20000
-    @job[:augustus_score_threshold] = 0.8
-    @job[:taxon_id] = 5653
-    @job[:db_id] = "Companion"
-    @job[:ratt_transfer_type] = 'Species'
-    @job.build_sequence_file
-    @job.build_transcript_file
+    if @space_low then
+      flash[:info] = "New job creation is temporarily closed for technical " + \
+                     "reasons."
+      redirect_to :welcome
+    else
+      # set defaults
+      @job = Job.new
+      @job[:do_contiguate] = true
+      @job[:do_exonerate] = false
+      @job[:do_ratt] = true
+      @job[:do_pseudo] = true
+      @job[:use_transcriptome_data] = false
+      @job[:no_resume] = false
+      @job[:max_gene_length] = 20000
+      @job[:augustus_score_threshold] = 0.8
+      @job[:taxon_id] = 5653
+      @job[:db_id] = "Companion"
+      @job[:ratt_transfer_type] = 'Species'
+      @job.build_sequence_file
+      @job.build_transcript_file
+    end
   end
 
   def index
