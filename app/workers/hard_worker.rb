@@ -69,7 +69,7 @@ class HardWorker
     job.save!
 
     # send job start notification email
-    if job[:email].length > 0 then
+    if job[:email] and job[:email].length > 0 then
       JobMailer.start_job_email(job).deliver_later
     end
 
@@ -247,20 +247,22 @@ class HardWorker
       end
 
       # send finish notification email
-      if job[:email].length > 0 then
+      if job[:email] and job[:email].length > 0 then
         JobMailer.finish_success_job_email(job).deliver_later
       end
     rescue => e
       job[:finished_at] = DateTime.now
+      errstr = "#{e.backtrace.first}: #{e.message} (#{e.class})\n"
+      errstr += e.backtrace.drop(1).map{|s| "\t#{s}"}.join("\n")
       if job[:stderr] then
-        job[:stderr] = job[:stderr] + "\n" + e.to_s
+        job[:stderr] = job[:stderr] + "\n" + errstr
       else
-        job[:stderr] = e.to_s
+        job[:stderr] = errstr
       end
 
       job.save!
       # send error notification email
-      if job[:email].length > 0 then
+      if job[:email] and job[:email].length > 0 then
         JobMailer.finish_failure_job_email(job).deliver_later
       end
       JobMailer.finish_failure_job_email_notify_dev(job).deliver_later
