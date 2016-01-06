@@ -69,7 +69,7 @@ class HardWorker
     job.save!
 
     # send job start notification email
-    if job[:email].length > 0 then
+    if job[:email] and job[:email].length > 0 then
       JobMailer.start_job_email(job).deliver_later
     end
 
