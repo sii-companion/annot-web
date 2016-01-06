@@ -1,2 +1,5 @@
-<h1>Jobs#create</h1>
-<p>Find me in app/views/jobs/create.html.erb</p>
+<h1>Job submission successful</h1>
+<p>Your job has been successfully submitted to the Companion server.
+   The status of your job can be accessed via the following link:</p>
+
+<%= link_to job_path(id: @job[:job_id]) %>

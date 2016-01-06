@@ -39,7 +39,7 @@ class Reference < ActiveFile::Base
           end
           # we need at least an AUGUSTUS model to use this species as a
           # direct reference
-          if newhash.has_key?('augustus_model') then
+          if newhash.has_key?('augustus_model') and newhash.has_key?('is_reference_strain') then
             out << newhash
             i += 1
           end
@@ -47,5 +47,18 @@ class Reference < ActiveFile::Base
       end
       out
     end
+  end
+
+  def has_chromosomes?
+    return (self[:nof_chromosomes] and self[:nof_chromosomes] > 0 \
+      and File.exist?(File.join(self[:referencedir], self[:abbr], 'chromosomes.fasta')))
+  end
+
+  def name_with_genes
+    out = "#{self[:name]} (#{self[:nof_genes]} genes"
+    if self.has_chromosomes? then
+      out = out + ", #{self[:nof_chromosomes]} chromosomes"
+    end
+    out = out + ")"
   end
 end

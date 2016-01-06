@@ -6,11 +6,11 @@
   <body>
     <h1>Your job has finished!</h1>
     <p>
-      Dear <%= @user[:fullname] %>, your job "<%= @job[:name] %>" has just finished successfully!  <br>
+      Dear Companion user, your job "<%= @job[:name] %>" has just finished successfully!<br />
     </p>
     <p>
       To inspect your <%= @job.genome_stat[:nof_genes] %> genes just follow <%= link_to "this link", job_url(id: @job[:job_id]) %>.
     </p>
-    <p>Thanks for using the software and have a great day!</p>
+    <p>Thanks for using Companion and have a nice day!</p>
   </body>
 </html>

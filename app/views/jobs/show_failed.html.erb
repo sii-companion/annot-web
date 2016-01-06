@@ -1,0 +1,18 @@
+<% content_for(:title, "#{@job[:name]} results") %>
+<div class="page-header">
+  <h1><%= @job[:name] %> <span class="small">(<%= @job[:prefix] %>)</span>
+    <%= render partial: "badge", locals: {:job => @job_hash, :extraclass => "pull-right"} %>
+  </h1>
+</div>
+
+<p>Your job was submitted <b><%= distance_of_time_in_words(Time.now, @job[:created_at]) %></b> ago
+      and failed <b><%= distance_of_time_in_words(Time.now, @job[:created_at]) %></b> ago.
+
+</p>
+<% if @job and @job[:stderr] and @job[:stderr].length > 0 then %>
+Here are some details of why the job failed:
+<pre class='span3'><%= @job[:stderr] %></pre>
+<% end %>
+
+The Companion maintainers have been notified of the problem and will look into
+it. Sorry for the inconvenience.

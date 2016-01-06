@@ -4,10 +4,18 @@ class StaticPagesController < ApplicationController
   end
 
   def examples
-    render "examples"
+    @job = nil
+    @ef = nil
+    if CONFIG['example_job_id'] and CONFIG['example_job_id'].length > 0 then
+      @job = Job.find_by(:job_id => CONFIG['example_job_id'])
+      if @job then
+        @ref = Reference.find(@job[:reference_id])
+      end
+    end
   end
 
   def how_it_works
+    examples
     render "how_it_works"
   end
 end

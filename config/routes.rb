@@ -1,15 +1,11 @@
 Rails.application.routes.draw do
 
-  # The priority is based upon order of creation: first created -> highest priority.
-  # See how all your routes lay out with "rake routes".
-
-  # You can have the root of your site routed with "root"
   root 'welcome#index'
 
   # static pages
   get 'faq' => 'static_pages#faq'
   get 'examples' => 'static_pages#examples'
-  get 'how_it_works' => 'static_pages#how_it_works'
+  get 'getting_started' => 'static_pages#how_it_works'
 
   # front page
   get 'welcome' => 'welcome#index'
@@ -17,19 +13,24 @@ Rails.application.routes.draw do
   get 'welcome/clear' => 'welcome#clear'
 
   # sign up
-  get 'signup' => 'users#new'
-  resources :users
+  # get 'signup' => 'users#new'
+  # resources :users
 
   # jobs
   resources :jobs
   post 'jobs/new_sequence_file' => 'sequence_files#create_for_jobform'
   post 'jobs/new_transcript_file' => 'transcript_files#create_for_jobform'
+  get 'find' => 'jobs#show', as: :job_find
+  get 'job/:id' => 'jobs#show'
+  get 'jobs/:id' => 'jobs#show'
   get 'jobs/:id/orths' => 'jobs#orths'
   get 'jobs/:id/orths/cluster/:cluster' => 'jobs#orths_for_cluster', :constraints => { :cluster => /.*/ }
   get 'jobs/:id/clusters' => 'jobs#get_clusters', as: :clusters
   get 'jobs/:id/singletons' => 'jobs#get_singletons', as: :singletons
   get 'jobs/:id/tree.nwk' => 'jobs#get_tree', as: :tree
+  get 'jobs/:id/report.html' => 'jobs#get_report', as: :report
   get 'jobs/:id/tree/genes' => 'jobs#get_tree_genes', as: :tree_genes
+  get 'jobs/:id/plots.zip' => 'jobs#get_all_synteny_images', as: :all_synteny_images
 
   # uploaded files
   get 'user_files/index'

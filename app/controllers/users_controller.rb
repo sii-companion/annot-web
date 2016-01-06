@@ -16,7 +16,6 @@ class UsersController < ApplicationController
     @user = User.new(params.require(:user).permit(:name, :email, :fullname,
                                                   :institution, :password,
                                                   :password_confirmation))
-    puts params[:user].inspect
     if @user.save
       log_in @user
       redirect_to :jobs
@@ -24,7 +23,4 @@ class UsersController < ApplicationController
       render :signup
     end
   end
-
-  # TODO: delete etc.
-
 end

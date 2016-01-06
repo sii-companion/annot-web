@@ -23,9 +23,11 @@ class HardWorker
   end
 
   def add_result_file(job, file)
-    if File.exist?("#{job.job_directory}/#{file}") then
+    file_path = "#{job.job_directory}/#{file}"
+    if File.exist?(file_path) then
       rf = ResultFile.new
-      rf.file = File.new("#{job.job_directory}/#{file}")
+      rf.file = File.new(file_path)
+      rf.md5 = Digest::MD5.file(file_path).hexdigest
       rf.save!
       job.result_files << rf
     else
@@ -51,6 +53,9 @@ class HardWorker
   end
 
   def perform(id)
+    # wait a bit to minimize timing issues
+    Kernel.sleep(5)
+
     job = Job.find(id)
     store name: job[:name]
     store job_id: @jid
@@ -64,7 +69,9 @@ class HardWorker
     job.save!
 
     # send job start notification email
-    JobMailer.start_job_email(job.user, job).deliver_later
+    if job[:email] and job[:email].length > 0 then
+      JobMailer.start_job_email(job).deliver_later
+    end
 
     begin
       # make necessary run directories
@@ -72,14 +79,14 @@ class HardWorker
 
       # prepare starting Sidekiq job
       cf = JobsHelper::ConfigFactory.new
-      uf = SequenceFile.find(job[:sequence_file_id])
+      uf = job.sequence_file
       cf.use_target_seq(uf)
       r = Reference.find(job[:reference_id])
       cf.select_reference(r)
       cf.use_prefix(job[:prefix])
-      cf.do_contiguation(job[:do_contiguate])
+      cf.do_contiguation(job[:do_contiguate] && r.has_chromosomes?)
       if job[:use_transcriptome_data] then
-        tf = TranscriptFile.find(job[:transcript_file_id])
+        tf = job.transcript_file
         if tf then
           cf.use_transcript_file(tf)
         end
@@ -100,7 +107,7 @@ class HardWorker
             "#{CONFIG['nextflowscript']} #{CONFIG['dockerconf']} " + \
             "#{'-resume' unless job[:no_resume]} " + \
             "--dist_dir #{job.job_directory}"
-      puts run
+      Rails.logger.info run
       with_environment("ROOTDIR" => "#{CONFIG['rootdir']}",
                        "NXF_WORK" => job.work_directory,
                        "NXF_TEMP" => job.temp_directory) do
@@ -109,12 +116,11 @@ class HardWorker
           my_stderr = stderr.readlines.join
         end
       end
-      puts "STDOUT:"
-      puts my_stdout
-      puts "STDERR:"
-      puts my_stderr
+      Rails.logger.info "STDOUT:"
+      Rails.logger.info my_stdout
+      Rails.logger.info "STDERR:"
+      Rails.logger.info my_stderr
 
-      job[:finished_at] = DateTime.now
       job[:stderr] = my_stderr
       job[:stdout] = my_stdout
       job.save!
@@ -198,8 +204,11 @@ class HardWorker
             # HACK! needs to be done correctly for all possible transcript namings!
             memb_id = memb[0].gsub(/(:.+$|\.\d+$|\.mRNA$)/,"")
             g = Gene.where(["gene_id LIKE ? AND (job_id = #{job[:id]} OR job_id IS NULL)", "#{memb_id}%"]).take
-            raise "#{memb[0]}: #{memb_id} (with job ID #{job[:id]}) not found!" unless g
-            c.genes << g
+            if g then
+              c.genes << g
+            else
+              Rails.logger.info("#{memb[0]}: #{memb_id} (with job ID #{job[:id]}) not found!")
+            end
           end
           c.save!
         end
@@ -218,8 +227,11 @@ class HardWorker
             # HACK! needs to be done correctly for all possible transcript namings!
             memb_id = memb.gsub(/(:[^:]+$|\.\d+$)/,"")
             g = Gene.where(["gene_id LIKE ? AND (job_id = #{job[:id]} OR job_id IS NULL)", "#{memb_id}%"]).take
-            raise "#{memb}: #{memb_id} (with job ID #{job[:id]}) not found!" unless g
-            t.genes << g
+            if g then
+              t.genes << g
+            else
+              Rails.logger.info("#{memb}: #{memb_id} (with job ID #{job[:id]}) not found!")
+            end
           end
           t.save!
         end
@@ -229,14 +241,31 @@ class HardWorker
       job.save!
 
       # clean up directories
-      FileUtils.rm_rf(job.temp_directory)
-      FileUtils.rm_rf(job.work_directory)
+      if not CONFIG['keep_work_directories'] then
+        FileUtils.rm_rf(job.temp_directory)
+        FileUtils.rm_rf(job.work_directory)
+      end
 
       # send finish notification email
-      JobMailer.finish_success_job_email(job.user, job).deliver_later
+      if job[:email] and job[:email].length > 0 then
+        JobMailer.finish_success_job_email(job).deliver_later
+      end
     rescue => e
+      job[:finished_at] = DateTime.now
+      errstr = "#{e.backtrace.first}: #{e.message} (#{e.class})\n"
+      errstr += e.backtrace.drop(1).map{|s| "\t#{s}"}.join("\n")
+      if job[:stderr] then
+        job[:stderr] = job[:stderr] + "\n" + errstr
+      else
+        job[:stderr] = errstr
+      end
+
+      job.save!
       # send error notification email
-      JobMailer.finish_failure_job_email(job.user, job).deliver_later
+      if job[:email] and job[:email].length > 0 then
+        JobMailer.finish_failure_job_email(job).deliver_later
+      end
+      JobMailer.finish_failure_job_email_notify_dev(job).deliver_later
       raise e
     end
   end

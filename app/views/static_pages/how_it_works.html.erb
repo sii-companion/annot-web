@@ -1,5 +1,79 @@
-<% content_for(:title, "How Companion works") %>
+<% content_for(:title, "Getting started with Companion") %>
 
 <div class="page-header">
-    <h1>How it works</h1>
+    <h1>Getting started</h1>
 </div>
+
+<h3 id="prepare"><span class="glyphicon glyphicon-check"></span> Prepare your sequence</h3>
+
+<p>The Companion service requires input data to be in valid FASTA, GenBank or EMBL format. In files containing both annotations and sequences (such as EMBL and GenBank), only sequences will be considered. Any already existing annotation will be discarded and not included in the final result.</p>
+
+<p>Some additional requirements to consider:</p>
+
+<ul>
+    <li>the maximal allowed size of an uploaded file is 64 MB</li>
+    <li>the maximal allowed number of individual sequences (e.g. scaffolds) in the uploaded file is 3000</li>
+    <li>it might make sense to filter the input sequences to not include many small sequences shorter than, for instance, 1 kilobase</li>
+    <li>please make sure that the sequence headers do not contain special characters</li>
+    <li>input sequence headers need to be unique up to the first whitespace as these strings will be used as sequence identifiers in the resulting annotation files</li>
+</ul>
+
+<h3 id="upload"><span class="glyphicon glyphicon-cloud-upload"></span> Upload and run</h3>
+
+<p>Once you have prepared the input sequence on your computer, you can navigate to the <i>Companion</i> <%= link_to 'job submission page', 'jobs/new' %> to create a new annotation job. You will need to provide some information:</p>
+
+<ol>
+<li><b>Assign job name and prefix</b>
+<p>
+    The <i>job name</i> is just a free text identifier used by <i>Companion</i> to denote your job. It will not be used in the annotated output and is solely meant to help you distinguish individual runs. In contrast, the <i>species prefix</i> will be used to construct all sorts of identifiers in the final result such as pseudochromosome or gene IDs. For example, if you have picked a species prefix of <tt>WXYZ</tt> then genes in your annotated genome will be assigned gene IDs prefixed with that string, e.g. <tt>WXXZ_00006700</tt>, with transcripts called <tt>WXXZ_00006700.1</tt>, etc. Pseudochromosome IDs constructed by <i>Companion</i> will be prefixed with this string, e.g. <tt>WXXZ_04</tt>, <tt>WXXZ_IV</tt> or <tt>WXXZ_00</tt>.
+</p>
+<p>
+    If you have already registered a new project with one of the public databases (such as ENA), then the prefix should be the 'locus tag prefix' assigned to you or chosen by you.
+</p></li>
+
+<li><b>Upload your target sequence</b>
+<p>
+    Simply select the sequence to annotate from your local disk. The FASTA, EMBL or GenBank file can be gzip- or bzip2-compressed. If it is a compressed file, it must have a <tt>.gz</tt> or <tt>.bz2</tt> suffix.
+</p></li>
+
+<li><b>Upload transcriptomics evidence (optional)</b>
+<p>
+    Accuracy of <i>de novo</i> gene annotation (i.e. of genes with no reference counterpart) can be improved by adding extrinsic evidence to guide the process. <i>Companion</i> can use assembled transcripts in GTF format, for example as produced by Cufflinks, to improve the results. If you have prepared such a file, you can upload it to be used in gene finding (maximum size 64 MB). Please do not upload raw reads or alignments, the transcripts will have to be assembled in the coordinate space of your uploaded sequences. This is the case, for example, if you have run Cufflinks against the sequence you are submitting.
+</p></li>
+
+<li><b>Select a reference</b>
+<p>
+  <i>Companion</i> will try to transfer information, such as gene structure or product information from a highly conserved ortholog in the reference genome. Also, predictor models trained on the genes of the reference will be used for <i>de novo</i> gene finding. We currently offer <%= link_to "#{Reference.count} reference data sets", faq_url(:anchor => "references") %> across many parasites and related species, imported from <a href="http://www.genedb.org">GeneDB</a> and <a href="http://www.eupathdb.org">EuPathDB</a>.
+</p></li>
+
+<li><b>Check whether contiguation is needed</b>
+<p>
+    It might be helpful to order and orientate the input sequences according to the reference chromosomes, if they are known. This makes it possible to quickly check for structural variants, allows to number gene IDs by chromosome and also helps creating useful comparative graphs.
+</p>
+<p>
+    <i>Companion</i> uses <a href="https://github.com/satta/ABACAS2">ABACAS2</a>, a successor to the original <a href="http://bioinformatics.oxfordjournals.org/content/25/15/1968.long">ABACAS tool</a>, to perform this contiguation step. It will create new 'pseudochromosome' sequences as well as layout files describing how the input sequences were assembled into pseudochromosomes. All unassembled input sequences, e.g. scaffolds, will be concatenated into a single 'bin' pseudochromosome. This results in a manageable number of sequences even when faced with hundreds to thousands of input sequences.
+</p></li>
+
+<li><b>Submit!</b>
+<p>
+    After reviewing all chosen parameters, just click the 'Submit' button and your files will be uploaded and validated.  When all information is confirmed to be OK, your job will be enqueued in the system.
+</p></li>
+</ol>
+
+<h3 id="wait"><i class="glyphicon glyphicon-hourglass"></i> Wait for your job to finish</h3>
+<p>
+    After a job has been successfully enqueued, the system will assign your job an alphanumerical ID <% if @job then %> (e.g. <tt><%= @job[:job_id] %></tt>)<% end %> and a URL to check your job status<% if @job then %> (e.g. <%= link_to job_url(id: @job[:job_id]), job_url(id: @job[:job_id]) %>)<% end %>. If no other jobs have been enqueued before yours, then it will start processing right away and you can visit the URL regularly to check on the progress of your job. There are the following states:
+
+    <ul>
+        <li><span class="label label-default" style="margin-right: 2em">Not started yet</span> meaning that your job is waiting for execution and will start as soon as the previous ones have finished</li>
+        <li><span class="label label-info" style="margin-right: 2em">Working</span> meaning that your job is currently being executed on the server</li>
+        <li><span class="label label-danger" style="margin-right: 2em">Failed</span> meaning that there has been a problem while running your annotation job, and</li>
+        <li><span class="label label-success" style="margin-right: 2em">Completed</span> meaning that the job has finished and results are ready</li>
+    </ul>
+    In case you chose to provide a notification email address at the time of submission, you will also get emails when your job starts and when it has finished, together with the links to the result page.
+</p>
+
+<h3 id="inspect"><i class="fa fa-laptop"></i> Inspect your results</h3>
+<p>
+    When the job has finished successfully, the URL you were given by the system will point to the results page, which will allow you to download and browse the results of your annotation job. Please take a look at the <%= link_to "example results page", examples_path %> to get an idea of what the results will contain.
+</p>
