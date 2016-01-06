@@ -82,6 +82,10 @@ class JobsController < ApplicationController
       flash[:info] = "You do not have permission to delete jobs in the " + \
                      "queue."
       redirect_to :welcome
+    elsif CONFIG['example_job_id'] == params[:id] then
+      flash[:info] = "Can't delete the example job. Remove the job from " + \
+                      "the configuration to allow deletion."
+      redirect_to :jobs
     else
       thisjob = Job.find_by(:job_id => params[:id])
       if thisjob then
