@@ -39,6 +39,7 @@ class JobsController < ApplicationController
                         :started_at => job[:started_at],
                         :finished_at => job[:finished_at],
                         :name => jobname,
+                        :email => job[:email],
                         :queued => Sidekiq::Status::queued?(job[:job_id]),
                         :working => Sidekiq::Status::working?(job[:job_id]),
                         :failed => Sidekiq::Status::failed?(job[:job_id]),
@@ -81,6 +82,10 @@ class JobsController < ApplicationController
       flash[:info] = "You do not have permission to delete jobs in the " + \
                      "queue."
       redirect_to :welcome
+    elsif CONFIG['example_job_id'] == params[:id] then
+      flash[:info] = "Can't delete the example job. Remove the job from " + \
+                      "the configuration to allow deletion."
+      redirect_to :jobs
     else
       thisjob = Job.find_by(:job_id => params[:id])
       if thisjob then
