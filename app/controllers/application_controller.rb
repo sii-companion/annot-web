@@ -1,10 +1,13 @@
+MEGABYTE = 1024.0 * 1024.0
+
 class ApplicationController < ActionController::Base
   # Prevent CSRF attacks by raising an exception.
   # For APIs, you may want to use :null_session instead.
   protect_from_forgery with: :exception
   include SessionsHelper
+  include Sys
 
-  before_filter :number_of_jobs
+  before_filter :number_of_jobs, :check_diskspace
 
   def number_of_jobs
     @n_working = 0
@@ -18,6 +21,19 @@ class ApplicationController < ActionController::Base
                 @n_working = @n_working + 1
             end
         end
+    end
+  end
+
+  def check_diskspace
+    if not CONFIG['min_work_space'] then
+      @space_low = false
+    else
+      stat = Filesystem.stat(CONFIG['workdir'])
+      if ((stat.block_size*stat.blocks_available) / MEGABYTE) < CONFIG['min_work_space'].to_i then
+        @space_low = true
+      else
+        @space_low = false
+      end
     end
   end
 end
