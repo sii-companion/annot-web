@@ -55,9 +55,9 @@ class Reference < ActiveFile::Base
   end
 
   def name_with_genes
-    out = "#{self[:name]} (#{self[:nof_genes]} genes"
+    out = "#{self[:name]} (#{self[:nof_genes]} #{"gene".pluralize(self[:nof_genes].to_i)}"
     if self.has_chromosomes? then
-      out = out + ", #{self[:nof_chromosomes]} chromosomes"
+      out = out + ", #{self[:nof_chromosomes]} #{"chromosome".pluralize(self[:nof_chromosomes].to_i)}"
     end
     out = out + ")"
   end
