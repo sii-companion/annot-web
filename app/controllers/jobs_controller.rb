@@ -1,6 +1,6 @@
 class JobsController < ApplicationController
   def new
-    if @space_low then
+    if @closed then
       flash[:info] = "New job creation is temporarily closed for technical " + \
                      "reasons."
       redirect_to :welcome

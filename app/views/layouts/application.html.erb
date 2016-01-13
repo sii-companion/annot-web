@@ -30,8 +30,8 @@
 
       <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
         <ul class="nav navbar-nav">
-          <li class="<%= 'active' if current_page?(new_job_path) %> <%= 'disabled' if @space_low %>">
-           <%= link_to (@space_low ? '#' : new_job_path) do  %>
+          <li class="<%= 'active' if current_page?(new_job_path) %> <%= 'disabled' if @closed %>">
+           <%= link_to (@closed ? '#' : new_job_path) do  %>
              <span class="glyphicon glyphicon-cloud-upload"></span> Submit job
            <% end %>
          </li>

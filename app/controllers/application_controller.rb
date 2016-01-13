@@ -7,7 +7,7 @@ class ApplicationController < ActionController::Base
   include SessionsHelper
   include Sys
 
-  before_filter :number_of_jobs, :check_diskspace
+  before_filter :number_of_jobs, :check_closed
 
   def number_of_jobs
     @n_working = 0
@@ -24,15 +24,19 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  def check_diskspace
+  def check_closed
+    if File.exist?(Rails.root.join('CLOSED')) then
+      @closed = true
+      return
+    end
     if not CONFIG['min_work_space'] then
-      @space_low = false
+      @closed = false
     else
       stat = Filesystem.stat(CONFIG['workdir'])
       if ((stat.block_size*stat.blocks_available) / MEGABYTE) < CONFIG['min_work_space'].to_i then
-        @space_low = true
+        @closed = true
       else
-        @space_low = false
+        @closed = false
       end
     end
   end

@@ -4,7 +4,7 @@
   <div class="row">
     <%= form_tag(:job_find, method: "get", class: "form-inline") do %>
       <div class="form-group">
-        <% if not @space_low then %>
+        <% if not @closed then %>
           <a class="btn btn-lg btn-primary" href="/jobs/new" role="button">Annotate <i>your</i> sequence!</a> <br /><br /> or find
         <% else %>
           <a class="btn btn-lg btn-danger disabled" href="#" role="button">New job submission is temporarily closed for technical reasons.<br />Please try again later.</a> <br /><br /> Find
