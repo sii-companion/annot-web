@@ -12,10 +12,6 @@ Rails.application.routes.draw do
   get 'welcome/run' => 'welcome#run'
   get 'welcome/clear' => 'welcome#clear'
 
-  # sign up
-  # get 'signup' => 'users#new'
-  # resources :users
-
   # jobs
   resources :jobs
   post 'jobs/new_sequence_file' => 'sequence_files#create_for_jobform'
@@ -33,10 +29,8 @@ Rails.application.routes.draw do
   get 'jobs/:id/plots.zip' => 'jobs#get_all_synteny_images', as: :all_synteny_images
 
   # uploaded files
-  get 'user_files/index'
   get 'user_files/new'
   get 'user_files/create'
-  get 'user_files/destroy'
   resources :user_files
 
   # session management
@@ -44,49 +38,4 @@ Rails.application.routes.draw do
   post   'login'   => 'sessions#create'
   delete 'logout'  => 'sessions#destroy'
 
-  # Example of named route that can be invoked with purchase_url(id: product.id)
-  #   get 'products/:id/purchase' => 'catalog#purchase', as: :purchase
-
-  # Example resource route (maps HTTP verbs to controller actions automatically):
-  #   resources :products
-
-  # Example resource route with options:
-  #   resources :products do
-  #     member do
-  #       get 'short'
-  #       post 'toggle'
-  #     end
-  #
-  #     collection do
-  #       get 'sold'
-  #     end
-  #   end
-
-  # Example resource route with sub-resources:
-  #   resources :products do
-  #     resources :comments, :sales
-  #     resource :seller
-  #   end
-
-  # Example resource route with more complex sub-resources:
-  #   resources :products do
-  #     resources :comments
-  #     resources :sales do
-  #       get 'recent', on: :collection
-  #     end
-  #   end
-
-  # Example resource route with concerns:
-  #   concern :toggleable do
-  #     post 'toggle'
-  #   end
-  #   resources :posts, concerns: :toggleable
-  #   resources :photos, concerns: :toggleable
-
-  # Example resource route within a namespace:
-  #   namespace :admin do
-  #     # Directs /admin/products/* to Admin::ProductsController
-  #     # (app/controllers/admin/products_controller.rb)
-  #     resources :products
-  #   end
 end
