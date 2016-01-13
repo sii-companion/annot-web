@@ -1,6 +1,6 @@
 class JobsController < ApplicationController
   def new
-    if @space_low then
+    if @closed then
       flash[:info] = "New job creation is temporarily closed for technical " + \
                      "reasons."
       redirect_to :welcome
@@ -154,6 +154,8 @@ class JobsController < ApplicationController
       @ref = Reference.find(@job[:reference_id])
       if @job_hash[:failed] then
         render 'jobs/show_failed'
+      elsif !@job.genome_stat or @job.genome_stat[:nof_genes] == 0 then
+        render 'jobs/show_empty'
       else
         render 'jobs/show'
       end

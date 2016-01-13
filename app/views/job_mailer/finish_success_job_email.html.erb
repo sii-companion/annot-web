@@ -8,9 +8,19 @@
     <p>
       Dear Companion user, your job "<%= @job[:name] %>" has just finished successfully!<br />
     </p>
+    <% if (!@job.genome_stat) or  @job.genome_stat[:nof_genes] == 0 then %>
+    <p>
+      Unfortunately, no genes could be annotated in the sequence you submitted.
+      This could be a result of input sequences that are too short to perform
+      reasonable gene finding. Another possible reason could be high divergence
+      of your species from the selected reference (<%= @ref[:name] %>).
+      It might probably help picking a different reference.
+    </p>
+    <% else %>
     <p>
       To inspect your <%= @job.genome_stat[:nof_genes] %> genes just follow <%= link_to "this link", job_url(id: @job[:job_id]) %>.
     </p>
+    <% end %>
     <p>Thanks for using Companion and have a nice day!</p>
   </body>
 </html>

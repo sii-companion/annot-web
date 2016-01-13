@@ -10,6 +10,7 @@ class JobMailer < ApplicationMailer
   def finish_success_job_email(job)
     @url = jobs_url(:only_path => :true)
     @job = job
+    @ref = Reference.find(job[:reference_id])
     mail(to: @job.email, subject: "Your job '#{job[:name]}' has finished successfully")
   end
 

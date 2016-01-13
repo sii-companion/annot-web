@@ -1,0 +1,27 @@
+<% content_for(:title, "#{@job[:name]} results") %>
+<div class="page-header">
+  <h1><%= @job[:name] %> <span class="small">(<%= @job[:prefix] %>)</span>
+    <%= render partial: "badge", locals: {:job => @job_hash, :extraclass => "pull-right"} %>
+  </h1>
+</div>
+
+<p>This job was submitted <b><%= distance_of_time_in_words(Time.now, @job[:created_at]) %></b> ago
+  <% if @job_hash[:complete] then %>
+    and ran for <b><%= distance_of_time_in_words(@job[:started_at], @job[:finished_at])%></b>, finally finishing at <b><%= @job[:finished_at] %></b>.
+  <% elsif @job_hash[:working] then %>
+    and is running now<% if @job[:started_at] then %>
+      for <b><%= distance_of_time_in_words(Time.now, @job[:started_at]) %></b><% end %>.
+  <% elsif @job_hash[:failed] then %>
+    and failed <b><%= distance_of_time_in_words(Time.now, @job[:finished_at]) %></b> ago.
+  <% else %>
+    and has not started yet.
+  <% end %>
+</p>
+
+<p>
+Unfortunately, no features could be annotated in the sequence you submitted.
+This could be a result of input sequences that are too short to perform
+reasonable gene finding. Another possible reason could be high divergence
+of your species from the selected reference (<i><%= @ref[:name] %></i>).
+It might probably help picking a different reference.
+</p>
