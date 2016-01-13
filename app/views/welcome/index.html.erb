@@ -1,5 +1,5 @@
 <div class="jumbotron">
-  <%= image_tag 'companion_logo.png' %>
+  <%= image_tag 'companion_logo.png', alt: 'Companion' %>
   <p class="lead">Easy and reliable parasite genome annotation.</p>
   <div class="row">
     <%= form_tag(:job_find, method: "get", class: "form-inline") do %>
@@ -53,7 +53,7 @@
        your compute cluster? Get <a href="http://www.nextflow.io">Nextflow</a>,
        the pipeline <a href="https://github.com/sanger-pathogens/companion">code</a>
        under the hood and the <a href="https://www.docker.com">Docker</a>
-       <a href="https://registry.hub.docker.com/u/satta/annot-nf">dependencies</a>
+       <a href="https://hub.docker.com/r/satta/companion/">dependencies</a>
        and run the whole workflow on your own machine!</p>
   </div>
 </div>
