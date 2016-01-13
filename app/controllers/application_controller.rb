@@ -32,10 +32,14 @@ class ApplicationController < ActionController::Base
     if not CONFIG['min_work_space'] then
       @closed = false
     else
-      stat = Filesystem.stat(CONFIG['workdir'])
-      if ((stat.block_size*stat.blocks_available) / MEGABYTE) < CONFIG['min_work_space'].to_i then
-        @closed = true
-      else
+      begin
+        stat = Filesystem.stat(CONFIG['workdir'])
+        if ((stat.block_size*stat.blocks_available) / MEGABYTE) < CONFIG['min_work_space'].to_i then
+          @closed = true
+        else
+          @closed = false
+        end
+      rescue
         @closed = false
       end
     end
