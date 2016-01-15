@@ -154,7 +154,7 @@ class JobsController < ApplicationController
       @ref = Reference.find(@job[:reference_id])
       if @job_hash[:failed] then
         render 'jobs/show_failed'
-      elsif !@job.genome_stat or @job.genome_stat[:nof_genes] == 0 then
+      elsif @job_hash[:complete] and (!@job.genome_stat or @job.genome_stat[:nof_genes] == 0) then
         render 'jobs/show_empty'
       else
         render 'jobs/show'
