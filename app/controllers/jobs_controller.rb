@@ -323,7 +323,7 @@ class JobsController < ApplicationController
     params.require(:job).permit(:name, :sequence_file, :transcript_file_id, \
                                 :reference_id, :prefix, :do_pseudo, \
                                 :do_contiguate, :do_exonerate, :do_ratt, \
-                                :use_transcriptome_data, \
+                                :use_transcriptome_data, :organism, \
                                 :max_gene_length, :augustus_score_threshold , \
                                 :taxon_id, :db_id, :ratt_transfer_type, \
                                 :no_resume, :email, sequence_file_attributes: [:id, :file],

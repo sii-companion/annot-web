@@ -11,19 +11,32 @@
     <h3 class="panel-title">Step 1: Basic job properties</h3>
   </div>
   <div class="panel-body">
-    <div><p>First of all, please specify a free-text <b>name</b> for your new job. It should reflect the purpose of your job, and should probably include the name of the organism you are annotating.</p></div>
+    <div>
+      <p>First of all, please specify a free-text <b>name</b> for your new job. It should reflect the purpose of your job, and should probably include the organism you are annotating.</p>
+      <p> Example: <i>My new species annotation</i></p>
+    </div>
     <div class="input-group">
-     <span class="input-group-addon" id="sizing-addon1">Job name</span>
-     <%= f.text_field :name, class: 'form-control', :aria => {:describedby => "sizing-addon1"}, required: true %>
-   </div>
-   <div style="padding-top: 20px;"><p> Please also give a short <b>species prefix</b> that will be used to name entities (such as genes, pseudochromosomes, etc.) generated during the annotation run. It should not contain spaces or special characters.</p>
-     <p> Example: <i>LFOO</i></p></div>
-     <div class="input-group">
-       <span class="input-group-addon" id="sizing-addon2">Species prefix</span>
-       <%= f.text_field :prefix, class: 'form-control', :placeholder => "LFOO", :aria => {:describedby => "sizing-addon2"}, required: true %>
-     </div>
-   </div>
- </div>
+      <span class="input-group-addon" id="sizing-addon1">Job name</span>
+      <%= f.text_field :name, class: 'form-control', :aria => {:describedby => "sizing-addon1"}, required: true %>
+    </div>
+    <div style="padding-top: 20px;">
+      <p>Please also give a short <b>species prefix</b> that will be used to name entities (such as genes, pseudochromosomes, etc.) generated during the annotation run. It should not contain spaces or special characters.</p>
+      <p> Example: <i>LDON</i></p>
+    </div>
+    <div class="input-group">
+      <span class="input-group-addon" id="sizing-addon2">Species prefix</span>
+      <%= f.text_field :prefix, class: 'form-control', :placeholder => "LFOO", :aria => {:describedby => "sizing-addon2"}, required: true %>
+    </div>
+    <div style="padding-top: 20px;">
+      <p>Finally, please provide a <b>species name</b> that describes the target species you are annotating.</p>
+      <p> Example: <i>Leishmania donovani</i></p>
+    </div>
+    <div class="input-group">
+      <span class="input-group-addon" id="sizing-addon2">Species name</span>
+      <%= f.text_field :organism, class: 'form-control', :placeholder => "Leishmania donovani", :aria => {:describedby => "sizing-addon2"}, required: true %>
+    </div>
+  </div>
+</div>
 
  <div class="panel panel-default">
   <div class="panel-heading">
