@@ -83,3 +83,6 @@ gem "rubyzip", :require => 'zip'
 
 # for gathering filesystem information
 gem "sys-filesystem", :require => 'sys/filesystem'
+
+# sitemap handling
+gem 'sitemap_generator'

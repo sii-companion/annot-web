@@ -1,10 +1,10 @@
 <div class="jumbotron">
-  <%= image_tag 'companion_logo.png' %>
+  <%= image_tag 'companion_logo.png', alt: 'Companion' %>
   <p class="lead">Easy and reliable parasite genome annotation.</p>
   <div class="row">
     <%= form_tag(:job_find, method: "get", class: "form-inline") do %>
       <div class="form-group">
-        <% if not @space_low then %>
+        <% if not @closed then %>
           <a class="btn btn-lg btn-primary" href="/jobs/new" role="button">Annotate <i>your</i> sequence!</a> <br /><br /> or find
         <% else %>
           <a class="btn btn-lg btn-danger disabled" href="#" role="button">New job submission is temporarily closed for technical reasons.<br />Please try again later.</a> <br /><br /> Find
@@ -53,7 +53,7 @@
        your compute cluster? Get <a href="http://www.nextflow.io">Nextflow</a>,
        the pipeline <a href="https://github.com/sanger-pathogens/companion">code</a>
        under the hood and the <a href="https://www.docker.com">Docker</a>
-       <a href="https://registry.hub.docker.com/u/satta/annot-nf">dependencies</a>
+       <a href="https://hub.docker.com/r/satta/companion/">dependencies</a>
        and run the whole workflow on your own machine!</p>
   </div>
 </div>

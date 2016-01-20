@@ -1,6 +1,6 @@
 class JobsController < ApplicationController
   def new
-    if @space_low then
+    if @closed then
       flash[:info] = "New job creation is temporarily closed for technical " + \
                      "reasons."
       redirect_to :welcome
@@ -154,6 +154,8 @@ class JobsController < ApplicationController
       @ref = Reference.find(@job[:reference_id])
       if @job_hash[:failed] then
         render 'jobs/show_failed'
+      elsif @job_hash[:complete] and (!@job.genome_stat or @job.genome_stat[:nof_genes] == 0) then
+        render 'jobs/show_empty'
       else
         render 'jobs/show'
       end
@@ -321,7 +323,7 @@ class JobsController < ApplicationController
     params.require(:job).permit(:name, :sequence_file, :transcript_file_id, \
                                 :reference_id, :prefix, :do_pseudo, \
                                 :do_contiguate, :do_exonerate, :do_ratt, \
-                                :use_transcriptome_data, \
+                                :use_transcriptome_data, :organism, \
                                 :max_gene_length, :augustus_score_threshold , \
                                 :taxon_id, :db_id, :ratt_transfer_type, \
                                 :no_resume, :email, sequence_file_attributes: [:id, :file],
