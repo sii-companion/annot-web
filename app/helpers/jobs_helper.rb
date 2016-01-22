@@ -76,7 +76,6 @@ module JobsHelper
 
     def select_reference(ref)
       @items["ref_species"] = ref[:abbr]
-      #@items["ABACAS_CHR_PATTERN"] = ref[:chromosome_pattern]
       @items["ref_dir"] = ref[:referencedir]
       if ref[:snap_model] then
         @items["run_snap"] = "true"
@@ -118,6 +117,8 @@ module JobsHelper
     def get_file(job)
       add_item("RATT_TRANSFER_TYPE", job[:ratt_transfer_type])
       add_item("MAX_GENE_LENGTH", job[:max_gene_length])
+      add_item("ABACAS_MATCH_SIZE", job[:abacas_match_size])
+      add_item("ABACAS_MATCH_SIM", job[:abacas_match_sim])
       add_item("AUGUSTUS_GENEMODEL", 'partial')
       add_item("EMBL_ORGANISM", job[:organism])
       add_item("embl_ena_submission", 'true')
