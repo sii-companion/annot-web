@@ -15,10 +15,10 @@ class ApplicationController < ActionController::Base
     jobs = Job.where("finished_at is NULL")
     if jobs then
         jobs.each do |job|
-            if Sidekiq::Status::queued?(job[:job_id]) then
-                @n_queued = @n_queued + 1
-            elsif Sidekiq::Status::working?(job[:job_id]) then
+            if Sidekiq::Status::working?(job[:job_id]) then
                 @n_working = @n_working + 1
+            elsif not Sidekiq::Status::failed?(job[:job_id]) then
+                @n_queued = @n_queued + 1
             end
         end
     end

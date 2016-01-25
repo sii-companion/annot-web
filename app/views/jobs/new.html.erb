@@ -1,4 +1,8 @@
 <% content_for(:title, "Submit new Companion job") %>
+<% content_for :head do %>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/6.0.7/bootstrap-slider.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/6.0.7/css/bootstrap-slider.min.css" />
+<% end %>
 
 <div class="page-header">
   <h1>Submit a new annotation job</h1>
@@ -11,19 +15,32 @@
     <h3 class="panel-title">Step 1: Basic job properties</h3>
   </div>
   <div class="panel-body">
-    <div><p>First of all, please specify a free-text <b>name</b> for your new job. It should reflect the purpose of your job, and should probably include the name of the organism you are annotating.</p></div>
+    <div>
+      <p>First of all, please specify a free-text <b>name</b> for your new job. It should reflect the purpose of your job, and should probably include the organism you are annotating.</p>
+      <p> Example: <i>My new species annotation</i></p>
+    </div>
     <div class="input-group">
-     <span class="input-group-addon" id="sizing-addon1">Job name</span>
-     <%= f.text_field :name, class: 'form-control', :aria => {:describedby => "sizing-addon1"}, required: true %>
-   </div>
-   <div style="padding-top: 20px;"><p> Please also give a short <b>species prefix</b> that will be used to name entities (such as genes, pseudochromosomes, etc.) generated during the annotation run. It should not contain spaces or special characters.</p>
-     <p> Example: <i>LFOO</i></p></div>
-     <div class="input-group">
-       <span class="input-group-addon" id="sizing-addon2">Species prefix</span>
-       <%= f.text_field :prefix, class: 'form-control', :placeholder => "LFOO", :aria => {:describedby => "sizing-addon2"}, required: true %>
-     </div>
-   </div>
- </div>
+      <span class="input-group-addon" id="sizing-addon1">Job name</span>
+      <%= f.text_field :name, class: 'form-control', :aria => {:describedby => "sizing-addon1"}, required: true %>
+    </div>
+    <div style="padding-top: 20px;">
+      <p>Please also give a short <b>species prefix</b> that will be used to name entities (such as genes, pseudochromosomes, etc.) generated during the annotation run. It should not contain spaces or special characters.</p>
+      <p> Example: <i>LDON</i></p>
+    </div>
+    <div class="input-group">
+      <span class="input-group-addon" id="sizing-addon2">Species prefix</span>
+      <%= f.text_field :prefix, class: 'form-control', :placeholder => "LFOO", :aria => {:describedby => "sizing-addon2"}, required: true %>
+    </div>
+    <div style="padding-top: 20px;">
+      <p>Finally, please provide a <b>species name</b> that describes the target species you are annotating.</p>
+      <p> Example: <i>Leishmania donovani</i></p>
+    </div>
+    <div class="input-group">
+      <span class="input-group-addon" id="sizing-addon2">Species name</span>
+      <%= f.text_field :organism, class: 'form-control', :placeholder => "Leishmania donovani", :aria => {:describedby => "sizing-addon2"}, required: true %>
+    </div>
+  </div>
+</div>
 
  <div class="panel panel-default">
   <div class="panel-heading">
@@ -100,11 +117,23 @@
    <div> <p>The contiguation step will try to orientate the sequences in your input file to align with the chromosomal sequences of the reference organism to build pseudochromosomes, which will then be used as the target sequences for gene annotation. This step is optional; if it is not desired then no modifications will be made to the input sequences.</p> </div>
    <div class="form-group">
      <div class="radio">
-       <label><%= f.radio_button :do_contiguate, true, required: true %> Yes, contiguate pseudochromosomes.</label>
+       <label><%= f.radio_button :do_contiguate, true, required: true, onClick: "$('#job_abacas_match_size').bootstrapSlider('enable');$('#job_abacas_match_sim').bootstrapSlider('enable');" %> Yes, contiguate pseudochromosomes.</label>
      </div>
      <div class="radio">
-       <label><%= f.radio_button :do_contiguate, false, required: true %> No, do not modify my input sequences.</label>
+       <label><%= f.radio_button :do_contiguate, false, required: true, onClick: "$('#job_abacas_match_size').bootstrapSlider('disable');$('#job_abacas_match_sim').bootstrapSlider('disable');" %> No, do not modify my input sequences.</label>
      </div>
+   </div>
+   <div>
+    <p>Select minimum required match length for contig placement: <span id="job_abacas_match_size_curval"><%= @job["abacas_match_size"] %></span> bp</p>
+   </div>
+   <div>
+     200 <%= f.number_field :abacas_match_size, class: 'form-control', :data => {'slider-id' => 'matchsizeslider', 'slider-min' => "200", 'slider-max' => '20000', 'slider-step' => '50', 'slider-value' => @job["abacas_match_size"]}, required: true %> 20000
+   </div>
+   <div style="padding-top: 20px;">
+    <p>Select minimum required match similarity for contig placement: <span id="job_abacas_match_sim_curval"><%= @job["abacas_match_sim"] %></span> %</p>
+   </div>
+   <div>
+      30 <%= f.number_field :abacas_match_sim, class: 'form-control', :data => {'slider-id' => 'matchsimslider', 'slider-min' => "25", 'slider-max' => '100', 'slider-step' => '5', 'slider-value' => @job["abacas_match_sim"]}, required: true %> 100
    </div>
  </div>
 </div>
@@ -196,6 +225,19 @@
     $('#transcript-selection').slideUp();
     $('.panel-heading span.clickable').addClass('panel-collapsed');
     $('.panel-heading span.clickable').find('i').removeClass('glyphicon-chevron-up').addClass('glyphicon-chevron-down');
+    $('#job_abacas_match_size').bootstrapSlider({
+      min: 200,
+      max: 20000,
+      scale: 'logarithmic',
+      step: 50
+    });
+    $("#job_abacas_match_size").on("slide", function(slideEvt) {
+      $("#job_abacas_match_size_curval").text(slideEvt.value);
+    });
+    $('#job_abacas_match_sim').bootstrapSlider();
+    $("#job_abacas_match_sim").on("slide", function(slideEvt) {
+      $("#job_abacas_match_sim_curval").text(slideEvt.value);
+    });
   });
 
    jQuery(function ($) {
