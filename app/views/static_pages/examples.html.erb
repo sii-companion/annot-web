@@ -10,7 +10,7 @@
 <% if @job then %>
 <p>
   This page contains some example results from a previously prepared
-  <i>Companion</i> run.
+  <i>Companion</i> annotation run.
   The tabs below display live data and behave exactly like an actual job
   result page (in fact, they are the result of an
   <%= link_to "actual job", job_url(id: @job[:job_id]) %> that was
@@ -48,9 +48,9 @@
 <div class="col-md-6">
   <h4>Result files</h4>
   <p>
-    The next tab (<span class="text-info">Result files</span>) allows the user to
-    download the results of the annotation jobs to their own computer, e.g. for
-    further downstream analyses, manual curation or preparation for
+    The next tab (<span class="text-info">Result files</span>) allows the user
+    to download the results of the annotation jobs to their own computer, e.g.
+    for further downstream analyses, manual curation or preparation for
     database submission. These are offered in the following formats:
   </p>
   <ul>
@@ -126,9 +126,9 @@
       sequence (not drawn to scale) compared to all reference chromosomes.
     </p>
     <p>
-      These plots are useful to visualize the reference-target colinearity, which helps in
-      identifying potential problems in pseudochromosome contiguation or large-scale chromosomal
-      rearrangements at a glance.
+      These plots are useful to visualize the reference-target colinearity,
+      which helps in identifying potential problems in pseudochromosome
+      contiguation or large-scale chromosomal rearrangements at a glance.
     </p>
   </div>
   <div class="col-md-6"><%= image_tag 'ss_circos.png', width: "100%", class: "center-block" %></div>
@@ -139,22 +139,23 @@
   <div class="col-md-6">
     <h4>Validator results</h4>
     <p>
-      We are trying to ensure that gene annotation files delivered by
+      We are doing our best to ensure that gene annotation files delivered by
       <i>Companion</i> are both syntactically and semantically (=biologically)
-      valid and do not contain any major issues. But but to the complexity of the
-      process and the high variability of input data, it is always possible to
-      end up with less than perfect gene models. Often such remaining issues can be
-      quickly addressed by a human curator.
-    </p><p>
-    To make the best use of curator time as
-    a scarce resource, we perform thorough automatic checking of our generated
-    annotations, given as annotation graphs in GFF3 format. The results of
-    this check are presented in a table, grouped by feature type.
-    The number of successful and failed checks is concisely presented and for
-    each failed check, the ID of the questionable feature is reported by
-    clicking on the red labels denoting checking failures.
-    This makes it easy to quickly estimate the amount of required curation
-    and allows to work in a directed and focused fashion.
-  </p>
+      valid and do not contain major issues. However, due to the complexity of
+      the process and the high variability of input data, it is sometimes
+      possible to end up with less than perfect gene models. Often such
+      remaining issues can be quickly addressed by a human curator.
+    </p>
+    <p>
+      To make the best use of curator time as
+      a scarce resource, we perform thorough automatic checking of our generated
+      annotations, given as annotation graphs in GFF3 format. The results of
+      this check are presented in a table, grouped by feature type.
+      The number of successful and failed checks is concisely presented and for
+      each failed check, the ID of the questionable feature is reported by
+      clicking on the red labels denoting checking failures.
+      This makes it easy to quickly estimate the amount of required curation
+      and allows to work in a directed and focused fashion.
+    </p>
 </div>
 </div>
