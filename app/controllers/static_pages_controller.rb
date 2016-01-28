@@ -5,7 +5,7 @@ class StaticPagesController < ApplicationController
 
   def examples
     @job = nil
-    @ef = nil
+    @ref = nil
     if CONFIG['example_job_id'] and CONFIG['example_job_id'].length > 0 then
       @job = Job.find_by(:job_id => CONFIG['example_job_id'])
       if @job then

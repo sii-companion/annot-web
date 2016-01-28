@@ -13,7 +13,9 @@ class JobsController < ApplicationController
       @job[:do_pseudo] = true
       @job[:use_transcriptome_data] = false
       @job[:no_resume] = false
-      @job[:max_gene_length] = 20000
+      @job[:max_gene_length] = 50000
+      @job[:abacas_match_size] = 500
+      @job[:abacas_match_sim] = 85
       @job[:augustus_score_threshold] = 0.8
       @job[:taxon_id] = 5653
       @job[:db_id] = "Companion"
@@ -325,6 +327,7 @@ class JobsController < ApplicationController
                                 :do_contiguate, :do_exonerate, :do_ratt, \
                                 :use_transcriptome_data, :organism, \
                                 :max_gene_length, :augustus_score_threshold , \
+                                :abacas_match_size, :abacas_match_sim, \
                                 :taxon_id, :db_id, :ratt_transfer_type, \
                                 :no_resume, :email, sequence_file_attributes: [:id, :file],
                                 transcript_file_attributes: [:id, :file])
