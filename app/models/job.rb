@@ -6,8 +6,8 @@ class Job < ActiveRecord::Base
     has_one :genome_stat, dependent: :destroy
     has_many :circos_images, dependent: :destroy
     has_many :result_files, dependent: :destroy
-    has_many :genes, dependent: :destroy
-    has_many :clusters, dependent: :destroy
+    has_many :genes, dependent: :delete
+    has_many :clusters, dependent: :delete
     has_one :tree, dependent: :destroy
     validates_format_of :email, :with => /\A\z|\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\z/i
     validates_presence_of :sequence_file
