@@ -87,6 +87,10 @@ GEM
     jquery-ui-rails (5.0.5)
       railties (>= 3.2.16)
     json (1.8.3)
+    lol_dba (2.0.3)
+      actionpack (>= 3.0, < 5.0)
+      activerecord (>= 3.0, < 5.0)
+      railties (>= 3.0, < 5.0)
     loofah (2.0.3)
       nokogiri (>= 1.5.9)
     mail (2.6.3)
@@ -196,6 +200,7 @@ DEPENDENCIES
   jquery-rails (= 3.1.3)
   jquery-ui-rails
   json
+  lol_dba
   open4
   rack-cache
   rails (>= 4.2.0)

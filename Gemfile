@@ -86,3 +86,4 @@ gem "sys-filesystem", :require => 'sys/filesystem'
 
 # sitemap handling
 gem 'sitemap_generator'
+gem 'lol_dba'

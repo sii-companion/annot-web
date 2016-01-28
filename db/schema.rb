@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160122111521) do
+ActiveRecord::Schema.define(version: 20160128103447) do
 
   create_table "circos_images", force: :cascade do |t|
     t.string   "file_uid"
@@ -21,6 +21,8 @@ ActiveRecord::Schema.define(version: 20160122111521) do
     t.integer  "job_id"
     t.string   "chromosome"
   end
+
+  add_index "circos_images", ["job_id"], name: "index_circos_images_on_job_id"
 
   create_table "clusters", force: :cascade do |t|
     t.integer "job_id",     null: false
@@ -100,6 +102,8 @@ ActiveRecord::Schema.define(version: 20160122111521) do
     t.integer  "job_id"
   end
 
+  add_index "genome_stats", ["job_id"], name: "index_genome_stats_on_job_id"
+
   create_table "jobs", force: :cascade do |t|
     t.string   "name"
     t.string   "job_id"
@@ -136,6 +140,8 @@ ActiveRecord::Schema.define(version: 20160122111521) do
     t.integer  "abacas_match_sim"
   end
 
+  add_index "jobs", ["user_id"], name: "index_jobs_on_user_id"
+
   create_table "result_files", force: :cascade do |t|
     t.string   "file_uid"
     t.string   "file_name"
@@ -145,11 +151,15 @@ ActiveRecord::Schema.define(version: 20160122111521) do
     t.string   "md5"
   end
 
+  add_index "result_files", ["job_id"], name: "index_result_files_on_job_id"
+
   create_table "trees", force: :cascade do |t|
     t.string  "seq_uid"
     t.string  "seq_name"
     t.integer "job_id"
   end
+
+  add_index "trees", ["job_id"], name: "index_trees_on_job_id"
 
   create_table "user_files", force: :cascade do |t|
     t.string   "name"
@@ -162,6 +172,9 @@ ActiveRecord::Schema.define(version: 20160122111521) do
     t.string   "type"
     t.integer  "job_id"
   end
+
+  add_index "user_files", ["id", "type"], name: "index_user_files_on_id_and_type"
+  add_index "user_files", ["job_id"], name: "index_user_files_on_job_id"
 
   create_table "users", force: :cascade do |t|
     t.string   "name"
