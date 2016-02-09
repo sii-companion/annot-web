@@ -242,7 +242,11 @@ class JobsController < ApplicationController
     if job then
       ref = Reference.find(job[:reference_id])
       this_s = job.genes.includes(:clusters).where(:clusters => {id: nil})
-      ref_s = Gene.where(job: nil, species: ref[:abbr]).includes(:clusters).where(:clusters => { id: nil})
+      #ref_s = Gene.where(job: nil, species: ref[:abbr]).includes(:clusters).where(:clusters => { id: nil})
+      ref_s = Gene.where(species: ref[:abbr]) -
+       Gene.joins('JOIN clusters_genes ON genes.id = clusters_genes.gene_id ' + \
+                  'JOIN clusters ON clusters_genes.cluster_id = clusters.id')
+           .where('genes.species = ? and clusters.job_id = ?', ref[:abbr], job[:id])
       respond_to do |format|
         format.html do
           out = []
