@@ -7,3 +7,4 @@ production:
 :queues:
   - default
   - [annot, 2]
+:timeout: 86400

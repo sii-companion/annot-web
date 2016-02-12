@@ -1,6 +1,6 @@
 class HardWorker
   include Sidekiq::Worker
-  sidekiq_options :retry => false, :dead => false
+  sidekiq_options :retry => 1
   include Sidekiq::Status::Worker
 
   def expiration
