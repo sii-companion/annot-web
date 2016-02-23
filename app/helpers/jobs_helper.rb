@@ -1,15 +1,27 @@
 require 'tempfile'
 
 module JobsHelper
-  @fnmaps = {"pseudochr.fasta.gz" => "Pseudochromosome level genomic sequence (FASTA)",
-            "scafs.fasta.gz" => "Scaffold level genomic sequence (FASTA)",
-            "pseudo.out.gff3" => "Pseudochromosome level genes (GFF3)",
-            "scaffold.out.gff3" => "Scaffold level genes (GFF3)",
-            "pseudo.pseudochr.agp" => "Pseudochromosome layout (AGP)",
-            "pseudo.scafs.agp" => "Scaffold layout (AGP)",
-            "out.gaf" => "Functional GO annotation (GAF1)",
-            "proteins.fasta" => "Protein sequences (FASTA)",
-            "embl.tar.gz" => "Pseudochromosome level sequence and annotation (EMBL)"}
+
+  @formatdescs = {:FASTA => { :desc => "Simple sequence text format",
+                              :specurl => "http://blast.ncbi.nlm.nih.gov/blastcgihelp.shtml" },
+                  :GFF3  => { :desc => "Text-based feature annotation graph format",
+                              :specurl => "http://www.sequenceontology.org/gff3.shtml" },
+                  :AGP  => { :desc => "Text-based sequence layout format, used for ENA submission",
+                              :specurl => "https://www.ncbi.nlm.nih.gov/assembly/agp/AGP_Specification/" },
+                  :GAF1  => { :desc => "Genome Ontology Association File, used for GO submission",
+                              :specurl => "http://geneontology.org/page/go-annotation-file-gaf-format-10" },
+                  :EMBL  => { :desc => "Text-based feature and sequence format, used for ENA submission",
+                              :specurl => "http://www.insdc.org/files/feature_table.html" } }
+
+  @fnmaps = {"pseudochr.fasta.gz" => { :title => "Pseudochromosome level genomic sequence", :format => "FASTA" },
+            "scafs.fasta.gz" => { :title => "Scaffold level genomic sequence", :format => "FASTA" },
+            "pseudo.out.gff3" => { :title => "Pseudochromosome level gene annotations", :format => "GFF3" },
+            "scaffold.out.gff3" => { :title => "Scaffold level gene annotations", :format => "GFF3" },
+            "pseudo.pseudochr.agp" => { :title => "Pseudochromosome layout", :format => "AGP" },
+            "pseudo.scafs.agp" => { :title => "Scaffold layout", :format => "AGP" },
+            "out.gaf" => { :title => "Gene Ontology function assignments", :format => "GAF1" },
+            "proteins.fasta" => { :title => "Protein sequences", :format => "FASTA"},
+            "embl.tar.gz" => { :title => "Pseudochromosome level sequence and annotation", :format => "EMBL"} }
 
   def file_description(fn)
     if @fnmaps[fn] then
@@ -19,6 +31,15 @@ module JobsHelper
     end
   end
   module_function :file_description
+
+  def format_description(fn)
+    if @formatdescs[fn.to_sym] then
+      @formatdescs[fn.to_sym]
+    else
+      fn
+    end
+  end
+  module_function :format_description
 
   class ConfigFactory
     def initialize
