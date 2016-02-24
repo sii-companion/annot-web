@@ -110,37 +110,44 @@ var vtable;
         <thead>
             <tr>
                 <th></th>
+                <th class="text-right">Format</th>
                 <th class="text-right">MD5</th>
                 <th class="text-right">Size</th>
             </tr>
         </thead>
         <tbody>
-          <% @job.result_files.each do |file| %>
+          <% @job.result_files.sort.each do |file| %>
             <tr>
                 <td><%= link_to file.file.url do %>
                     <i class="glyphicon glyphicon-download-alt"></i>
-                     <%= JobsHelper::file_description(file.file.name) %>
+                     <%= JobsHelper::file_description(file.file.name)[:title] %>
                 <% end %></td>
-                <% if file.md5 then %>
                 <td class="text-right">
-                  <a data-toggle="popover"
-                     data-placement="left"
-                     data-trigger="hover"
-                     data-content="<%= file.md5 %>">
-                     <i class="glyphicon glyphicon-barcode"></i>
-                  </a>
-                </td>
+                    <a data-toggle="popover"
+                       data-placement="left"
+                       data-trigger="hover"
+                       href="<%= JobsHelper::format_description(JobsHelper::file_description(file.file.name)[:format])[:specurl] %>"
+                       data-content="<%= JobsHelper::format_description(JobsHelper::file_description(file.file.name)[:format])[:desc] %>. Click to see the specification.">
+                       <%= JobsHelper::file_description(file.file.name)[:format] %></i>
+                    </a>
+                  </td>
+                <% if file.md5 then %>
+                  <td class="text-right">
+                    <a data-toggle="popover"
+                       data-placement="left"
+                       data-trigger="hover"
+                       data-content="<%= file.md5 %>">
+                       <i class="glyphicon glyphicon-barcode"></i>
+                    </a>
+                  </td>
                 <% else %>
-                <td class="text-right">n/a</td>
+                  <td class="text-right">n/a</td>
                 <% end %>
                 <td class="text-right"><%= number_to_human_size(file.file.size) %></td>
             </tr>
           <% end %>
         </tbody>
       </table>
-      <p>All files are provided in the following formats: GFF3 (<a href="http://www.sequenceontology.org/gff3.shtml">format specification</a>), FASTA (<a href="http://blast.ncbi.nlm.nih.gov/blastcgihelp.shtml">format specification</a>), EMBL (<a href="http://www.insdc.org/files/feature_table.html">format specification</a>), GAF 1.0 (<a href="http://geneontology.org/page/go-annotation-file-gaf-format-10">format specification</a>) and AGP 2.0 (<a href="https://www.ncbi.nlm.nih.gov/assembly/agp/AGP_Specification/">format specification</a>).
-
-      </p>
     </div>
   <% end %>
 
@@ -148,8 +155,14 @@ var vtable;
     <div id="orth" class="tab-pane fade">
         <div style="display: none" id="orthoview">
           <div class="row">
-            <p>These Venn diagrams show shared and species-specific gene clusters in the target genome <%= @job[:prefix] %> (left, green) and the <%= @ref.name %> reference (right, blue). Singletons, i.e. genes without orthologs and paralogs, are shown outside the Venn diagram to the left and right.</p>
-            <p>Click on the numbers to view clusters and singleton gene lists.</p>
+            <p>These Venn diagrams show shared and species-specific
+               protein-coding gene clusters in the target genome
+               <%= @job[:prefix] %> (left, green) and the <%= @ref.name %>
+               reference (right, blue). Singletons, i.e. genes without
+               orthologs and paralogs in either species, are placed outside
+               the Venn diagram to the left and right.</p>
+            <p>Click on the numbers to view clusters and singleton gene
+               lists.</p>
           </div>
           <div class="center-block" style="width:700px;float:none;">
             <table class="small" style="width:700px;float:none;">
@@ -175,7 +188,7 @@ var vtable;
         <div id="orthotable">
           <h3 style="display: none" id='vtabledesc'></h3>
           <div style="display: none" id="vtablediv">
-            <table  class="table table-striped display compact" cellspacing="0" id="vtable">
+            <table class="table table-condensed compact" cellspacing="0" id="vtable">
               <thead>
                     <tr>
                         <th>Cluster</th>
@@ -186,7 +199,7 @@ var vtable;
             </table>
           </div>
           <div style="display: none" id="gltablediv">
-            <table class="table table-striped display compact" cellspacing="0" id="gltable">
+            <table class="table table-condensed compact" cellspacing="0" id="gltable">
               <thead>
                     <tr>
                         <th>Gene ID</th>
@@ -201,9 +214,13 @@ var vtable;
           </div>
         </div>
         <div>
-          <%= link_to clusters_url(id: @job[:job_id]) do %>
+          <p>These clusters have been created using <a href="http://www.orthomcl.org">OrthoMCL</a> v1.4 based on
+             BLASTP hits (word size: 4, e-value cutoff: 10<sup>-5</sup>) between the
+             translated protein sequences of the target and reference genomes'
+             protein-coding genes.</p>
+          <p><%= link_to clusters_url(id: @job[:job_id]) do %>
               <i class="glyphicon glyphicon-download-alt"></i> Cluster assignments
-         <% end %> as OrthoMCL 1.4 output file
+         <% end %> as OrthoMCL 1.4 output file</p>
         </div>
     </div>
   <% end %>
@@ -218,13 +235,13 @@ var vtable;
           <form>
             <div class="btn-group" data-toggle="buttons">
                 <label onClick="phylocanvas.setTreeType('rectangular');" class="btn btn-default">
-                    <input id="tree-rectangular" name="treetype" type="radio" /> Rectangular
+                    <input id="tree-rectangular" name="treetype" type="radio" checked="checked" /> Rectangular
                 </label>
                 <label onClick="phylocanvas.setTreeType('circular');" class="btn btn-default">
                     <input id="tree-circular" name="treetype" type="radio" /> Circular
                 </label>
                 <label onClick="phylocanvas.setTreeType('radial');" class="btn btn-default active">
-                    <input id="tree-radial" name="treetype" type="radio" checked="checked" /> Radial
+                    <input id="tree-radial" name="treetype" type="radio" /> Radial
                 </label>
                 <label onClick="phylocanvas.setTreeType('diagonal');" class="btn btn-default">
                     <input id="tree-diagonal" name="treetype" type="radio"  /> Diagonal
@@ -238,12 +255,19 @@ var vtable;
         <%= image_tag 'ajax-loader.gif' %>
       </div>
       <div>
-        <%= link_to @job.tree.seq.url do %>
+        <p>These clusters have been created using
+            <a href="http://meta.microbesonline.org/fasttree/">FastTree</a> based on
+             a multiple sequence alignment created by <a href="http://mafft.cbrc.jp/alignment/software/">MAFFT</a>
+             (<tt>--auto --anysymbol --retree 1 --parttree</tt>)
+             of the concatenated DNA sequences of up to 50 single-copy
+             <%= link_to '', {:class => 'tree_genes'} do %>core genes<% end %>
+             from all organisms appearing as taxa in the tree above.</p>
+          <p><%= link_to @job.tree.seq.url do %>
           <i class="glyphicon glyphicon-download-alt"></i> Multiple sequence alignment
         <% end %> for this tree (FASTA)<br />
         <%= link_to '', {:class => 'tree_genes'} do %>
           <i class="glyphicon glyphicon-list"></i> Core genes
-        <% end %> used to build this tree
+        <% end %> used to build this tree</p>
       </div>
     </div>
   <% end %>
@@ -530,8 +554,9 @@ $(document).ready(function(){
         $('#phylospinner').hide();
         $('#phyloview').show();
         phylocanvas = new PhyloCanvas.Tree('PhyloCanvas', { history_collapsed : true });
-        phylocanvas.setTreeType("radial");
+        phylocanvas.setTreeType("rectangular");
         phylocanvas.load(tree);
+        $('.pc-history').hide();
         phylocanvas.setNodeColourAndShape('<%= @job[:prefix] %>', '#31708f');
         phylocanvas.backColour = function(node){
           if(node.getLabel() == "<%= @job[:prefix] %>") {

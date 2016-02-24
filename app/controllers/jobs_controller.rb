@@ -171,9 +171,9 @@ class JobsController < ApplicationController
       render plain: "job #{params[:id]} not found", status: 404
     else
       ref = Reference.find(job[:reference_id])
-      cl_a = job.clusters.joins(:genes).where(:genes => {:species => job[:prefix]}).distinct.collect {|c| c[:cluster_id]}
+      cl_a = job.clusters.joins(:genes).where(:genes => {:species => job[:prefix], :gtype => 'coding'}).distinct.collect {|c| c[:cluster_id]}
       #cl_a = Cluster.find_by_sql("select * from clusters c join clusters_genes cg on cg.cluster_id = c.id join genes g on g.id = cg.gene_id where c.job_id = '#{job[:id]}' and g.species = '#{job[:prefix]}'")
-      cl_b = job.clusters.joins(:genes).where(:genes => {:species => ref[:abbr]}).distinct.collect {|c| c[:cluster_id]}
+      cl_b = job.clusters.joins(:genes).where(:genes => {:species => ref[:abbr], :gtype => 'coding'}).distinct.collect {|c| c[:cluster_id]}
       #cl_b = Cluster.find_by_sql("select * from clusters c join clusters_genes cg on cg.cluster_id = c.id join genes g on g.id = cg.gene_id where c.job_id = ''#{job[:id]}'' and g.species = '#{ref[:abbr]}'")
       a = cl_a - cl_b
       b = cl_b - cl_a
@@ -194,8 +194,8 @@ class JobsController < ApplicationController
       ref = Reference.find(job[:reference_id])
       # the code below is horribly hacky IMHO and should eventually be
       # replaced by proper SQL or iterative set operations
-      cl_a = job.clusters.joins(:genes).where(:genes => {:species => job[:prefix]}).distinct
-      cl_b = job.clusters.joins(:genes).where(:genes => {:species => ref[:abbr]}).distinct
+      cl_a = job.clusters.joins(:genes).where(:genes => {:species => job[:prefix], :gtype => 'coding'}).distinct
+      cl_b = job.clusters.joins(:genes).where(:genes => {:species => ref[:abbr], :gtype => 'coding'}).distinct
       v = {}
       v[job[:prefix]] = cl_a - cl_b
       v[ref[:abbr]] = cl_b - cl_a
@@ -241,8 +241,12 @@ class JobsController < ApplicationController
     expires_in 1.month, :public => true
     if job then
       ref = Reference.find(job[:reference_id])
-      this_s = job.genes.includes(:clusters).where(:clusters => {id: nil})
-      ref_s = Gene.where(job: nil, species: ref[:abbr]).includes(:clusters).where(:clusters => { id: nil})
+      this_s = job.genes.includes(:clusters).where(:clusters => {id: nil}, :gtype => 'coding')
+      #ref_s = Gene.where(job: nil, species: ref[:abbr]).includes(:clusters).where(:clusters => { id: nil})
+      ref_s = Gene.where(species: ref[:abbr], :gtype => 'coding') -
+       Gene.joins('JOIN clusters_genes ON genes.id = clusters_genes.gene_id ' + \
+                  'JOIN clusters ON clusters_genes.cluster_id = clusters.id')
+           .where('genes.species = ? and clusters.job_id = ?', ref[:abbr], job[:id])
       respond_to do |format|
         format.html do
           out = []
