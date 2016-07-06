@@ -80,10 +80,22 @@ var vtable;
                 <td>Number of coding genes</td>
                 <td class="text-right"><%= @job.genome_stat[:nof_coding_genes]%></td>
             </tr>
+            <% if @job.genome_stat[:nof_pseudogenes] then %>
+            <tr>
+                <td>Number of pseudogenes</td>
+                <td class="text-right"><%= @job.genome_stat[:nof_pseudogenes]%></td>
+            </tr>
+            <% end %>
             <tr>
                 <td>Number of genes with function</td>
                 <td class="text-right"><%= @job.genome_stat[:nof_genes_with_function]%></td>
             </tr>
+            <% if @job.genome_stat[:nof_pseudogenes_with_function] then %>
+            <tr>
+                <td>Number of pseudogenes with function</td>
+                <td class="text-right"><%= @job.genome_stat[:nof_pseudogenes_with_function]%></td>
+            </tr>
+            <% end %>
             <tr>
                 <td>Number of non-coding genes</td>
                 <td class="text-right"><%= @job.genome_stat[:nof_genes].to_i - @job.genome_stat[:nof_coding_genes].to_i %></td>
@@ -234,13 +246,13 @@ var vtable;
         <div class="center-block col-md-4" style="float: none;">
           <form>
             <div class="btn-group" data-toggle="buttons">
-                <label onClick="phylocanvas.setTreeType('rectangular');" class="btn btn-default">
+                <label onClick="phylocanvas.setTreeType('rectangular');" class="btn btn-default active">
                     <input id="tree-rectangular" name="treetype" type="radio" checked="checked" /> Rectangular
                 </label>
                 <label onClick="phylocanvas.setTreeType('circular');" class="btn btn-default">
                     <input id="tree-circular" name="treetype" type="radio" /> Circular
                 </label>
-                <label onClick="phylocanvas.setTreeType('radial');" class="btn btn-default active">
+                <label onClick="phylocanvas.setTreeType('radial');" class="btn btn-default">
                     <input id="tree-radial" name="treetype" type="radio" /> Radial
                 </label>
                 <label onClick="phylocanvas.setTreeType('diagonal');" class="btn btn-default">

@@ -143,6 +143,8 @@ module JobsHelper
       add_item("AUGUSTUS_GENEMODEL", 'partial')
       add_item("EMBL_ORGANISM", job[:organism])
       add_item("embl_ena_submission", 'true')
+      add_item("truncate_input_headers", 'true')
+      add_item("alphanumeric_ids", 'false')
       add_item("SPECK_TEMPLATE", "#{CONFIG['rootdir']}/data/speck/companion_html")
       add_item("AUGUSTUS_SCORE_THRESHOLD", job[:augustus_score_threshold].round(2))
       add_item("TAXON_ID", job[:taxon_id])
