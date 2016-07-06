@@ -80,10 +80,22 @@ var vtable;
                 <td>Number of coding genes</td>
                 <td class="text-right"><%= @job.genome_stat[:nof_coding_genes]%></td>
             </tr>
+            <% if @job.genome_stat[:nof_pseudogenes] then %>
+            <tr>
+                <td>Number of pseudogenes</td>
+                <td class="text-right"><%= @job.genome_stat[:nof_pseudogenes]%></td>
+            </tr>
+            <% end %>
             <tr>
                 <td>Number of genes with function</td>
                 <td class="text-right"><%= @job.genome_stat[:nof_genes_with_function]%></td>
             </tr>
+            <% if @job.genome_stat[:nof_pseudogenes_with_function] then %>
+            <tr>
+                <td>Number of pseudogenes with function</td>
+                <td class="text-right"><%= @job.genome_stat[:nof_pseudogenes_with_function]%></td>
+            </tr>
+            <% end %>
             <tr>
                 <td>Number of non-coding genes</td>
                 <td class="text-right"><%= @job.genome_stat[:nof_genes].to_i - @job.genome_stat[:nof_coding_genes].to_i %></td>

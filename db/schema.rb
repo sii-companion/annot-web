@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160128103447) do
+ActiveRecord::Schema.define(version: 20160704145916) do
 
   create_table "circos_images", force: :cascade do |t|
     t.string   "file_uid"
@@ -97,9 +97,11 @@ ActiveRecord::Schema.define(version: 20160128103447) do
     t.integer  "nof_coding_genes"
     t.integer  "nof_genes_with_mult_cds"
     t.integer  "nof_genes_with_function"
-    t.datetime "created_at",              null: false
-    t.datetime "updated_at",              null: false
+    t.datetime "created_at",                    null: false
+    t.datetime "updated_at",                    null: false
     t.integer  "job_id"
+    t.integer  "nof_pseudogenes"
+    t.integer  "nof_pseudogenes_with_function"
   end
 
   add_index "genome_stats", ["job_id"], name: "index_genome_stats_on_job_id"
