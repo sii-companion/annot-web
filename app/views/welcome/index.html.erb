@@ -1,5 +1,6 @@
 <div class="jumbotron">
-  <%= image_tag 'companion_logo.png', alt: 'Companion' %>
+  <%= image_tag('companion_logo.png', alt: 'Companion',
+                class: 'img-responsive center-block') %>
   <p class="lead">Easy and reliable parasite genome annotation.</p>
   <div class="row">
     <%= form_tag(:job_find, method: "get", class: "form-inline") do %>
@@ -10,7 +11,7 @@
           <a class="btn btn-lg btn-danger disabled" href="#" role="button">New job submission is temporarily closed for technical reasons.<br />Please try again later.</a> <br /><br /> Find
         <% end %>
         your job by ID:<br /><br />
-        <%= text_field_tag(:id, nil, :class => "form-control input-lg", :style => "width: 350px",
+        <%= text_field_tag(:id, nil, :class => "form-control input-lg",
                            :placeholder => "e.g. 9b0a42358d208bb061cbf2d3" ) %>
       </div>
     <% end %>
