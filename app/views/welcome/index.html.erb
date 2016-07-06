@@ -1,5 +1,6 @@
 <div class="jumbotron">
-  <%= image_tag 'companion_logo.png', alt: 'Companion' %>
+  <%= image_tag('companion_logo.png', alt: 'Companion',
+                class: 'img-responsive center-block') %>
   <p class="lead">Easy and reliable parasite genome annotation.</p>
   <div class="row">
     <%= form_tag(:job_find, method: "get", class: "form-inline") do %>
@@ -10,7 +11,7 @@
           <a class="btn btn-lg btn-danger disabled" href="#" role="button">New job submission is temporarily closed for technical reasons.<br />Please try again later.</a> <br /><br /> Find
         <% end %>
         your job by ID:<br /><br />
-        <%= text_field_tag(:id, nil, :class => "form-control input-lg", :style => "width: 350px",
+        <%= text_field_tag(:id, nil, :class => "form-control input-lg",
                            :placeholder => "e.g. 9b0a42358d208bb061cbf2d3" ) %>
       </div>
     <% end %>
@@ -56,4 +57,16 @@
        <a href="https://hub.docker.com/r/satta/companion/">dependencies</a>
        and run the whole workflow on your own machine!</p>
   </div>
+</div>
+
+<div class="row marketing">
+  <div class="col-md-3"></div>
+  <div class="col-md-6">
+    <div style="margin-bottom: 1em">If you are using <i>Companion</i> in your research, please cite the following publication:</div>
+    <p>Steinbiss S, Silva-Franco F, Brunk B, Foth B, Hertz-Fowler C <i>et al.</i><br />
+       Companion: a web server for annotation and analysis of parasite genomes.<br />
+       <i>Nucleic Acids Research</i>, 44:W29-W34, 2016.<br />
+       DOI: <a href="http://dx.doi.org/10.1093/nar/gkw292">10.1093/nar/gkw292</a></p>
+  </div>
+  <div class="col-md-3"></div>
 </div>
