@@ -18,7 +18,7 @@ class JobsController < ApplicationController
       @job[:abacas_match_sim] = 85
       @job[:augustus_score_threshold] = 0.8
       @job[:taxon_id] = 5653
-      @job[:db_id] = "Companion"
+      @job[:db_id ] = "Companion"
       @job[:ratt_transfer_type] = 'Species'
       @job.build_sequence_file
       @job.build_transcript_file
@@ -66,7 +66,7 @@ class JobsController < ApplicationController
 
   def create
     @job = Job.new(jobs_params(params))
-    if verify_recaptcha(:model => @job, :message => "The captcha you entered was invalid.") && @job.save then
+    if simple_captcha_valid? && @job.save then
       Rails.logger.info @job.inspect
       file = @job.sequence_file
       file.file.canonicalize_seq!
@@ -81,6 +81,7 @@ class JobsController < ApplicationController
            <a href=\"#{url}\">#{url}</a>."
       redirect_to job_path(id: @job[:job_id])
     else
+      flash[:info] = "Invalid human verification code. Please try again."
       render 'new'
     end
   end

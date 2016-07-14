@@ -6,6 +6,7 @@ class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
   include SessionsHelper
   include Sys
+  include SimpleCaptcha::ControllerHelpers
 
   before_filter :number_of_jobs, :check_closed
 
