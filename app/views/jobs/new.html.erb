@@ -212,9 +212,8 @@
    </div>
  </div>
 
- <div><p>To protect the service from automated bots, please prove that you are a human by ticking the box
-   below.</p></div>
-   <%= recaptcha_tags %><br />
+ <div><p>To protect the service from automated bots, please prove that you are a human.</p></div>
+   <%= show_simple_captcha %><br />
 
    <%= f.submit "Submit job", class: "btn btn-default"  %>
    <% end %>

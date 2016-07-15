@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160704145916) do
+ActiveRecord::Schema.define(version: 20160714143813) do
 
   create_table "circos_images", force: :cascade do |t|
     t.string   "file_uid"
@@ -154,6 +154,15 @@ ActiveRecord::Schema.define(version: 20160704145916) do
   end
 
   add_index "result_files", ["job_id"], name: "index_result_files_on_job_id"
+
+  create_table "simple_captcha_data", force: :cascade do |t|
+    t.string   "key",        limit: 40
+    t.string   "value",      limit: 6
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "simple_captcha_data", ["key"], name: "idx_key"
 
   create_table "trees", force: :cascade do |t|
     t.string  "seq_uid"
