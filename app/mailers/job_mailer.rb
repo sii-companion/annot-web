@@ -1,5 +1,5 @@
 class JobMailer < ApplicationMailer
-  default from: 'Companion Server <companion@sanger.ac.uk>'
+  default from: 'Companion Server <iii-companion@glasgow.ac.uk>'
 
   def start_job_email(job)
     @url = jobs_url(:only_path => :true)
@@ -23,6 +23,6 @@ class JobMailer < ApplicationMailer
   def finish_failure_job_email_notify_dev(job)
     @url = jobs_url(:only_path => :true)
     @job = job
-    mail(to: 'companion@sanger.ac.uk', subject: "User job '#{job[:name]}' (#{job[:job_id]}) has failed")
+    mail(to: 'iii-companion@glasgow.ac.uk', subject: "User job '#{job[:name]}' (#{job[:job_id]}) has failed")
   end
 end

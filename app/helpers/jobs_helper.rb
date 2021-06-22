@@ -98,11 +98,7 @@ module JobsHelper
     def select_reference(ref)
       @items["ref_species"] = ref[:abbr]
       @items["ref_dir"] = ref[:referencedir]
-      if ref[:snap_model] then
-        @items["run_snap"] = "true"
-      else
-        @items["run_snap"] = "false"
-      end
+      @items["run_snap"] = "false"
       if ref[:weightfile] then
         @items["WEIGHT_FILE"] = ref[:weightfile]
       end

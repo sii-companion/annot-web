@@ -1,6 +1,6 @@
 name              "annot-nf"
-maintainer        "Sascha Steinbiss"
-maintainer_email  "ss34@sanger.ac.uk"
+maintainer        "Thomas Otto"
+maintainer_email  "iii-companion@glasgow.ac.uk"
 license           "ISC"
 description       "Installs annot-nf"
 version           "1.0"
