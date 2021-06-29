@@ -3,6 +3,10 @@ class StaticPagesController < ApplicationController
     render "faq"
   end
 
+  def survey2018
+    render "survey2018"
+  end
+
   def examples
     @job = nil
     @ref = nil

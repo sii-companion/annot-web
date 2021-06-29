@@ -1,6 +1,6 @@
-desc 'expire jobs older than 3 months'
+desc 'expire jobs older than 4 months'
 task :expire_old => :environment do |t, args|
-  oldjobs = Job.where("finished_at < :threshold", {:threshold => 3.months.ago})
+  oldjobs = Job.where("finished_at < :threshold", {:threshold => 4.months.ago})
   oldjobs.each do |job|
     if CONFIG['example_job_id'] == job['job_id'] then
       puts "Job #{job[:job_id]} '#{job[:name]}' is marked as the example, skipping it"
