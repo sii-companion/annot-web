@@ -21,8 +21,8 @@
           <span class="icon-bar"></span>
           <span class="icon-bar"></span>
         </button>
-        <a href="http://www.sanger.ac.uk" class="navbar-brand">
-          <%= image_tag 'sang_logo.png', alt: 'Wellcome Trust Sanger Institute' %>
+        <a href="http://www.gla.ac.uk" class="navbar-brand">
+          <%= image_tag 'sang_logo.png', alt: 'University of Glasgow' %>
         </a>
         <%= link_to root_url, :class => "navbar-brand" do %>
         <%= image_tag 'companion_logo.png', alt: 'Companion' %>
@@ -46,7 +46,13 @@
           <i class="fa fa-list-alt"></i> Example results
           <% end %>
         </li>
-        <li class="<%= 'active' if current_page?(faq_path) %>">
+       <li class="<%= 'active' if current_page?(survey2018_path) %>">
+          <%= link_to survey2018_path do  %>
+          <i class="fa fa-question"></i> Survey 2018
+          <% end %>
+        </li>
+ 
+       <li class="<%= 'active' if current_page?(faq_path) %>">
           <%= link_to faq_path do  %>
           <i class="fa fa-question"></i> FAQ
           <% end %>
@@ -92,10 +98,11 @@
 <footer class="footer">
   <div class="copyright">
     <p class="pull-right" style="margin-right: 20px;">
-      <a href="http://www.sanger.ac.uk/legal/">Terms and conditions</a> &middot; <a href="http://www.sanger.ac.uk/legal/cookiespolicy.html">Cookies policy</a>
+      <a href="http://www.gla.ac.uk/legal/">Terms and conditions</a> &middot; <a href="https://www.gla.ac.uk/legal/privacy/">Privacy policy</a>
     </p>
     <p>
-      Companion is developed by the <a href="http://www.sanger.ac.uk/science/groups/berriman-group">Parasite Genomics group</a> at the WTSI. Copyright &copy; 2015 Genome Research Limited.
+      Companion is developed first by the <a href="http://www.sanger.ac.uk/science/groups/berriman-group">Parasite Genomics group</a> at the WTSI and now is continued in the <a href="https://www.gla.ac.uk/researchinstitutes/iii/staff/thomasdanotto/">biottofni</a> 
+group in Glasgow. Copyright &copy; 2015 Genome Research Limited.
     </p>
   </div>
 </footer>
