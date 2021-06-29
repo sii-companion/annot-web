@@ -4,6 +4,7 @@ Rails.application.routes.draw do
 
   # static pages
   get 'faq' => 'static_pages#faq'
+  get 'survey2018' => 'static_pages#survey2018'
   get 'examples' => 'static_pages#examples'
   get 'getting_started' => 'static_pages#how_it_works'
 
