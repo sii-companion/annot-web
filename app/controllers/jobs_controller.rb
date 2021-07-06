@@ -70,16 +70,20 @@ class JobsController < ApplicationController
       Rails.logger.info @job.inspect
       file = @job.sequence_file
       file.file.canonicalize_seq!
-      # start job and record Sidekiq ID
-      jobid = HardWorker.perform_async(@job[:id])
-      @job[:job_id] = jobid
-      @job.save!
-      url = Rails.application.routes.url_helpers.job_url(id: @job[:job_id], :host => request.host_with_port)
-      flash[:success] = "Your job with ID <b>#{jobid}</b> has just been successfully
-           created and enqueued. You can go back to this page and check the
-           status of your job using the following URL:
-           <a href=\"#{url}\">#{url}</a>."
-      redirect_to job_path(id: @job[:job_id])
+      if @job.valid?
+        # start job and record Sidekiq ID
+        jobid = HardWorker.perform_async(@job[:id])
+        @job[:job_id] = jobid
+        @job.save!
+        url = Rails.application.routes.url_helpers.job_url(id: @job[:job_id], :host => request.host_with_port)
+        flash[:success] = "Your job with ID <b>#{jobid}</b> has just been successfully
+            created and enqueued. You can go back to this page and check the
+            status of your job using the following URL:
+            <a href=\"#{url}\">#{url}</a>."
+        redirect_to job_path(id: @job[:job_id])
+      else
+        render 'new'
+      end
     else
       flash[:info] = "Invalid human verification code. Please try again."
       render 'new'
