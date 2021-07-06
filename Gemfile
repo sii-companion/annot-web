@@ -1,11 +1,14 @@
 source 'https://rubygems.org'
 
+# Specify working ruby version
+ruby '2.3.3', :patchlevel => '222'
+
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '>= 4.2.0'
 gem 'activesupport', '>= 4.2.2'
 
 # Use sqlite3 as the database for Active Record
-gem 'sqlite3'
+gem 'sqlite3', '~> 1.3.0'
 # Use SCSS for stylesheets
 gem 'sass-rails', '>= 3.2'
 # Use Uglifier as compressor for JavaScript assets
@@ -91,3 +94,10 @@ gem 'lol_dba'
 
 # worker startup
 gem 'foreman'
+
+# pin earlier version of sprockets
+gem 'sprockets', '~>3.0'
+
+# required for debugging
+gem 'debase'
+gem 'ruby-debug-ide'
