@@ -91,3 +91,6 @@ gem 'lol_dba'
 
 # worker startup
 gem 'foreman'
+
+# jira integration
+gem 'jira-ruby', :require => 'jira-ruby'
