@@ -275,6 +275,7 @@ class HardWorker
         JobMailer.finish_failure_job_email(job).deliver_later
       end
       JobMailer.finish_failure_job_email_notify_dev(job).deliver_later
+      JobsController.finish_failure_job_create_jira_issue(job)
       raise e
     end
   end

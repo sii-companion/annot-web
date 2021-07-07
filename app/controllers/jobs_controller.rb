@@ -1,4 +1,7 @@
 class JobsController < ApplicationController
+
+  before_filter :get_jira_client
+
   def new
     if @closed then
       flash[:info] = "New job creation is temporarily closed for technical " + \
@@ -341,5 +344,29 @@ class JobsController < ApplicationController
                                 :no_resume, :email, sequence_file_attributes: [:id, :file],
                                 transcript_file_attributes: [:id, :file])
 
+  end
+
+  def finish_failure_job_create_jira_issue(job)
+    @job = job
+    @issue = @jira_client.Issue.build
+    @issue.save(
+      "fields": {
+        "project": {
+           "key": "COM"
+        },
+        "summary": "Investigate failed user job '#{job[:name]}'",
+        "description": "The user job '#{job[:name]}' (#{job[:job_id]}) failed. Consult the iii-companion email for stdout.\n" \
+                        "User email: #{job[:email]}\n" \
+                        "Config: #{job[:config_file]}",
+        "issuetype": {
+           "name": "Bug"
+        },
+        "parent": {
+          "key": "COM-1"
+        },
+        "labels": [Socket.gethostname],
+        "customfield_10029": [@job.job_id]
+      }
+    )
   end
 end

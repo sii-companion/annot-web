@@ -45,4 +45,20 @@ class ApplicationController < ActionController::Base
       end
     end
   end
+
+  private
+
+  def get_jira_client
+    # add any extra configuration options for your instance of JIRA,
+    # e.g. :use_ssl, :ssl_verify_mode, :context_path, :site
+    options = {
+      :username => CONFIG['jira_api_user'],
+      :password => CONFIG['jira_api_token'],
+      :site     => 'https://glasgow-iii.atlassian.net/',
+      :context_path => '', # often blank
+      :auth_type => :basic,
+      :read_timeout => 120
+    }
+    @jira_client = JIRA::Client.new(options)
+  end
 end
