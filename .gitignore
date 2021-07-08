@@ -4,6 +4,8 @@
 # or operating system, you probably want to add a global ignore instead:
 #   git config --global core.excludesfile '~/.gitignore_global'
 
+.gitattributes
+
 # Ignore bundler config.
 /.bundle
 
@@ -53,3 +55,10 @@ public/assets/*
 
 work
 *DB.org
+
+# Server specific config files. Use examples to rebuild
+config/companion.yml
+config/initializers/mailer.rb
+
+# Server-specific sitemap
+public/sitemap.xml.gz
