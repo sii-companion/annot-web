@@ -54,9 +54,6 @@
        <p class="alert alert-warning">Note: The maximal size of your uploaded
        file is <b>64 MB</b>, and the
        maximum number of individual sequences in it is <b>3000</b>.</p>
-       <p class="alert alert-danger">Warning: We are currently investigating an
-       issue with zipped sequence files, so please only submit a file in FASTA,
-       EMBL or GenBank format.</p>
        <%= f.fields_for :sequence_file do |s_f| %>
          <%= s_f.file_field :file, required: true %>
        <% end %>
