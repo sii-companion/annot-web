@@ -52,7 +52,7 @@
        EMBL or GenBank format) can be gzip- or bzip2-compressed. In this case
        it must have a <tt>.gz</tt> or <tt>.bz2</tt> suffix.</p>
        <p class="alert alert-warning">Note: The maximal size of the <i>unzipped</i> sequence
-       file is <b>128 MB</b>, and the
+       file is <b><%= CONFIG['max_file_size_mb'] %> MB</b>, and the
        maximum number of individual sequences in it is <b>3000</b>.</p>
        <%= f.fields_for :sequence_file do |s_f| %>
          <%= s_f.file_field :file, required: true %>
