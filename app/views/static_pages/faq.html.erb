@@ -6,7 +6,7 @@
 
 <div class="row">
   <h4 id="size">Can I upload large genomes?</h4>
-  <p>The current limit for uploaded files is 64MB. If you need to annotate input
+  <p>The current limit for uploaded files is <%= CONFIG['max_file_size_mb'] %> MB. If you need to annotate input
     genomes larger than that, it makes sense to run a stand-alone version of
     <i>Companion</i> on a sufficiently powerful machine, as it hits the limit
     of this web server. You can find the standalone version of <i>Companion</i>
