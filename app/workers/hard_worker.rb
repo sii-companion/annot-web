@@ -106,7 +106,7 @@ class HardWorker
             "#{job[:config_file]} run " + \
             "#{CONFIG['nextflowscript']} #{CONFIG['dockerconf']} " + \
             "#{'-resume' unless job[:no_resume]} " + \
-            "--dist_dir #{job.job_directory}" + \
+            "--dist_dir #{job.job_directory} " + \
             "-with-trace -with-timeline"
       Rails.logger.info run
       with_environment("ROOTDIR" => "#{CONFIG['rootdir']}",
