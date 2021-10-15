@@ -211,7 +211,7 @@ class HardWorker
             r = m[2].scan(/([^ ()]+)\([^)]+\)/)
             r.each do |memb|
               # HACK! needs to be done correctly for all possible transcript namings!
-              memb_id = memb[0].gsub(/(:.+$|\.\d+$|\.mRNA$)/,"")
+              memb_id = memb[0].gsub(/(:.+$|\.\d+$|\.mRNA$|\_R[A-Z]$)/,"")
               g = Gene.where(["gene_id LIKE ? AND (job_id = #{job[:id]} OR job_id IS NULL)", "#{memb_id}%"]).take
               if g then
                 c.genes << g
