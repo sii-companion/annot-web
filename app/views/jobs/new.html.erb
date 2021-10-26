@@ -53,7 +53,7 @@
        it must have a <tt>.gz</tt> or <tt>.bz2</tt> suffix.</p>
        <p class="alert alert-warning">Note: The maximal size of the <i>unzipped</i> sequence
        file is <b><%= CONFIG['max_file_size_mb'] %> MB</b>, and the
-       maximum number of individual sequences in it is <b>15000</b>.</p>
+       maximum number of individual sequences in it is <b>16000</b>.</p>
        <%= f.fields_for :sequence_file do |s_f| %>
          <%= s_f.file_field :file, required: true %>
        <% end %>
