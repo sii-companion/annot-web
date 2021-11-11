@@ -17,9 +17,14 @@
       It might probably help picking a different reference.
     </p>
     <% else %>
-    <p>
-      To inspect your <%= @job.genome_stat[:nof_genes] %> genes just follow <%= link_to "this link", job_url(id: @job[:job_id]) %>.
-    </p>
+      <% if @job.genome_stat[:nof_genes] > 0 and @job.genome_stat[:nof_pseudogenes]/@job.genome_stat[:nof_genes].to_f > 0.1 %>
+        <b>
+          Warning: Number of pseudogenes exceeded 10%. Please determine suitability of reference for submitted sequence.
+        </b>
+      <% end %>
+      <p>
+        To inspect your <%= @job.genome_stat[:nof_genes] %> genes just follow <%= link_to "this link", job_url(id: @job[:job_id]) %>.
+      </p>
     <% end %>
     <p>Thanks for using Companion and have a nice day!</p>
   </body>
