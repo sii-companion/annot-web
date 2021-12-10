@@ -1,4 +1,4 @@
-development:
+base: &default
   nextflowpath: "/Users/ss34/"
   nextflowscript: "/Users/ss34/develop/annot-nf/annot.nf"
   locationconfig: "/Users/ss34/develop/annot-nf/loc_docker.config"
@@ -38,11 +38,11 @@ development:
   example_job_id: "b2e79c6b5f8495fe52ca297d"
   max_file_size_mb: 64
 
+development:
+  <<: *default
+
 production:
-  nextflowpath: "/Users/ss34/"
-  nextflowscript: "/Users/ss34/develop/annot-nf/annot.nf"
-  locationconfig: "/Users/ss34/develop/annot-nf/loc_docker.config"
-  extrinsicconfig: "/Users/ss34/develop/annot-nf/data/augustus/extrinsic.cfg"
+  <<: *default
   referencedirs:
     Kinetoplastida: "/Users/ss34/rails/testapp/ref_kinetoplastids"
     Plasmodium: "/Users/ss34/rails/testapp/ref_plasmodium"
@@ -55,18 +55,10 @@ production:
   fix_polycistrons:
     Kinetoplastids: "true"
     Plasmodium: "false"
-  dockerconf: "-with-docker satta/companion"
-  rootdir: "/Users/ss34/develop/annot-nf/"
-  workdir: "/Users/ss34/develop/annot-nf/work"
-  tmpdir: "/tmp"
-  example_job_id: "b2e79c6b5f8495fe52ca297d"
-  max_file_size_mb: 64
+  max_file_size_mb: 128
 
 test:
-  nextflowpath: "/Users/ss34/"
-  nextflowscript: "/Users/ss34/develop/annot-nf/annot.nf"
-  locationconfig: "/Users/ss34/develop/annot-nf/loc_docker.config"
-  extrinsicconfig: "/Users/ss34/develop/annot-nf/data/augustus/extrinsic.cfg"
+  <<: *default
   referencedirs:
     Kinetoplastida: "/Users/ss34/rails/testapp/ref_kinetoplastids"
     Plasmodium: "/Users/ss34/rails/testapp/ref_plasmodium"
@@ -79,8 +71,3 @@ test:
   fix_polycistrons:
     Kinetoplastids: "true"
     Plasmodium: "false"
-  dockerconf: "-with-docker satta/companion"
-  rootdir: "/Users/ss34/develop/annot-nf/"
-  workdir: "/Users/ss34/develop/annot-nf/work"
-  tmpdir: "/tmp"
-  example_job_id: "b2e79c6b5f8495fe52ca297d"
