@@ -25,19 +25,19 @@
     </div>
     <div style="padding-top: 20px;">
       <p>Please also give a short <b>species prefix</b> that will be used to name entities (such as genes, pseudochromosomes, etc.) generated during the annotation run. It should not contain spaces or special characters.</p>
-      <p> Example: <i>LDON</i></p>
+      <p> Example: <i><%= CONFIG['example_species']['prefix'] %></i></p>
     </div>
     <div class="input-group">
       <span class="input-group-addon" id="sizing-addon2">Species prefix</span>
-      <%= f.text_field :prefix, class: 'form-control', :placeholder => "LFOO", :aria => {:describedby => "sizing-addon2"}, required: true %>
+      <%= f.text_field :prefix, class: 'form-control', :placeholder => CONFIG['example_species']['prefix'], :aria => {:describedby => "sizing-addon2"}, required: true %>
     </div>
     <div style="padding-top: 20px;">
       <p>Finally, please provide a <b>species name</b> that describes the target species you are annotating.</p>
-      <p> Example: <i>Leishmania donovani</i></p>
+      <p> Example: <i><%= CONFIG['example_species']['name'] %></i></p>
     </div>
     <div class="input-group">
       <span class="input-group-addon" id="sizing-addon2">Species name</span>
-      <%= f.text_field :organism, class: 'form-control', :placeholder => "Leishmania donovani", :aria => {:describedby => "sizing-addon2"}, required: true %>
+      <%= f.text_field :organism, class: 'form-control', :placeholder => CONFIG['example_species']['name'], :aria => {:describedby => "sizing-addon2"}, required: true %>
     </div>
   </div>
 </div>
@@ -57,12 +57,15 @@
        <%= f.fields_for :sequence_file do |s_f| %>
          <%= s_f.file_field :file, required: true %>
        <% end %>
-       <p><a href="/examples/PfIT_05.fasta">Here</a> is an example sequence
-       input file for a <i>Plasmodium falciparum</i> IT chromosome 5 sequence
-       that can be used with the <i>Plasmodium falciparum</i> 3D7 example
-       reference set (choose below in step 4) for a quick example run.
-       To use it, please download it to your local machine and upload it using
-       the button above.</p>
+       
+       <% if (CONFIG['organism_group'] == "parasite") then %>                       
+        <p><a href="/examples/PfIT_05.fasta">Here</a> is an example sequence
+        input file for a <i>Plasmodium falciparum</i> IT chromosome 5 sequence
+        that can be used with the <i>Plasmodium falciparum</i> 3D7 example
+        reference set (choose below in step 4) for a quick example run.
+        To use it, please download it to your local machine and upload it using
+        the button above.</p>
+      <% end %>
   </div>
 </div>
 
@@ -186,7 +189,7 @@
        <%= f.number_field :augustus_score_threshold, class: 'form-control', :aria => {:describedby => "sizing-addon2"}, required: true, :step => 'any' %>
      </div>
      <div style="padding-top: 20px;"><p>Please set the following values which are required for valid GAF output.</p>
-       <p> Example: <i>5691 (for T. brucei)</i>, see <a href="http://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi" target="_blank">NCBI Taxonomy Browser</a>. The default is 5653 (Kinetoplastida).</p></div>
+       <p> Example: <i><%= CONFIG['taxon']['example'] %></i>, see <a href="http://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi" target="_blank">NCBI Taxonomy Browser</a>. The default is <%= CONFIG['taxon']['default'] %>.</p></div>
        <div class="input-group">
          <span class="input-group-addon" id="sizing-addon2">Taxon ID</span>
          <%= f.number_field :taxon_id, class: 'form-control', :aria => {:describedby => "sizing-addon2"}, required: true %>

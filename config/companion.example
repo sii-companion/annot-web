@@ -37,6 +37,14 @@ base: &default
   tmpdir: "/tmp"
   example_job_id: "b2e79c6b5f8495fe52ca297d"
   max_file_size_mb: 64
+  organism_group: "parasite"
+  example_species:
+    prefix: "LDON"
+    name: "Leishmania donovani"
+  taxon:
+    example: "5691 (for T. brucei)"
+    default: "5653 (Kinetoplastida)"
+    id: 5653
 
 development:
   <<: *default

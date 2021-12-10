@@ -1,7 +1,7 @@
 <div class="jumbotron">
   <%= image_tag('companion_logo.png', alt: 'Companion',
                 class: 'img-responsive center-block') %>
-  <p class="lead">Easy and reliable parasite genome annotation at the University of Glasgow.</p>
+  <p class="lead">Easy and reliable <%= CONFIG['organism_group'] %> genome annotation at the University of Glasgow.</p>
   <div class="row">
     <%= form_tag(:job_find, method: "get", class: "form-inline") do %>
       <div class="form-group">
