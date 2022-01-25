@@ -183,7 +183,7 @@
      <%= f.number_field :max_gene_length, class: 'form-control', :aria => {:describedby => "sizing-addon2"}, required: true %>
    </div>
    <div style="padding-top: 20px;"><p>The value below sets the AUGUSTUS score inclusion threshold for a gene to be considered as predicted <i>de novo</i>. Lower this value to make gene prediction more sensitive.</p>
-     <p> Example: <i>0.8</i></p></div>
+     <p> Example: <i>0.4</i></p></div>
      <div class="input-group">
        <span class="input-group-addon" id="sizing-addon2">AUGUSTUS score threshold</span>
        <%= f.number_field :augustus_score_threshold, class: 'form-control', :aria => {:describedby => "sizing-addon2"}, required: true, :step => 'any' %>

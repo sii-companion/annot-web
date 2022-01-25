@@ -16,7 +16,7 @@ class JobsController < ApplicationController
       @job[:max_gene_length] = 50000
       @job[:abacas_match_size] = 500
       @job[:abacas_match_sim] = 85
-      @job[:augustus_score_threshold] = 0.8
+      @job[:augustus_score_threshold] = 0.4
       @job[:taxon_id] = CONFIG['taxon']['id']
       @job[:db_id ] = "Companion"
       @job[:ratt_transfer_type] = 'Species'
