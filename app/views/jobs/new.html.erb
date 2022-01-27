@@ -2,6 +2,8 @@
 <% content_for :head do %>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/6.0.7/bootstrap-slider.min.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/6.0.7/css/bootstrap-slider.min.css" />
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <% end %>
 
 <div class="page-header">
@@ -107,7 +109,7 @@
       Reference.all.sort {|a,b| a[:name] <=> b[:name]},
       :id, :name_with_genes,
       {:prompt => 'Please select a reference species'},
-      {:class => "form-control", :required => true} %>
+      {:class => "js-example-basic-single", :required => true} %>
     </div>
   </div>
 </div>
@@ -223,6 +225,7 @@
 
    <script type="text/javascript">
    $(document).ready(function() {
+    $('.js-example-basic-single').select2();
     $('#advanced-panel').slideUp();
     $('#transcript-selection').slideUp();
     $('.panel-heading span.clickable').addClass('panel-collapsed');
