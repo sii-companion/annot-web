@@ -29,6 +29,10 @@ class Reference < ActiveFile::Base
           if CONFIG['fix_polycistrons'] and CONFIG['fix_polycistrons'][section] then
             newhash[:fix_polycistrons] = CONFIG['fix_polycistrons'][section]
           end
+          # assign do_circos for this section, if configured
+          if CONFIG['do_circos'] and CONFIG['do_circos'][section] then
+            newhash[:do_circos] = CONFIG['do_circos'][section]
+          end
           # lift over properties from JSON
           v.each_pair do |k2,v2|
             if ref_key_map.has_key?(k2) then
@@ -39,7 +43,7 @@ class Reference < ActiveFile::Base
           end
           # we need at least an AUGUSTUS model to use this species as a
           # direct reference
-          if newhash.has_key?('augustus_model') and newhash.has_key?('is_reference_strain') then
+          if newhash.has_key?('is_reference_strain') then
             out << newhash
             i += 1
           end

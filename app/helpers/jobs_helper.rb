@@ -112,6 +112,9 @@ module JobsHelper
       if ref[:fix_polycistrons] then
         @items["fix_polycistrons"] = ref[:fix_polycistrons]
       end
+      if ref[:do_circos] then
+        @items["do_circos"] = ref[:do_circos]
+      end
     end
 
     def get_target_seq(val)

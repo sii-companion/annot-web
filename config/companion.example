@@ -31,6 +31,13 @@ base: &default
     PiroplasmaDB: "false"
     AmoebaDB: "false"
     ToxoDB: "false"
+  do_circos:
+    Kinetoplastida: "true"
+    Plasmodium: "true"
+    CryptoDB: "true"
+    PiroplasmaDB: "true"
+    AmoebaDB: "true"
+    ToxoDB: "true"
   dockerconf: "-with-docker satta/companion"
   rootdir: "/Users/ss34/develop/annot-nf/"
   workdir: "/Users/ss34/develop/annot-nf/work"
