@@ -93,7 +93,6 @@ class HardWorker
       end
       cf.make_embl()
       cf.use_reference()
-      cf.do_circos()
       cf.do_exonerate(job[:do_exonerate])
       cf.run_ratt(job[:do_ratt])
       cf.do_pseudo(job[:do_pseudo])
