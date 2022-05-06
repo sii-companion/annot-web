@@ -1,49 +1,18 @@
 base: &default
-  nextflowpath: "/Users/ss34/"
-  nextflowscript: "/Users/ss34/develop/annot-nf/annot.nf"
-  locationconfig: "/Users/ss34/develop/annot-nf/loc_docker.config"
-  extrinsicconfig: "/Users/ss34/develop/annot-nf/data/augustus/extrinsic.cfg"
-  referencedirs:
-    Kinetoplastida: "/Users/ss34/rails/testapp/ref_kinetoplastids"
-    Plasmodium: "/Users/ss34/rails/testapp/ref_plasmodium"
-    CryptoDB: "/Users/ss34/rails/testapp/CryptoDB.org"
-    PiroplasmaDB: "/Users/ss34/rails/testapp/PiroplasmaDB.org"
-    AmoebaDB: "/Users/ss34/rails/testapp/AmoebaDB.org"
-    ToxoDB: "/Users/ss34/rails/testapp/ToxoDB.org"
-  weightfiles:
-    Kinetoplastida: "/Users/ss34/develop/annot-nf/data/weight/weight_kinetoplastid.lua"
-    Plasmodium: "/Users/ss34/develop/annot-nf/data/weight/weight_plasmodium.lua"
-    CryptoDB: "/Users/ss34/develop/annot-nf/data/weight/weight_plasmodium.lua"
-    PiroplasmaDB: "/Users/ss34/develop/annot-nf/data/weight/weight_plasmodium.lua"
-    AmoebaDB: "/Users/ss34/develop/annot-nf/data/weight/weight_plasmodium.lua"
-    ToxoDB: "/Users/ss34/develop/annot-nf/data/weight/weight_plasmodium.lua"
-  maxintronlengths:
-    Kinetoplastida: 1
-    Plasmodium: 120000
-    CryptoDB: 120000
-    PiroplasmaDB: 120000
-    AmoebaDB: 120000
-    ToxoDB: 120000
-  fix_polycistrons:
-    Kinetoplastida: "true"
-    Plasmodium: "false"
-    CryptoDB: "false"
-    PiroplasmaDB: "false"
-    AmoebaDB: "false"
-    ToxoDB: "false"
-  do_circos:
-    Kinetoplastida: "true"
-    Plasmodium: "true"
-    CryptoDB: "true"
-    PiroplasmaDB: "true"
-    AmoebaDB: "true"
-    ToxoDB: "true"
-  dockerconf: "-with-docker satta/companion"
-  rootdir: "/Users/ss34/develop/annot-nf/"
-  workdir: "/Users/ss34/develop/annot-nf/work"
+  nextflowpath: "/home/companion/"
+  nextflowscript: "/home/companion/annot-nf/annot.nf"
+  locationconfig: "/home/companion/annot-nf/loc_web.config"
+  extrinsicconfig: "/home/companion/annot-nf/data/augustus/extrinsic.cfg"
+  dockerconf: ""
+  rootdir: "/home/companion/annot-nf/"
+  workdir: "/www/companion/work"
   tmpdir: "/tmp"
-  example_job_id: "b2e79c6b5f8495fe52ca297d"
-  max_file_size_mb: 64
+  example_job_id: ""
+  keep_work_directories: false
+  recaptcha_pub_key: "6LeG5w4TAAAAAMiqHp_0nwnY2H4mB3xMLlXhqxDa"
+  recaptcha_priv_key: ""
+  min_work_space: 500
+  max_file_size_mb: 128
   organism_group: "parasite"
   example_species:
     prefix: "LDON"
@@ -55,34 +24,24 @@ base: &default
 
 development:
   <<: *default
+  referencedirs:
+    Kinetoplastida: "/www/companion/ref_kinetoplastids"
+    Plasmodium: "/www/companion/ref_plasmodium"
+  weightfiles:
+    Kinetoplastida: "/home/companion/annot-nf/data/weight/weight_kinetoplastid.lua"
+    Plasmodium: "/home/companion/annot-nf/data/weight/weight_plasmodium.lua"
+  maxintronlengths:
+    Kinetoplastida: 1
+    Plasmodium: 20000
+  fix_polycistrons:
+    Kinetoplastida: "true"
+    Plasmodium: "false"
+  do_circos: 
+    Kinetoplastida: "true"
+    Plasmodium: "true"
 
 production:
   <<: *default
-  referencedirs:
-    Kinetoplastida: "/Users/ss34/rails/testapp/ref_kinetoplastids"
-    Plasmodium: "/Users/ss34/rails/testapp/ref_plasmodium"
-  weightfiles:
-    Kinetoplastida: "/Users/ss34/develop/annot-nf/data/weight/weight_kinetoplastid.lua"
-    Plasmodium: "/Users/ss34/develop/annot-nf/data/weight/weight_plasmodium.lua"
-  maxintronlengths:
-    Kinetoplastida: 1
-    Plasmodium: 20000
-  fix_polycistrons:
-    Kinetoplastids: "true"
-    Plasmodium: "false"
-  max_file_size_mb: 128
 
 test:
   <<: *default
-  referencedirs:
-    Kinetoplastida: "/Users/ss34/rails/testapp/ref_kinetoplastids"
-    Plasmodium: "/Users/ss34/rails/testapp/ref_plasmodium"
-  weightfiles:
-    Kinetoplastida: "/Users/ss34/develop/annot-nf/data/weight/weight_kinetoplastid.lua"
-    Plasmodium: "/Users/ss34/develop/annot-nf/data/weight/weight_plasmodium.lua"
-  maxintronlengths:
-    Kinetoplastida: 1
-    Plasmodium: 20000
-  fix_polycistrons:
-    Kinetoplastids: "true"
-    Plasmodium: "false"
