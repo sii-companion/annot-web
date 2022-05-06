@@ -9,8 +9,6 @@ base: &default
   tmpdir: "/tmp"
   example_job_id: ""
   keep_work_directories: false
-  recaptcha_pub_key: "6LeG5w4TAAAAAMiqHp_0nwnY2H4mB3xMLlXhqxDa"
-  recaptcha_priv_key: ""
   min_work_space: 500
   max_file_size_mb: 128
   organism_group: "parasite"
