@@ -38,17 +38,17 @@ class HardWorker
   def make_directories(job)
     # make result directory
     if not Dir.exist?(job.job_directory) then
-      Dir.mkdir(job.job_directory)
+      FileUtils.mkdir_p(job.job_directory)
     end
 
     # make temp directory
     if not Dir.exist?(job.temp_directory) then
-      Dir.mkdir(job.temp_directory)
+      FileUtils.mkdir_p(job.temp_directory)
     end
 
     # make work directory
     if not Dir.exist?(job.work_directory) then
-      Dir.mkdir(job.work_directory)
+      FileUtils.mkdir_p(job.work_directory)
     end
   end
 
