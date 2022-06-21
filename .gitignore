@@ -62,3 +62,7 @@ config/initializers/mailer.rb
 
 # Server-specific sitemap
 public/sitemap.xml.gz
+
+# Ignore job timeline/trace
+timeline.html*
+trace.txt*
