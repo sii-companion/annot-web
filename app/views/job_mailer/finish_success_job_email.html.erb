@@ -18,9 +18,18 @@
     </p>
     <% else %>
       <% if @job.genome_stat[:nof_genes] > 0 and @job.genome_stat[:nof_pseudogenes]/@job.genome_stat[:nof_genes].to_f > 0.1 %>
-        <b>
+        <p><b>
           Warning: Number of pseudogenes exceeded 10%. Please determine suitability of reference for submitted sequence.
-        </b>
+        </b></p>
+      <% end %>
+      <% if @job.genome_stat[:nof_genes]/@ref[:nof_genes].to_f > 1.2 then %>
+        <p><b>
+          Warning: Number of genes is 20% greater than number of reference genes.
+        </b></p>
+      <% elsif @job.genome_stat[:nof_genes]/@ref[:nof_genes].to_f < 0.8 then %>
+        <p><b>
+          Warning: Number of genes is 20% lower than number of reference genes.
+        </b></p>
       <% end %>
       <p>
         To inspect your <%= @job.genome_stat[:nof_genes] %> genes just follow <%= link_to "this link", job_url(id: @job[:job_id]) %>.
