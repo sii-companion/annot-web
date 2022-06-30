@@ -1,7 +1,7 @@
 # annot-web
-Web interface for annotation pipeline
+Web interface for the Companion annotation pipeline
 
-[![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-brightgreen.svg)](https://github.com/sanger-pathogens/annot-web/blob/master/LICENSE)
+[![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-brightgreen.svg)](https://github.com/iii-companion/annot-web/blob/master/LICENSE)
 
 ## Contents
   * [Introduction](#introduction)
@@ -10,13 +10,13 @@ Web interface for annotation pipeline
   * [Further Information](#further-information)
 
 ## Introduction
-Web interface for Companion: http://companion.sanger.ac.uk
+Web interface for Companion: https://companion.ac.uk
  
 ## License
-annot-web is free software, licensed under [GPLv3](https://github.com/sanger-pathogens/annot-web/blob/master/LICENSE).
+annot-web is free software, licensed under [GPLv3](https://github.com/iii-companion/annot-web/blob/master/LICENSE).
 
 ## Feedback/Issues
-Please report any issues to the [issues page](https://github.com/sanger-pathogens/annot-web/issues) or email path-help@sanger.ac.uk.
+Please report any issues to the [issues page](https://github.com/iii-companion/annot-web/issues) or email iii-companion@glasgow.ac.uk.
 
 ## Further Information
-Sanger Institute staff should refer to the [wiki](http://mediawiki.internal.sanger.ac.uk/index.php/Companion) for further information.
+UofG staff should refer to the [wiki](http://toweb1.mvls.gla.ac.uk/index.php/Companion) for further information.
