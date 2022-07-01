@@ -1,6 +1,6 @@
 class HardWorker
   include Sidekiq::Worker
-  sidekiq_options :retry => 1
+  sidekiq_options :retry => 0
   include Sidekiq::Status::Worker
 
   def expiration
@@ -108,12 +108,14 @@ class HardWorker
             "--dist_dir #{job.job_directory} " + \
             "-with-trace -with-timeline"
       Rails.logger.info run
-      with_environment("ROOTDIR" => "#{CONFIG['rootdir']}",
-                       "NXF_WORK" => job.work_directory,
-                       "NXF_TEMP" => job.temp_directory) do
-        status = Open4::popen4(run) do |pid, stdin, stdout, stderr|
-          my_stdout = stdout.readlines.join
-          my_stderr = stderr.readlines.join
+      Dir.chdir(job.job_directory) do
+        with_environment("ROOTDIR" => "#{CONFIG['rootdir']}",
+                        "NXF_WORK" => job.work_directory,
+                        "NXF_TEMP" => job.temp_directory) do
+          status = Open4::popen4(run) do |pid, stdin, stdout, stderr|
+            my_stdout = stdout.readlines.join
+            my_stderr = stderr.readlines.join
+          end
         end
       end
       Rails.logger.info "STDOUT:"
