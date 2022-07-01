@@ -28,6 +28,10 @@ Rails.application.routes.draw do
   get 'jobs/:id/report.html' => 'jobs#get_report', as: :report
   get 'jobs/:id/tree/genes' => 'jobs#get_tree_genes', as: :tree_genes
   get 'jobs/:id/plots.zip' => 'jobs#get_all_synteny_images', as: :all_synteny_images
+  
+  resources :jobs do
+    get :restart, on: :member 
+  end
 
   # uploaded files
   get 'user_files/new'
