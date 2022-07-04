@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160714143813) do
+ActiveRecord::Schema.define(version: 20220704155155) do
 
   create_table "circos_images", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb3" do |t|
     t.string   "file_uid"
@@ -81,16 +81,16 @@ ActiveRecord::Schema.define(version: 20160714143813) do
   create_table "genome_stats", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb3" do |t|
     t.integer  "nof_regions"
     t.integer  "overall_length"
-    t.decimal  "gc_overall",                    precision: 10
-    t.decimal  "gc_coding",                     precision: 10
+    t.decimal  "gc_overall",                    precision: 10, scale: 2
+    t.decimal  "gc_coding",                     precision: 10, scale: 2
     t.integer  "nof_genes"
-    t.decimal  "gene_density",                  precision: 10
-    t.decimal  "avg_coding_length",             precision: 10
+    t.decimal  "gene_density",                  precision: 10, scale: 2
+    t.decimal  "avg_coding_length",             precision: 10, scale: 2
     t.integer  "nof_coding_genes"
     t.integer  "nof_genes_with_mult_cds"
     t.integer  "nof_genes_with_function"
-    t.datetime "created_at",                                   null: false
-    t.datetime "updated_at",                                   null: false
+    t.datetime "created_at",                                             null: false
+    t.datetime "updated_at",                                             null: false
     t.integer  "job_id"
     t.integer  "nof_pseudogenes"
     t.integer  "nof_pseudogenes_with_function"
@@ -103,15 +103,15 @@ ActiveRecord::Schema.define(version: 20160714143813) do
     t.datetime "started_at"
     t.string   "status"
     t.datetime "finished_at"
-    t.datetime "created_at",               null: false
-    t.datetime "updated_at",               null: false
+    t.datetime "created_at",                                                      null: false
+    t.datetime "updated_at",                                                      null: false
     t.integer  "user_id"
     t.string   "path"
     t.boolean  "do_contiguate"
     t.boolean  "do_exonerate"
     t.boolean  "do_ratt"
     t.integer  "max_gene_length"
-    t.decimal  "augustus_score_threshold",               precision: 10
+    t.decimal  "augustus_score_threshold",               precision: 10, scale: 2
     t.integer  "taxon_id"
     t.string   "db_id"
     t.integer  "reference_id"
