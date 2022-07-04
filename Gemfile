@@ -93,3 +93,5 @@ gem 'lol_dba'
 
 # worker startup
 gem 'foreman'
+
+gem 'mysql2'
