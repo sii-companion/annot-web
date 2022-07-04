@@ -66,7 +66,8 @@ gem 'jquery-ui-rails'
 
 # for bulk import of data into ActiveRecord
 # require at least v0.18.3 for :on_duplicate_key_ignore option to work
-gem 'activerecord-import', '>= 0.18.3'
+# fix to 0.18.3 until ruby is universally updated beyond 2.3.3
+gem 'activerecord-import', '= 0.18.3'
 
 # better tables
 gem 'jquery-datatables-rails', '~> 3.3.0'
