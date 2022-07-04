@@ -65,7 +65,9 @@ gem 'autoprefixer-rails'
 gem 'jquery-ui-rails'
 
 # for bulk import of data into ActiveRecord
-gem 'activerecord-import', '~> 0.4.0'
+# require at least v0.18.3 for :on_duplicate_key_ignore option to work
+# fix to 0.18.3 until ruby is universally updated beyond 2.3.3
+gem 'activerecord-import', '= 0.18.3'
 
 # better tables
 gem 'jquery-datatables-rails', '~> 3.3.0'

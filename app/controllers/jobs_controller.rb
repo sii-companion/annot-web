@@ -90,6 +90,18 @@ class JobsController < ApplicationController
     end
   end
 
+  def restart
+    @job = Job.find_by(:job_id => params[:id])
+    if @job.valid?
+      jobid = HardWorker.perform_async(@job[:id])
+      @job[:job_id] = jobid
+      @job[:finished_at] = nil
+      @job.save!
+      url = Rails.application.routes.url_helpers.job_url(id: @job[:job_id], :host => request.host_with_port)
+      redirect_to :jobs
+    end
+  end
+
   def destroy
     if !logged_in? then
       flash[:info] = "You do not have permission to delete jobs in the " + \

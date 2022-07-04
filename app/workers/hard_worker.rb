@@ -25,11 +25,15 @@ class HardWorker
   def add_result_file(job, file)
     file_path = "#{job.job_directory}/#{file}"
     if File.exist?(file_path) then
-      rf = ResultFile.new
+      # prevent duplication for job restarts
+      rf = job.result_files.where(:file_name => file).take
+      if not rf then
+        rf = ResultFile.new
+        job.result_files << rf
+      end
       rf.file = File.new(file_path)
       rf.md5 = Digest::MD5.file(file_path).hexdigest
       rf.save!
-      job.result_files << rf
     else
       raise "required file not present: #{job.job_directory}/#{file}"
     end
@@ -177,11 +181,15 @@ class HardWorker
           else
             chrname = "unnamed chromosome"
           end
-          img = CircosImage.new
-          img.file = File.new(f)
-          img.chromosome = chrname
-          img.save!
-          job.circos_images << img
+          file = File.new(f)
+          # prevent duplication for job restarts
+          img = job.circos_images.where(:chromosome => chrname).take
+          if not img then
+            img = CircosImage.new(chromosome: chrname)
+            job.circos_images << img
+          end 
+          img.file = file
+          img.save!          
           File.unlink(f)
         end
 
@@ -191,13 +199,13 @@ class HardWorker
           File.open("#{job.job_directory}/genelist.csv").read.each_line do |l|
             l.chomp!
             id, type, product, seqid, start, stop, strand = l.split("\t")
-            g = Gene.new(:gene_id => id, :product => product, :loc_start => start,
+            g = Gene.find_or_create_by(:gene_id => id, :product => product, :loc_start => start,
                          :loc_end => stop, :strand => strand, :job => job,
                          :seqid => seqid, :gtype => type, :species => job[:prefix],
                          :section => r[:section])
             genes << g
           end
-          Gene.import(genes)
+          Gene.import genes, on_duplicate_key_ignore: true
         end
 
         # import clusters
@@ -206,14 +214,16 @@ class HardWorker
           File.open("#{job.job_directory}/orthomcl_out").each_line do |l|
             m = l.match(/^(ORTHOMCL[0-9]+)[^:]+:\s+(.+)/)
             next unless m
-            c = Cluster.new(:cluster_id => m[1], :job => job)
+            c = Cluster.find_or_create_by(:cluster_id => m[1], :job => job)
             r = m[2].scan(/([^ ()]+)\([^)]+\)/)
             r.each do |memb|
               # HACK! needs to be done correctly for all possible transcript namings!
               memb_id = memb[0].gsub(/(:.+$|\.\d+$|\.mRNA$|\_R[A-Z]$)/,"")
               g = Gene.where(["gene_id LIKE ? AND (job_id = #{job[:id]} OR job_id IS NULL)", "#{memb_id}%"]).take
               if g then
-                c.genes << g
+                unless g.in?(c.genes)
+                  c.genes << g
+                end
               else
                 Rails.logger.info("#{memb[0]}: #{memb_id} (with job ID #{job[:id]}) not found!")
               end
@@ -226,7 +236,7 @@ class HardWorker
         if File.exist?("#{job.job_directory}/tree_selection.genes") and
           File.exist?("#{job.job_directory}/tree.aln") then
           genes = []
-          t = Tree.new(job: job)
+          t = Tree.find_or_create_by(job: job)
           t.seq = File.new("#{job.job_directory}/tree.aln")
           t.save!
           File.open("#{job.job_directory}/tree_selection.genes").each_line do |l|
@@ -236,7 +246,9 @@ class HardWorker
               memb_id = memb.gsub(/(:[^:]+$|\.\d+$)/,"")
               g = Gene.where(["gene_id LIKE ? AND (job_id = #{job[:id]} OR job_id IS NULL)", "#{memb_id}%"]).take
               if g then
-                t.genes << g
+                unless g.in?(t.genes)
+                  t.genes << g
+                end
               else
                 Rails.logger.info("#{memb}: #{memb_id} (with job ID #{job[:id]}) not found!")
               end
