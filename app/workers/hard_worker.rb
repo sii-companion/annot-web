@@ -106,7 +106,8 @@ class HardWorker
             "#{CONFIG['nextflowscript']} #{CONFIG['dockerconf']} " + \
             "#{'-resume' unless job[:no_resume]} " + \
             "--dist_dir #{job.job_directory} " + \
-            "-with-trace -with-timeline"
+            "-with-trace -with-timeline " + \
+            "-ansi-log false"  # Warning: Only compatable with nextflow versions >= 19.04.0
       Rails.logger.info run
       with_environment("ROOTDIR" => "#{CONFIG['rootdir']}",
                        "NXF_WORK" => job.work_directory,
