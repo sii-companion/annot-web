@@ -1,6 +1,6 @@
 class HardWorker
   include Sidekiq::Worker
-  sidekiq_options :retry => 1
+  sidekiq_options :retry => 0
   include Sidekiq::Status::Worker
 
   def expiration
@@ -110,14 +110,17 @@ class HardWorker
             "#{CONFIG['nextflowscript']} #{CONFIG['dockerconf']} " + \
             "#{'-resume' unless job[:no_resume]} " + \
             "--dist_dir #{job.job_directory} " + \
-            "-with-trace -with-timeline"
+            "-with-trace -with-timeline " + \
+            "-ansi-log false"  # Warning: Only compatable with nextflow versions >= 19.04.0
       Rails.logger.info run
-      with_environment("ROOTDIR" => "#{CONFIG['rootdir']}",
-                       "NXF_WORK" => job.work_directory,
-                       "NXF_TEMP" => job.temp_directory) do
-        status = Open4::popen4(run) do |pid, stdin, stdout, stderr|
-          my_stdout = stdout.readlines.join
-          my_stderr = stderr.readlines.join
+      Dir.chdir(job.job_directory) do
+        with_environment("ROOTDIR" => "#{CONFIG['rootdir']}",
+                        "NXF_WORK" => job.work_directory,
+                        "NXF_TEMP" => job.temp_directory) do
+          status = Open4::popen4(run) do |pid, stdin, stdout, stderr|
+            my_stdout = stdout.readlines.join
+            my_stderr = stderr.readlines.join
+          end
         end
       end
       Rails.logger.info "STDOUT:"
