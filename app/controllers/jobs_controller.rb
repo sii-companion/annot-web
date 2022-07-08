@@ -9,7 +9,8 @@ class JobsController < ApplicationController
       @job = Job.new
       @job[:do_contiguate] = true
       @job[:do_exonerate] = false
-      @job[:do_ratt] = true
+      @job[:do_ratt] = false
+      @job[:do_liftoff] = false
       @job[:do_pseudo] = true
       @job[:use_transcriptome_data] = false
       @job[:no_resume] = false
@@ -346,7 +347,7 @@ class JobsController < ApplicationController
     params.require(:job).permit(:name, :sequence_file, :transcript_file_id, \
                                 :reference_id, :prefix, :do_pseudo, \
                                 :do_contiguate, :do_exonerate, :do_ratt, \
-                                :use_transcriptome_data, :organism, \
+                                :do_liftoff, :use_transcriptome_data, :organism, \
                                 :max_gene_length, :augustus_score_threshold , \
                                 :abacas_match_size, :abacas_match_sim, \
                                 :taxon_id, :db_id, :ratt_transfer_type, \

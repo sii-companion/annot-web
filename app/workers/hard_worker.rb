@@ -99,6 +99,7 @@ class HardWorker
       cf.use_reference()
       cf.do_exonerate(job[:do_exonerate])
       cf.run_ratt(job[:do_ratt])
+      cf.run_liftoff(job[:do_liftoff])
       cf.do_pseudo(job[:do_pseudo])
       job[:config_file] = cf.get_file(job).path
       job.save!
