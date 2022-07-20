@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20220707140222) do
+ActiveRecord::Schema.define(version: 20220719141745) do
 
   create_table "circos_images", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb3" do |t|
     t.string   "file_uid"
@@ -103,22 +103,22 @@ ActiveRecord::Schema.define(version: 20220707140222) do
     t.datetime "started_at"
     t.string   "status"
     t.datetime "finished_at"
-    t.datetime "created_at",                                                      null: false
-    t.datetime "updated_at",                                                      null: false
+    t.datetime "created_at",                                                           null: false
+    t.datetime "updated_at",                                                           null: false
     t.integer  "user_id"
     t.string   "path"
     t.boolean  "do_contiguate"
     t.boolean  "do_exonerate"
     t.boolean  "do_ratt"
     t.integer  "max_gene_length"
-    t.decimal  "augustus_score_threshold",               precision: 10, scale: 2
+    t.decimal  "augustus_score_threshold",                    precision: 10, scale: 2
     t.integer  "taxon_id"
     t.string   "db_id"
     t.integer  "reference_id"
     t.string   "prefix"
     t.string   "ratt_transfer_type"
     t.string   "config_file"
-    t.text     "stdout",                   limit: 65535
+    t.text     "stdout",                   limit: 4294967295
     t.text     "stderr",                   limit: 65535
     t.integer  "genome_stat_id"
     t.boolean  "no_resume"
