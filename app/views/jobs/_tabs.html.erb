@@ -391,10 +391,25 @@ var vtable;
                     <% end %>
                 </td>
             </tr>
+            
+            <% if @job[:do_ratt] %>
             <tr>
                 <td>RATT transfer type</td>
                 <td><%= @job[:ratt_transfer_type] %></td>
             </tr>
+            <% end %>
+
+            <tr>
+                <td>Liftoff</td>
+                <td>
+                    <% if @job[:do_liftoff] %>
+                      &#10003;
+                    <% else %>
+                      &#10007;
+                    <% end %>
+                </td>
+            </tr>
+
             <tr>
                 <td>SNAP</td>
                 <td>

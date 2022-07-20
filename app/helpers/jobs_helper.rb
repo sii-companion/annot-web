@@ -71,6 +71,10 @@ module JobsHelper
       @items["run_ratt"] = val
     end
 
+    def run_liftoff(val = true)
+      @items["run_liftoff"] = val
+    end
+
     def do_pseudo(val = true)
       @items["do_pseudo"] = val
     end

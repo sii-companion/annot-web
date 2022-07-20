@@ -173,11 +173,18 @@
        <label><%= f.radio_button :do_ratt, true, required: true %> Yes, use RATT with the
         <%= f.collection_select :ratt_transfer_type, ['Species','Assembly','Strain'], :to_s, :to_s, include_blank: false %>
         transfer type to transfer reference gene models.</label>
-      </div>
-      <div class="radio">
+     </div>
+     <div class="radio">
        <label><%= f.radio_button :do_ratt, false, required: true %> No, only do <i>ab initio</i> gene finding.</label>
      </div>
    </div>
+   <div class="radio">
+     <label><%= f.radio_button :do_liftoff, true, required: true %> Use Liftoff to transfer reference gene models.</label>
+   </div>
+   <div class="radio">
+     <label><%= f.radio_button :do_liftoff, false, required: true %> No, only do <i>ab initio</i> gene finding.</label>
+   </div>
+
    <div> <p>The value below determines the maximal length of an individual gene in the resulting annotation. All genes predicted by the pipeline longer than this value will be discarded from the result set.</p>
     <p> Example: <i>20000</i></p></div>
     <div class="input-group">
