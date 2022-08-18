@@ -216,10 +216,10 @@ class HardWorker
         if File.exist?("#{job.job_directory}/orthomcl_out") then
           clusters = []
           File.open("#{job.job_directory}/orthomcl_out").each_line do |l|
-            m = l.match(/^(ORTHOMCL[0-9]+)[^:]+:\s+(.+)/)
+            m = l.match(/^(ORTHOMCL[0-9]+):\s+(.+)/)
             next unless m
             c = Cluster.find_or_create_by(:cluster_id => m[1], :job => job)
-            r = m[2].scan(/([^ ()]+)\([^)]+\)/)
+            r = m[2].scan(/[^|]+\|([^ )]+)/)
             r.each do |memb|
               # HACK! needs to be done correctly for all possible transcript namings!
               memb_id = memb[0].gsub(/(:.+$|\.\d+$|\.mRNA$|\_R[A-Z]$)/,"")
