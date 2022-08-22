@@ -497,7 +497,7 @@ $(document).ready(function(){
         $('#orthotable').hide();
         $('#orthospinner').show();
         $.getJSON( "<%= job_path(:id => @job[:job_id]) %>/orths/cluster/" + value, function(data2) {
-          $('#vtabledesc').text("Clusters in: " + value);
+          $('#vtabledesc').text("Genes in: " + value);
           $('#vtabledesc').show();
           $('#gltablediv').hide();
           $('#vtablediv').show();

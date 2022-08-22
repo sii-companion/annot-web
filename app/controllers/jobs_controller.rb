@@ -212,15 +212,15 @@ class JobsController < ApplicationController
       ref = Reference.find(job[:reference_id])
       # the code below is horribly hacky IMHO and should eventually be
       # replaced by proper SQL or iterative set operations
-      cl_a = job.clusters.joins(:genes).where(:genes => {:species => job[:prefix], :gtype => 'coding'}).distinct
-      cl_b = job.clusters.joins(:genes).where(:genes => {:species => ref[:abbr], :gtype => 'coding'}).distinct
+      cl_a = job.clusters.joins(:genes).where(:genes => {:species => job[:prefix]}).distinct
+      cl_b = job.clusters.joins(:genes).where(:genes => {:species => ref[:abbr]}).distinct
       v = {}
       v[job[:prefix]] = cl_a - cl_b
       v[ref[:abbr]] = cl_b - cl_a
       v["#{job[:prefix]} #{ref[:abbr]}"] = cl_a & cl_b
       results = []
       if not v[clusters] then
-        render plain: "clusters #{params[:cluster]} not valid", status: 500
+        render plain: "cluster #{params[:cluster]} not valid", status: 500
       else
         v[clusters].each do |cl|
           cl.genes.each do |g|
