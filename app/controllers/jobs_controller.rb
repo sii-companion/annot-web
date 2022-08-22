@@ -189,9 +189,9 @@ class JobsController < ApplicationController
       render plain: "job #{params[:id]} not found", status: 404
     else
       ref = Reference.find(job[:reference_id])
-      cl_a = job.clusters.joins(:genes).where(:genes => {:species => job[:prefix], :gtype => 'coding'}).distinct.collect {|c| c[:cluster_id]}
+      cl_a = job.clusters.joins(:genes).where(:genes => {:species => job[:prefix]}).distinct.collect {|c| c[:cluster_id]}
       #cl_a = Cluster.find_by_sql("select * from clusters c join clusters_genes cg on cg.cluster_id = c.id join genes g on g.id = cg.gene_id where c.job_id = '#{job[:id]}' and g.species = '#{job[:prefix]}'")
-      cl_b = job.clusters.joins(:genes).where(:genes => {:species => ref[:abbr], :gtype => 'coding'}).distinct.collect {|c| c[:cluster_id]}
+      cl_b = job.clusters.joins(:genes).where(:genes => {:species => ref[:abbr]}).distinct.collect {|c| c[:cluster_id]}
       #cl_b = Cluster.find_by_sql("select * from clusters c join clusters_genes cg on cg.cluster_id = c.id join genes g on g.id = cg.gene_id where c.job_id = ''#{job[:id]}'' and g.species = '#{ref[:abbr]}'")
       a = cl_a - cl_b
       b = cl_b - cl_a
