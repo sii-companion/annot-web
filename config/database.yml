@@ -13,8 +13,8 @@ default: &default
   adapter: mysql2
   encoding: utf8
   pool: 5
-  username: companion
-  password: XXXXXXXXXXXXX
+  username: <%= ENV['COMPANION_DATABASE_USERNAME'] %>
+  password: <%= ENV['COMPANION_DATABASE_PASSWORD'] %>
   socket: /var/run/mysqld/mysqld.sock
 
 development:
@@ -50,5 +50,3 @@ test:
 production:
   <<: *default
   database: companion_production
-  username: companion
-  password: <%= ENV['COMPANION_DATABASE_PASSWORD'] %>

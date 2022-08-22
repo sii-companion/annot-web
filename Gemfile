@@ -92,5 +92,8 @@ gem 'lol_dba'
 # worker startup
 gem 'foreman'
 
+# for env variable
+gem 'figaro'
+
 gem 'bigdecimal', '1.3.5'
 gem 'execjs', '2.7.0'
