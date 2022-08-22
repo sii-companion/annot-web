@@ -203,29 +203,19 @@ class JobsController < ApplicationController
   end
 
   def orths_for_cluster
-    clusters = params[:cluster]
     job = Job.find_by(:job_id => params[:id])
     expires_in 1.month, :public => true
     if not job then
       render plain: "job #{params[:id]} not found", status: 404
     else
-      ref = Reference.find(job[:reference_id])
-      # the code below is horribly hacky IMHO and should eventually be
-      # replaced by proper SQL or iterative set operations
-      cl_a = job.clusters.joins(:genes).where(:genes => {:species => job[:prefix], :gtype => 'coding'}).distinct
-      cl_b = job.clusters.joins(:genes).where(:genes => {:species => ref[:abbr], :gtype => 'coding'}).distinct
-      v = {}
-      v[job[:prefix]] = cl_a - cl_b
-      v[ref[:abbr]] = cl_b - cl_a
-      v["#{job[:prefix]} #{ref[:abbr]}"] = cl_a & cl_b
       results = []
-      if not v[clusters] then
-        render plain: "clusters #{params[:cluster]} not valid", status: 500
+      clusters = job.clusters.select{ |cl| cl.cluster_id == params[:cluster] }
+      if clusters.size == 0 then
+        render plain: "cluster #{params[:cluster]} not valid", status: 500
       else
-        v[clusters].each do |cl|
-          cl.genes.each do |g|
-            results << {id: g[:gene_id], product: g[:product], cluster: cl[:cluster_id]}
-          end
+        cl = clusters[0]
+        cl.genes.each do |g|
+          results << {id: g[:gene_id], product: g[:product], cluster: cl[:cluster_id]}
         end
         respond_to do |format|
           format.html do
