@@ -1,14 +1,23 @@
+def database_exists?
+  ActiveRecord::Base.connection
+rescue ActiveRecord::NoDatabaseError
+  false
+else
+  true
+end
+
 task :load_references => :environment do |t, args|
     puts "checking for gt..."
     if not system("gt -version > /dev/null") then
       puts "not found! Please install GenomeTools in your $PATH."
       exit 1
     end
-    puts "clearing references..."
-    Rake::Task["db:drop"].execute
-    Rake::Task["db:create"].execute
-    Rake::Task["db:migrate"].execute
-    Rake::Task["db:seed"].execute
+    if not database_exists? then
+      puts "creating db..."
+      Rake::Task["db:create"].execute
+      Rake::Task["db:migrate"].execute
+      Rake::Task["db:seed"].execute
+    end    
     CONFIG['referencedirs'].each do |section, refdir|
       genes = []
       puts "loading references for #{section}..."
@@ -23,7 +32,7 @@ task :load_references => :environment do |t, args|
         File.open("1").read.each_line do |l|
           l.chomp!
           id, type, product, seqid, start, stop, strand = l.split("\t")
-          g = Gene.new(:gene_id => id, :product => product, :loc_start => start,
+          g = Gene.find_or_create_by(:gene_id => id, :product => product, :loc_start => start,
                        :loc_end => stop, :strand => strand, :job => nil,
                        :seqid => seqid, :gtype => type, :species => species,
                        :section => section)
@@ -37,7 +46,7 @@ task :load_references => :environment do |t, args|
         File.unlink("1")
       end
       STDERR.print "read #{genes.length} genes, importing..."
-      Gene.import(genes)
+      Gene.import genes, on_duplicate_key_ignore: true
     end
     STDERR.puts "done"
 end
