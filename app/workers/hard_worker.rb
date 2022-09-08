@@ -206,7 +206,7 @@ class HardWorker
             g = Gene.find_or_create_by(:gene_id => id, :product => product, :loc_start => start,
                          :loc_end => stop, :strand => strand, :job => job,
                          :seqid => seqid, :gtype => type, :species => job[:prefix],
-                         :section => r[:section])
+                         :section => r[:section], :genus => r[:genus])
             genes << g
           end
           Gene.import genes, on_duplicate_key_ignore: true
@@ -219,11 +219,11 @@ class HardWorker
             m = l.match(/^(ORTHOMCL[0-9]+):\s+(.+)/)
             next unless m
             c = Cluster.find_or_create_by(:cluster_id => m[1], :job => job)
-            r = m[2].scan(/[^|]+\|([^ )]+)/)
-            r.each do |memb|
+            tr = m[2].scan(/[^|]+\|([^ )]+)/)
+            tr.each do |memb|
               # HACK! needs to be done correctly for all possible transcript namings!
               memb_id = memb[0].gsub(/(:.+$|\.\d+$|\.mRNA$|\_R[A-Z]$)/,"")
-              g = Gene.where(["gene_id LIKE ? AND (job_id = #{job[:id]} OR job_id IS NULL)", "#{memb_id}%"]).take
+              g = Gene.where(["gene_id LIKE ? AND (job_id = #{job[:id]} OR job_id IS NULL) AND genus = '#{r[:genus]}'", "#{memb_id}%"]).take
               if g then
                 unless g.in?(c.genes)
                   c.genes << g

@@ -75,6 +75,10 @@ module JobsHelper
       @items["run_liftoff"] = val
     end
 
+    def run_braker(val = true)
+      @items["run_braker"] = val
+    end
+
     def do_pseudo(val = true)
       @items["do_pseudo"] = val
     end
@@ -118,6 +122,9 @@ module JobsHelper
       end
       if ref[:do_circos] then
         @items["do_circos"] = ref[:do_circos]
+      end
+      if ref[:run_braker] then
+        @items["run_braker"] = ref[:run_braker]
       end
     end
 
