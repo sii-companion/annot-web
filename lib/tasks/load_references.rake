@@ -7,46 +7,48 @@ else
 end
 
 task :load_references => :environment do |t, args|
-    puts "checking for gt..."
+    STDERR.puts "checking for gt..."
     if not system("gt -version > /dev/null") then
-      puts "not found! Please install GenomeTools in your $PATH."
+      STDERR.puts "not found! Please install GenomeTools in your $PATH."
       exit 1
     end
     if not database_exists? then
-      puts "creating db..."
+      STDERR.puts "creating db..."
       Rake::Task["db:create"].execute
       Rake::Task["db:migrate"].execute
       Rake::Task["db:seed"].execute
     end    
     CONFIG['referencedirs'].each do |section, refdir|
-      genes = []
-      puts "loading references for #{section}..."
-      jsondata = File.open("#{refdir}/references.json").read
-      json = JSON.parse(jsondata)
-      species = nil
-      group = {}
-      json["species"].keys.sort.each do |k|
-        STDERR.puts k
-        Kernel.system("#{CONFIG['rootdir']}/bin/genes_gff3_to_csv.lua #{refdir}/#{k}/annotation.gff3 > 1")
-        species = k
-        File.open("1").read.each_line do |l|
-          l.chomp!
-          id, type, product, seqid, start, stop, strand = l.split("\t")
-          g = Gene.find_or_create_by(:gene_id => id, :product => product, :loc_start => start,
-                       :loc_end => stop, :strand => strand, :job => nil,
-                       :seqid => seqid, :gtype => type, :species => species,
-                       :section => section)
-          if g[:loc_start] and g[:loc_end] and g[:seqid] and g[:species] and g[:gtype] then
-            genes << g
-          else
-            STDERR.puts "gene #{id} is missing vital part:"
-            STDERR.puts g.inspect
+      STDERR.puts "loading references for #{section}..."
+      Dir["#{refdir}/Ref*"].each do |groupdir|
+        genes = []
+        jsondata = File.open("#{groupdir}/references.json").read
+        json = JSON.parse(jsondata)
+        species = nil
+        group = json["groups"].keys.first
+        json["species"].keys.sort.each do |k|
+          STDERR.puts k
+          Kernel.system("#{CONFIG['rootdir']}/bin/genes_gff3_to_csv.lua #{groupdir}/#{k}/annotation.gff3 > 1")
+          species = k
+          File.open("1").read.each_line do |l|
+            l.chomp!
+            id, type, product, seqid, start, stop, strand = l.split("\t")
+            g = Gene.find_or_create_by(:gene_id => id, :product => product, :loc_start => start,
+                        :loc_end => stop, :strand => strand, :job => nil,
+                        :seqid => seqid, :gtype => type, :species => species,
+                        :section => section, :genus => group)
+            if g[:loc_start] and g[:loc_end] and g[:seqid] and g[:species] and g[:gtype] then
+              genes << g
+            else
+              STDERR.puts "gene #{id} is missing vital part:"
+              STDERR.puts g.inspect
+            end
           end
+          File.unlink("1")
         end
-        File.unlink("1")
+        STDERR.puts "read #{genes.length} genes, importing..."
+        Gene.import genes, on_duplicate_key_ignore: true
       end
-      STDERR.print "read #{genes.length} genes, importing..."
-      Gene.import genes, on_duplicate_key_ignore: true
     end
     STDERR.puts "done"
 end
