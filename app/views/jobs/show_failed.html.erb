@@ -10,7 +10,10 @@
 
 </p>
 <% if @job and @job[:stderr] and @job[:stderr].length > 0 then %>
-Here are some details of why the job failed:
+Here are some details of why the job failed:<br>
+<h4>Standard output:</h4>
+<pre class='span3'><%= @job[:stdout] %></pre>
+<h4>Standard error:</h4>
 <pre class='span3'><%= @job[:stderr] %></pre>
 <% end %>
 

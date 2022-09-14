@@ -6,7 +6,7 @@
   <body>
     <h1>Your job has failed!</h1>
     <p>
-      Dear Companion user, we are very sorry to tell you, but during the processing of your job "<%= @job[:name] %>" our system has encountered an error and had to stop. We have been notified of the issue and will look into the problem.
+      Dear Companion user, we are very sorry to tell you, but during the processing of your job <%= link_to @job[:name], job_url(id: @job[:job_id]) %> our system has encountered an error and had to stop. We have been notified of the issue and will look into the problem.
     </p>
     <p>Sorry for the inconvenience!</p>
   </body>
