@@ -1,3 +1,5 @@
+require 'rack/utils'
+
 def database_exists?
   ActiveRecord::Base.connection
 rescue ActiveRecord::NoDatabaseError
@@ -6,7 +8,7 @@ else
   true
 end
 
-task :load_references => :environment do |t, args|
+task :load_references, [:args_expr] => :environment do |t, args|
     STDERR.puts "checking for gt..."
     if not system("gt -version > /dev/null") then
       STDERR.puts "not found! Please install GenomeTools in your $PATH."
@@ -17,8 +19,14 @@ task :load_references => :environment do |t, args|
       Rake::Task["db:create"].execute
       Rake::Task["db:migrate"].execute
       Rake::Task["db:seed"].execute
-    end    
-    CONFIG['referencedirs'].each do |section, refdir|
+    end
+    if args[:args_expr] then
+      STDERR.puts "using specific sections"
+      referencedirs = Rack::Utils.parse_nested_query(args[:args_expr])
+    else
+      referencedirs = CONFIG['referencedirs']
+    end
+    referencedirs.each do |section, refdir|
       STDERR.puts "loading references for #{section}..."
       Dir["#{refdir}/Ref*"].each do |groupdir|
         genes = []
