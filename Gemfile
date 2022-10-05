@@ -14,7 +14,7 @@ gem 'uglifier', '>= 2.7.2'
 gem 'coffee-rails', '~> 4.1.0'
 
 # Use jquery as the JavaScript library
-gem 'jquery-rails', '~> 4.3', '>= 4.3.3'
+gem 'jquery-rails'
 
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 gem 'jbuilder', '~> 2.0'
@@ -58,7 +58,7 @@ group :production, :development do
 end
 
 # Bootstrap
-gem 'bootstrap-sass', '~> 3.3.3'
+gem 'bootstrap-sass'
 gem 'autoprefixer-rails'
 
 # JQuery extensions
@@ -97,3 +97,5 @@ gem 'figaro'
 
 gem 'bigdecimal', '1.3.5'
 gem 'execjs', '2.7.0'
+
+gem 'turbolinks', '~> 5.2.0'

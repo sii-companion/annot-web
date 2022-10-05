@@ -200,28 +200,11 @@ var vtable;
         <div id="orthotable">
           <h3 style="display: none" id='vtabledesc'></h3>
           <div style="display: none" id="vtablediv">
-            <table class="table table-condensed compact" cellspacing="0" id="vtable">
-              <thead>
-                    <tr>
-                        <th>Cluster</th>
-                        <th>ID</th>
-                        <th>Product</th>
-                    </tr>
-                </thead>
+            <table class="table table-condensed compact" style="width: 100%" cellspacing="0" id="vtable">              
             </table>
           </div>
           <div style="display: none" id="gltablediv">
-            <table class="table table-condensed compact" cellspacing="0" id="gltable">
-              <thead>
-                    <tr>
-                        <th>Gene ID</th>
-                        <th>Sequence</th>
-                        <th>Start</th>
-                        <th>End</th>
-                        <th>Strand</th>
-                        <th>Product</th>
-                    </tr>
-                </thead>
+            <table class="table table-condensed compact" style="width: 100%" cellspacing="0" id="gltable">              
             </table>
           </div>
         </div>
@@ -501,22 +484,15 @@ $(document).ready(function(){
           $('#vtabledesc').show();
           $('#gltablediv').hide();
           $('#vtablediv').show();
-          var vtable = $('#vtable').DataTable( {
-            data: data2,
-            "columns": [
-                    { data: "cluster" },
-                    { data: "id" },
-                    { data: "product" }
-                ],
-            "destroy": true
+          $('#vtable').DataTable( {
+              destroy: true,
+              data: data2,
+              "columns": [
+                  { title: "Cluster", data: "cluster" },
+                  { title: "ID", data: "id" },
+                  { title: "Product", data: "product" }
+              ]
           });
-          vtable.columns.adjust().draw();
-          if (data2.length > 0) {
-            $('#vdownloadlink-container').show();
-            $('#vdownloadlink').attr('href','<%= job_path(:id => @job[:job_id]) %>/orths/cluster/'+ value);
-          } else {
-            $('#vdownloadlink-container').hide();
-          }
           $('#orthospinner').hide();
           $('#orthotable').show();
         });
@@ -534,19 +510,18 @@ $(document).ready(function(){
       $('#vtablediv').hide();
       $('#gltablediv').show();
       $('#orthotable').show();
-      var mytable = $('#gltable').DataTable( {
-            data: data.ref,
-            "columns": [
-                    { data: "gene_id" },
-                    { data: "seqid" },
-                    { data: "loc_start" },
-                    { data: "loc_end" },
-                    { data: "strand" },
-                    { data: "product" }
-                ],
-            "destroy": true
-          });
-      mytable.columns.adjust().draw();
+      $('#gltable').DataTable({
+          destroy: true,
+          data: data.ref,
+          "columns": [
+              { title: 'Gene ID', data: "gene_id" },
+              { title: 'Sequence', data: "seqid" },
+              { title: 'Start', data: "loc_start" },
+              { title: 'End', data: "loc_end" },
+              { title: 'Strand', data: "strand" },
+              { title: 'Product', data: "product" }
+          ]
+      });
       event.preventDefault();
     });
     $('.genome-singletons-link').click(function(event) {
@@ -555,19 +530,18 @@ $(document).ready(function(){
       $('#vtablediv').hide();
       $('#gltablediv').show();
       $('#orthotable').show();
-      var mytable = $('#gltable').DataTable( {
-            data: data.this,
-            "columns": [
-                    { data: "gene_id" },
-                    { data: "seqid" },
-                    { data: "loc_start" },
-                    { data: "loc_end" },
-                    { data: "strand" },
-                    { data: "product" }
-                ],
-            "destroy": true
-          });
-      mytable.columns.adjust().draw();
+      $('#gltable').DataTable({
+          destroy: true,
+          data: data.this,
+          "columns": [
+              { title: 'Gene ID', data: "gene_id" },
+              { title: 'Sequence', data: "seqid" },
+              { title: 'Start', data: "loc_start" },
+              { title: 'End', data: "loc_end" },
+              { title: 'Strand', data: "strand" },
+              { title: 'Product', data: "product" }
+          ]
+      });
       event.preventDefault();
     });
   });

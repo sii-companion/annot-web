@@ -15,5 +15,7 @@
  *= require_tree .
  */
 
-@import "bootstrap-sprockets"
-@import "bootstrap"
+@import "bootstrap-sprockets";
+@import "bootstrap";
+@import "jquery.dataTables";
+@import "jobs";
