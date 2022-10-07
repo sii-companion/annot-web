@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20220905110156) do
+ActiveRecord::Schema.define(version: 20221007101053) do
 
   create_table "circos_images", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb3" do |t|
     t.string   "file_uid"
@@ -81,7 +81,7 @@ ActiveRecord::Schema.define(version: 20220905110156) do
 
   create_table "genome_stats", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb3" do |t|
     t.integer  "nof_regions"
-    t.integer  "overall_length"
+    t.bigint   "overall_length"
     t.decimal  "gc_overall",                    precision: 10, scale: 2
     t.decimal  "gc_coding",                     precision: 10, scale: 2
     t.integer  "nof_genes"
