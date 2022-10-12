@@ -75,6 +75,10 @@ module JobsHelper
       @items["run_liftoff"] = val
     end
 
+    def transfer_tool(val)
+      @items["transfer_tool"] = val
+    end
+
     def run_braker(val = true)
       @items["run_braker"] = val
     end

@@ -170,19 +170,16 @@
    <div> <p>Do you want to use the <a href="http://nar.oxfordjournals.org/content/39/9/e57" target="_blank">Rapid Annotation Transfer Tool (RATT)</a> to directly map highly conserved genes from the reference to the target genome? This step can result in high quality gene models, but is not guaranteed to work for annotating genomes not closely related to the chosen reference.</p> </div>
    <div class="form-group">
      <div class="radio">
-       <label><%= f.radio_button :do_ratt, true, required: true %> Yes, use RATT with the
+       <label><%= f.radio_button :transfer_tool, "ratt", required: true %> Yes, use RATT with the
         <%= f.collection_select :ratt_transfer_type, ['Species','Assembly','Strain'], :to_s, :to_s, include_blank: false %>
         transfer type to transfer reference gene models.</label>
      </div>
      <div class="radio">
-       <label><%= f.radio_button :do_ratt, false, required: true %> No, only do <i>ab initio</i> gene finding.</label>
+       <label><%= f.radio_button :transfer_tool, "liftoff", required: true %> No, use Liftoff to transfer reference gene models.</label>
      </div>
-   </div>
-   <div class="radio">
-     <label><%= f.radio_button :do_liftoff, true, required: true %> Use Liftoff to transfer reference gene models.</label>
-   </div>
-   <div class="radio">
-     <label><%= f.radio_button :do_liftoff, false, required: true %> No, only do <i>ab initio</i> gene finding.</label>
+     <div class="radio">
+       <label><%= f.radio_button :transfer_tool, "none", required: true %> No, only do <i>ab initio</i> gene finding.</label>
+     </div>
    </div>
 
    <div> <p>The value below determines the maximal length of an individual gene in the resulting annotation. All genes predicted by the pipeline longer than this value will be discarded from the result set.</p>
