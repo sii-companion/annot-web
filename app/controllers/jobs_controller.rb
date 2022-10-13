@@ -128,6 +128,9 @@ class JobsController < ApplicationController
         if File.exist?("#{thisjob.job_directory}") then
           FileUtils.rm_rf("#{thisjob.job_directory}")
         end
+        if File.exist?("#{thisjob.work_directory}") then
+          FileUtils.rm_rf("#{thisjob.work_directory}")
+        end
       end
       thisjob.destroy
       if logged_in? then
