@@ -99,3 +99,5 @@ gem 'bigdecimal', '1.3.5'
 gem 'execjs', '2.7.0'
 
 gem 'turbolinks', '~> 5.2.0'
+
+gem 'concurrent-ruby'

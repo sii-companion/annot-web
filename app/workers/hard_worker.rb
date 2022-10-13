@@ -104,6 +104,9 @@ class HardWorker
       cf.do_pseudo(job[:do_pseudo])
       job[:config_file] = cf.get_file(job).path
       job.save!
+      
+      # Set CPU pool size for job based on concurrency options
+      pool_size = Concurrent.physical_processor_count / Sidekiq.options[:concurrency]
 
       # Nextflow run
       run = "#{CONFIG['nextflowpath']}/nextflow -c " + \
@@ -112,7 +115,7 @@ class HardWorker
             "#{CONFIG['nextflowscript']} #{CONFIG['dockerconf']} " + \
             "#{'-resume' unless job[:no_resume]} " + \
             "--dist_dir #{job.job_directory} " + \
-            "-with-trace -with-timeline " + \
+            "-with-trace -with-timeline -pool-size #{pool_size} " + \
             "-ansi-log false"  # Warning: Only compatable with nextflow versions >= 19.04.0
       Rails.logger.info run
       Dir.chdir(job.job_directory) do
