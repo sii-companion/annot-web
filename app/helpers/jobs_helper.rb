@@ -130,6 +130,9 @@ module JobsHelper
       if ref[:run_braker] then
         @items["run_braker"] = ref[:run_braker]
       end
+      if ref[:is_fungi] then
+        @items["is_fungi"] = ref[:is_fungi]
+      end
     end
 
     def get_target_seq(val)

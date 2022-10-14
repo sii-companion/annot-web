@@ -39,6 +39,10 @@ class Reference < ActiveFile::Base
             if CONFIG['run_braker'] and CONFIG['run_braker'][section] then
               newhash[:run_braker] = CONFIG['run_braker'][section]
             end
+            # assign is_fungi for this section, if configured
+            if CONFIG['is_fungi'] and CONFIG['is_fungi'][section] then
+              newhash[:is_fungi] = CONFIG['is_fungi'][section]
+            end
             # lift over properties from JSON
             v.each_pair do |k2,v2|
               if ref_key_map.has_key?(k2) then
