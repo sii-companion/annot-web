@@ -109,6 +109,8 @@ class HardWorker
       pool_size = Concurrent.physical_processor_count / Sidekiq.options[:concurrency]
 
       # Nextflow run
+      Kernel.system("mysql -u#{ENV['COMPANION_DATABASE_USERNAME']} -p\"#{ENV['COMPANION_DATABASE_PASSWORD']}\" -e \"create database orthomcl_#{job[:job_id]}\"")
+
       run = "#{CONFIG['nextflowpath']}/nextflow -c " + \
             "#{CONFIG['locationconfig']} -c " + \
             "#{job[:config_file]} run " + \
