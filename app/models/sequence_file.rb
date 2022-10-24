@@ -1,6 +1,5 @@
 class SequenceFile < UserFile
-  validates_property :valid_sequence, of: :file, as: true, message: "is not a valid DNA sequence file."
-  validates_property :number_of_sequences, of: :file, in: (0..3000), message: "contains more than 3000 sequences."
-  # TODO: need to validate that it is pure DNA sequence
+  validates_property :number_of_sequences, of: :file, in: (0..4000), message: "contains more than 4000 sequences."
+  validates_property :valid_dna_bases, of: :file, as: true, message: "contains invalid DNA bases."
   # TODO: need to validate that headers are correctly formatted
 end

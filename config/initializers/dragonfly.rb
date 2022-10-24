@@ -72,6 +72,22 @@ class SequenceNumberAnalyser
   end
 end
 
+class SequenceValidDNAAnalyser
+  def call(content)
+    path = content.path    
+    valid_dna = true
+    File.foreach(path) do |l|
+      if l.match(/^[^>]/) then 
+        if l.strip =~ /[^ACGTNacgtn\.-]/ then 
+          valid_dna = false
+          break
+        end
+      end 
+    end       
+    return valid_dna
+  end
+end
+
 Dragonfly.app.configure do
   plugin :imagemagick
   secret "b2909acc0dbe34c4a88d89c8c465f0f45b4a7b1d4e0a957b3181e6ac1063e2d3"
@@ -103,6 +119,7 @@ Dragonfly.app.configure do
   analyser :valid_transcript, TranscriptGTFAnalyser.new
   analyser :valid_sequence, SequenceValidAnalyser.new
   analyser :number_of_sequences, SequenceNumberAnalyser.new
+  analyser :valid_dna_bases, SequenceValidDNAAnalyser.new
 end
 
 # Logger
