@@ -8,6 +8,7 @@ else
   true
 end
 
+desc 'Load all references from referencedirs in config/companion.yml, or specific sections with query args, e.g. load_references[Section1="/path/to/section1/"&Section2="/path/to/section2/"]'
 task :load_references, [:args_expr] => :environment do |t, args|
     STDERR.puts "checking for gt..."
     if not system("gt -version > /dev/null") then
