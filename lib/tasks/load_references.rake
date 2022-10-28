@@ -42,10 +42,10 @@ task :load_references, [:args_expr] => :environment do |t, args|
           File.open("1").read.each_line do |l|
             l.chomp!
             id, type, product, seqid, start, stop, strand = l.split("\t")
-            g = Gene.find_or_create_by(:gene_id => id, :product => product, :loc_start => start,
-                        :loc_end => stop, :strand => strand, :job => nil,
-                        :seqid => seqid, :gtype => type, :species => species,
-                        :section => section, :genus => group)
+            g = Gene.find_or_initialize_by(:gene_id => id, :species => species, :job => nil)
+            g.assign_attributes({:product => product, :loc_start => start, :loc_end => stop,
+                      :strand => strand, :seqid => seqid, :gtype => type,
+                      :genus => group, :section => section})
             if g[:loc_start] and g[:loc_end] and g[:seqid] and g[:species] and g[:gtype] then
               genes << g
             else
@@ -56,7 +56,7 @@ task :load_references, [:args_expr] => :environment do |t, args|
           File.unlink("1")
         end
         STDERR.puts "read #{genes.length} genes, importing..."
-        Gene.import genes, on_duplicate_key_ignore: true
+        Gene.import genes, on_duplicate_key_update: :all
       end
     end
     STDERR.puts "done"

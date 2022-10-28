@@ -236,8 +236,11 @@ class HardWorker
             tr = m[2].scan(/[^|]+\|([^ )]+)/)
             tr.each do |memb|
               # HACK! needs to be done correctly for all possible transcript namings!
-              memb_id = memb[0].gsub(/(:.+$|\.\d+$|\.mRNA$|\_R[A-Z]$)/,"")
-              g = Gene.where(["gene_id LIKE ? AND (job_id = #{job[:id]} OR job_id IS NULL) AND genus = '#{r[:genus]}'", "#{memb_id}%"]).take
+              memb_id = memb[0].gsub(/(:.+$|\.\d+$|\.mRNA$|\_R[A-Z]$|\_t\d+$)/,"")
+              g = Gene.where([
+                "gene_id LIKE ? AND (job_id = #{job[:id]} AND species = '#{job[:prefix]}')" \
+                "OR (job_id IS NULL AND species = '#{r[:abbr]}')", "#{memb_id}%"
+              ]).take
               if g then
                 unless g.in?(c.genes)
                   c.genes << g

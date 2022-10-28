@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20221012103732) do
+ActiveRecord::Schema.define(version: 20221028090248) do
 
   create_table "circos_images", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb3" do |t|
     t.string   "file_uid"
@@ -49,18 +49,20 @@ ActiveRecord::Schema.define(version: 20221012103732) do
   end
 
   create_table "genes", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb3" do |t|
-    t.string  "gene_id",                 null: false
-    t.integer "loc_start",               null: false
-    t.integer "loc_end",                 null: false
-    t.integer "job_id"
-    t.text    "product",   limit: 65535, null: false
-    t.string  "strand",                  null: false
-    t.string  "seqid"
-    t.string  "gtype"
-    t.string  "species"
-    t.integer "tree_id"
-    t.string  "section"
-    t.string  "genus"
+    t.string   "gene_id",                                                       null: false
+    t.integer  "loc_start",                                                     null: false
+    t.integer  "loc_end",                                                       null: false
+    t.integer  "job_id"
+    t.text     "product",    limit: 65535,                                      null: false
+    t.string   "strand",                                                        null: false
+    t.string   "seqid"
+    t.string   "gtype"
+    t.string   "species"
+    t.integer  "tree_id"
+    t.string   "section"
+    t.string   "genus"
+    t.datetime "created_at",               default: -> { "CURRENT_TIMESTAMP" }, null: false
+    t.datetime "updated_at",               default: -> { "CURRENT_TIMESTAMP" }, null: false
     t.index ["gene_id"], name: "index_genes_on_gene_id", using: :btree
     t.index ["job_id"], name: "index_genes_on_job_id", using: :btree
   end
