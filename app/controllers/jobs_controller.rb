@@ -1,5 +1,8 @@
 class JobsController < ApplicationController
   def new
+    flash[:info] = "This enhanced release of Companion is currently in active testing. " \
+                    "If you experience issues with your job, please try again on " \
+                    "<a class=\"alert-link\" href=\"https://companion.ac.uk/\">another server</a>."
     if @closed then
       flash[:info] = "New job creation is temporarily closed for technical " + \
                      "reasons."
