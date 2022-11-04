@@ -60,57 +60,69 @@ var vtable;
         <thead>
             <tr>
                 <th></th>
-                <th class="text-right">Value</th>
+                <th class="text-right">Reference</th>
+                <th class="text-right">Query</th>
             </tr>
         </thead>
          <tbody>
             <tr>
                 <td>Number of annotated regions/sequences</td>
-                <td class="text-right"><%= @job.genome_stat[:nof_regions]%></td>
+                <td class="text-right"><%= @ref[:nof_regions]%></td>
+                <td class="text-right"><b><%= @job.genome_stat[:nof_regions]%></b></td>
             </tr>
             <tr>
                 <td>Number of genes</td>
-                <td class="text-right"><%= @job.genome_stat[:nof_genes]%></td>
+                <td class="text-right"><%= @ref[:nof_genes]%></td>
+                <td class="text-right"><b><%= @job.genome_stat[:nof_genes]%></b></td>
             </tr>
             <tr>
                 <td>Gene density (genes/megabase)</td>
-                <td class="text-right"><%= @job.genome_stat[:gene_density]%></td>
+                <td class="text-right">&ndash;</td>
+                <td class="text-right"><b><%= @job.genome_stat[:gene_density]%></b></td>
             </tr>
             <tr>
                 <td>Number of coding genes</td>
-                <td class="text-right"><%= @job.genome_stat[:nof_coding_genes]%></td>
+                <td class="text-right"><%= @ref[:nof_coding_genes]%></td>
+                <td class="text-right"><b><%= @job.genome_stat[:nof_coding_genes]%></b></td>
             </tr>
             <% if @job.genome_stat[:nof_pseudogenes] then %>
             <tr>
                 <td>Number of pseudogenes</td>
-                <td class="text-right"><%= @job.genome_stat[:nof_pseudogenes]%></td>
+                <td class="text-right">&ndash;</td>
+                <td class="text-right"><b><%= @job.genome_stat[:nof_pseudogenes]%></b></td>
             </tr>
             <% end %>
             <tr>
                 <td>Number of genes with function</td>
-                <td class="text-right"><%= @job.genome_stat[:nof_genes_with_function]%></td>
+                <td class="text-right">&ndash;</td>
+                <td class="text-right"><b><%= @job.genome_stat[:nof_genes_with_function]%></b></td>
             </tr>
             <% if @job.genome_stat[:nof_pseudogenes_with_function] then %>
             <tr>
                 <td>Number of pseudogenes with function</td>
-                <td class="text-right"><%= @job.genome_stat[:nof_pseudogenes_with_function]%></td>
+                <td class="text-right">&ndash;</td>
+                <td class="text-right"><b><%= @job.genome_stat[:nof_pseudogenes_with_function]%></b></td>
             </tr>
             <% end %>
             <tr>
                 <td>Number of non-coding genes</td>
-                <td class="text-right"><%= @job.genome_stat[:nof_genes].to_i - @job.genome_stat[:nof_coding_genes].to_i %></td>
+                <td class="text-right"><%= @ref[:nof_genes].to_i - @ref[:nof_coding_genes].to_i %></td>
+                <td class="text-right"><b><%= @job.genome_stat[:nof_genes].to_i - @job.genome_stat[:nof_coding_genes].to_i %></b></td>
             </tr>
             <tr>
                 <td>Number of genes with multiple CDSs</td>
-                <td class="text-right"><%= @job.genome_stat[:nof_genes_with_mult_cds]%></td>
+                <td class="text-right">&ndash;</td>
+                <td class="text-right"><b><%= @job.genome_stat[:nof_genes_with_mult_cds]%></b></td>
             </tr>
             <tr>
                 <td>Overall GC%</td>
-                <td class="text-right"><%= @job.genome_stat[:gc_overall].round(2)%></td>
+                <td class="text-right">&ndash;</td>
+                <td class="text-right"><b><%= @job.genome_stat[:gc_overall].round(2)%></b></td>
             </tr>
             <tr>
                 <td>Coding GC%</td>
-                <td class="text-right"><%= @job.genome_stat[:gc_coding].round(2)%></td>
+                <td class="text-right">&ndash;</td>
+                <td class="text-right"><b><%= @job.genome_stat[:gc_coding].round(2)%></b></td>
             </tr>
         </tbody>
       </table>
