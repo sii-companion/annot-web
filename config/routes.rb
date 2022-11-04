@@ -1,3 +1,5 @@
+require 'sidekiq/web'
+
 Rails.application.routes.draw do
 
   root 'welcome#index'
@@ -42,5 +44,9 @@ Rails.application.routes.draw do
   get    'login'   => 'sessions#new'
   post   'login'   => 'sessions#create'
   delete 'logout'  => 'sessions#destroy'
+
+  if Rails.env.development?
+    mount Sidekiq::Web => '/sidekiq'
+  end
 
 end
