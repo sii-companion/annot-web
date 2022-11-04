@@ -10,6 +10,7 @@ class Job < ActiveRecord::Base
     has_many :clusters, dependent: :delete_all
     has_one :tree, dependent: :destroy
     validates_format_of :email, :with => /\A\z|\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\z/i
+    validates_format_of :prefix, :with => /\A[a-z0-9_]*\z/i
     validates_presence_of :sequence_file
     accepts_nested_attributes_for :sequence_file, allow_destroy: true
     accepts_nested_attributes_for :transcript_file, allow_destroy: true
