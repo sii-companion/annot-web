@@ -117,6 +117,8 @@ class HardWorker
 
       # Set CPU pool size for job based on concurrency options
       pool_size = Concurrent.physical_processor_count / Sidekiq.options[:concurrency]
+      Rails.logger.info "Allocated CPU pool size:"
+      Rails.logger.info pool_size
 
       # Nextflow run
       run = "#{CONFIG['nextflowpath']}/nextflow -c " + \
