@@ -9,7 +9,6 @@ class Reference < ActiveFile::Base
     def load_file
       ref_key_map = {}
       out = []
-      i = 1
       CONFIG['referencedirs'].each do |section,referencedir|
         Dir["#{referencedir}/Ref*"].each do |groupdir|
           jsondata = File.open("#{groupdir}/references.json").read
@@ -17,7 +16,7 @@ class Reference < ActiveFile::Base
           group = json["groups"].keys.first
           json["species"].keys.sort.each do |k|
             v = json["species"][k]
-            newhash = {:id => i, :abbr => k, :section => section, :genus => group,
+            newhash = {:id => k, :abbr => k, :section => section, :genus => group,
                       :referencedir => groupdir}
             # assign weightfile for this section, if configured
             if CONFIG['weightfiles'] and CONFIG['weightfiles'][section] then
@@ -55,7 +54,6 @@ class Reference < ActiveFile::Base
             # direct reference
             if newhash.has_key?('augustus_model') and newhash.has_key?('is_reference_strain') then
               out << newhash
-              i += 1
             end
           end
         end
