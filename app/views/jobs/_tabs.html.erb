@@ -181,7 +181,7 @@ var vtable;
           <div class="row">
             <p>These Venn diagrams show shared and species-specific
                protein-coding gene clusters in the target genome
-               <%= @job[:prefix] %> (left, green) and the <%= @ref.name %>
+               <%= @job[:prefix] %> (left, green) and the <%= @ref[:name] %>
                reference (right, blue). Singletons, i.e. genes without
                orthologs and paralogs in either species, are placed outside
                the Venn diagram to the left and right.</p>
@@ -352,7 +352,7 @@ var vtable;
   <div id="params" class="tab-pane fade">
     <div class="row">
       <div>
-        The parameters you have chosen for your <b><%= @job.sequence_file.file_name %></b> vs. <b><%= @ref.name %></b> run are:
+        The parameters you have chosen for your <b><%= @job.sequence_file.file_name %></b> vs. <b><%= @ref[:name] %></b> run are:
       </div>
       <table class="table table-striped">
           <tbody>

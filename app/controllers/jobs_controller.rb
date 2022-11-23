@@ -184,7 +184,7 @@ class JobsController < ApplicationController
                    :working => Sidekiq::Status::working?(@job[:job_id]),
                    :failed => Sidekiq::Status::failed?(@job[:job_id]),
                    :complete => Sidekiq::Status::complete?(@job[:job_id])}
-      @ref = Reference.find(@job[:reference_id])
+      @ref = Reference.find(@job[:reference_id]) rescue Reference.new
       if @job_hash[:failed] then
         render 'jobs/show_failed'
       elsif @job_hash[:complete] and (!@job.genome_stat or @job.genome_stat[:nof_genes] == 0) then
