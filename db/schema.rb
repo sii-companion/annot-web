@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20221028090248) do
+ActiveRecord::Schema.define(version: 20221123121838) do
 
   create_table "circos_images", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb3" do |t|
     t.string   "file_uid"
@@ -117,7 +117,7 @@ ActiveRecord::Schema.define(version: 20221028090248) do
     t.decimal  "augustus_score_threshold",                    precision: 10, scale: 2
     t.integer  "taxon_id"
     t.string   "db_id"
-    t.integer  "reference_id"
+    t.string   "reference_id"
     t.string   "prefix"
     t.string   "ratt_transfer_type"
     t.string   "config_file"
