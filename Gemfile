@@ -101,3 +101,7 @@ gem 'execjs', '2.7.0'
 # gem 'turbolinks', '~> 5.2.0'
 
 gem 'concurrent-ruby'
+
+
+# cookie consent
+gem 'cookies_eu'

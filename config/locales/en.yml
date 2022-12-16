@@ -27,3 +27,7 @@ en:
     message:
       default: "Secret Code did not match with the Image"
       user: "The secret Image and code were different"
+  cookies_eu:
+    cookies_text: >
+      We only use strictly necessary cookies for security purposes when submitting jobs.
+      No data is stored for tracking purposes. By using our services, you agree to our use of cookies.
