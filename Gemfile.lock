@@ -66,7 +66,9 @@ GEM
       execjs
     coffee-script-source (1.12.2)
     concurrent-ruby (1.1.10)
-    connection_pool (2.2.5)
+    connection_pool (2.3.0)
+    cookies_eu (1.7.8)
+      js_cookie_rails (~> 2.2.0)
     crass (1.0.6)
     daemons (1.4.1)
     debase (0.2.4.1)
@@ -96,6 +98,8 @@ GEM
       thor (>= 0.14, < 2.0)
     jquery-ui-rails (6.0.1)
       railties (>= 3.2.16)
+    js_cookie_rails (2.2.0)
+      railties (>= 3.1)
     json (2.6.2)
     lol_dba (2.2.0)
       actionpack (>= 3.0, < 7.0)
@@ -169,10 +173,10 @@ GEM
       sprockets (> 3.0)
       sprockets-rails
       tilt
-    sidekiq (6.5.1)
-      connection_pool (>= 2.2.2)
+    sidekiq (6.5.7)
+      connection_pool (>= 2.2.5)
       rack (~> 2.0)
-      redis (>= 4.2.0)
+      redis (>= 4.5.0, < 5)
     sidekiq-limit_fetch (4.2.0)
       redis (>= 4.6.0)
       sidekiq (>= 4)
@@ -222,6 +226,7 @@ DEPENDENCIES
   bootstrap-sass
   coffee-rails (~> 4.1.0)
   concurrent-ruby
+  cookies_eu
   debase
   dragonfly
   execjs (= 2.7.0)

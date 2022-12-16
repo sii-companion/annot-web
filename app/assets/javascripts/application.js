@@ -17,3 +17,4 @@
 //= require jquery_ujs
 //= require bootstrap
 //= require_tree .
+//= require cookies_eu
