@@ -1,7 +1,8 @@
 class JobsController < ApplicationController
   def new
-    flash[:info] = "This enhanced release of Companion is currently in active testing. " \
-                    "If you experience issues with your job, please try again on " \
+    flash[:info] = "This is an enhanced release of Companion that includes integration with tools " \
+                    "such as BRAKER2 and Liftoff. " \
+                    "If you should encounter any issues when running your job, please try again on " \
                     "<a class=\"alert-link\" href=\"https://companion.ac.uk/\">another server</a>."
     if @closed then
       flash[:info] = "New job creation is temporarily closed for technical " + \
@@ -105,6 +106,14 @@ class JobsController < ApplicationController
       @job[:finished_at] = nil
       @job.save!
       url = Rails.application.routes.url_helpers.job_url(id: @job[:job_id], :host => request.host_with_port)
+      redirect_to :jobs
+    end
+  end
+
+  def stop
+    @job = Job.find_by(:job_id => params[:id])
+    if @job.valid?
+      HardWorker.cancel!(@job[:job_id])
       redirect_to :jobs
     end
   end
