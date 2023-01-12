@@ -41,4 +41,11 @@ class Job < ActiveRecord::Base
       end
       "#{CONFIG['workdir']}/#{self[:job_id]}"
     end
+
+    def drop_orthomcl_db
+      run = "mysql -u#{ENV['COMPANION_DATABASE_USERNAME']} " + \
+            "-p\"#{ENV['COMPANION_DATABASE_PASSWORD']}\" " + \
+            "-e \"drop database orthomcl_#{self[:job_id]}\""    
+      Kernel.system(run)
+    end
 end

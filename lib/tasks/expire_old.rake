@@ -18,10 +18,7 @@ task :expire_old => :environment do |t, args|
     if File.exist?("#{job.work_directory}") then
       FileUtils.rm_rf("#{job.work_directory}")
     end    
-    run = "mysql -u#{ENV['COMPANION_DATABASE_USERNAME']} " + \
-          "-p\"#{ENV['COMPANION_DATABASE_PASSWORD']}\" " + \
-          "-e \"drop database orthomcl_#{job[:job_id]}\""    
-    Kernel.system(run)
+    job.drop_orthomcl_db()
     job.destroy
     puts "Job #{job[:job_id]} '#{job[:name]}' was deleted."
   end

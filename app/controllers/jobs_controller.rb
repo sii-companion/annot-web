@@ -147,10 +147,7 @@ class JobsController < ApplicationController
         if File.exist?("#{thisjob.work_directory}") then
           FileUtils.rm_rf("#{thisjob.work_directory}")
         end
-        run = "mysql -u#{ENV['COMPANION_DATABASE_USERNAME']} " + \
-              "-p\"#{ENV['COMPANION_DATABASE_PASSWORD']}\" " + \
-              "-e \"drop database orthomcl_#{thisjob[:job_id]}\""    
-        Kernel.system(run)
+        thisjob.drop_orthomcl_db()         
       end
       thisjob.destroy
       if logged_in? then

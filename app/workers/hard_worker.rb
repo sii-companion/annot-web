@@ -288,6 +288,7 @@ class HardWorker
       if not CONFIG['keep_work_directories'] then
         FileUtils.rm_rf(job.temp_directory)
         FileUtils.rm_rf(job.work_directory)
+        job.drop_orthomcl_db()
       end
 
       # send finish notification email
