@@ -18,7 +18,6 @@ task :expire_old => :environment do |t, args|
     if File.exist?("#{job.work_directory}") then
       FileUtils.rm_rf("#{job.work_directory}")
     end    
-    job.drop_orthomcl_db()
     job.destroy
     puts "Job #{job[:job_id]} '#{job[:name]}' was deleted."
   end

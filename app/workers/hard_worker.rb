@@ -56,12 +56,7 @@ class HardWorker
     end
   end
 
-  def make_orthomcl_db(job)
-    run = "mysql -u#{ENV['COMPANION_DATABASE_USERNAME']} " + \
-    "-p\"#{ENV['COMPANION_DATABASE_PASSWORD']}\" " + \
-    "-e \"create database orthomcl_#{job[:job_id]}\""
-    Rails.logger.info run
-    Kernel.system(run)
+
   end
   def perform(id)
     # wait a bit to minimize timing issues
@@ -111,9 +106,6 @@ class HardWorker
       cf.do_pseudo(job[:do_pseudo])
       job[:config_file] = cf.get_file(job).path
       job.save!
-      
-      # Create orthomcl db for job
-      make_orthomcl_db(job)      
 
       # Set CPU pool size for job based on concurrency options
       pool_size = Concurrent.physical_processor_count / Sidekiq.options[:concurrency]
@@ -288,7 +280,6 @@ class HardWorker
       if not CONFIG['keep_work_directories'] then
         FileUtils.rm_rf(job.temp_directory)
         FileUtils.rm_rf(job.work_directory)
-        job.drop_orthomcl_db()
       end
 
       # send finish notification email

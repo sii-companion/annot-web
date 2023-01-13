@@ -146,8 +146,7 @@ class JobsController < ApplicationController
         end
         if File.exist?("#{thisjob.work_directory}") then
           FileUtils.rm_rf("#{thisjob.work_directory}")
-        end
-        thisjob.drop_orthomcl_db()         
+        end        
       end
       thisjob.destroy
       if logged_in? then
