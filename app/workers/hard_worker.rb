@@ -57,7 +57,6 @@ class HardWorker
   end
 
 
-  end
   def perform(id)
     # wait a bit to minimize timing issues
     Kernel.sleep(5)
