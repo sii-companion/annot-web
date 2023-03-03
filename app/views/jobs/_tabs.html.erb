@@ -221,13 +221,13 @@ var vtable;
           </div>
         </div>
         <div>
-          <p>These clusters have been created using <a href="http://www.orthomcl.org">OrthoMCL</a> v2.0 based on
-             BLASTP hits (word size: 4, e-value cutoff: 10<sup>-5</sup>) between the
+          <p>These clusters have been created using <a href="https://github.com/davidemms/OrthoFinder">OrthoFinder</a> v2.5.4 based on
+             Diamond hits (e-value cutoff: 10<sup>-3</sup>) between the
              translated protein sequences of the target and reference genomes'
              protein-coding genes.</p>
           <p><%= link_to clusters_url(id: @job[:job_id]) do %>
               <i class="glyphicon glyphicon-download-alt"></i> Cluster assignments
-         <% end %> as OrthoMCL 2.0 output file</p>
+         <% end %> as OrthoFinder Orthogroups output file</p>
         </div>
     </div>
   <% end %>
