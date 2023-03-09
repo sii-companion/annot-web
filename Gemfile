@@ -102,6 +102,7 @@ gem 'execjs', '2.7.0'
 
 gem 'concurrent-ruby'
 
+gem 'whenever', require: false
 
 # cookie consent
 gem 'cookies_eu'
