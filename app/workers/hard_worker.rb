@@ -3,10 +3,6 @@ class HardWorker
   sidekiq_options :retry => 0
   include Sidekiq::Status::Worker
 
-  def expiration
-    @expiration ||= 60*60*24*30*12*15 # keep jobs around for a long time
-  end
-
   def with_environment(variables={})
     if block_given?
       old_values = variables.map{ |k,v| [k,ENV[k]] }
@@ -223,7 +219,7 @@ class HardWorker
         if File.exist?("#{job.job_directory}/orthomcl_out") then
           clusters = []
           File.open("#{job.job_directory}/orthomcl_out").each_line do |l|
-            m = l.match(/^(ORTHOMCL[0-9]+):\s+(.+)/)
+            m = l.match(/^(OG[0-9]+):\s+(.+)/)
             next unless m
             c = Cluster.find_or_create_by(:cluster_id => m[1], :job => job)
             tr = m[2].scan(/[^|]+\|([^ )]+)/)
