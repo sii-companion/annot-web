@@ -2,16 +2,11 @@ require 'sidekiq'
 require 'sidekiq-status'
 
 Sidekiq.configure_client do |config|
-  config.client_middleware do |chain|
-    chain.add Sidekiq::Status::ClientMiddleware
-  end
+  Sidekiq::Status::configure_client_middleware config
 end
 
 Sidekiq.configure_server do |config|
-  config.server_middleware do |chain|
-    chain.add Sidekiq::Status::ServerMiddleware, expiration: 15.years
-  end
-  config.client_middleware do |chain|
-    chain.add Sidekiq::Status::ClientMiddleware
-  end
+  Sidekiq::Status.configure_server_middleware config
+
+  Sidekiq::Status.configure_client_middleware config
 end

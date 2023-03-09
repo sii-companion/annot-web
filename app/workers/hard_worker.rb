@@ -3,10 +3,6 @@ class HardWorker
   sidekiq_options :retry => 0
   include Sidekiq::Status::Worker
 
-  def expiration
-    @expiration ||= 60*60*24*30*12*15 # keep jobs around for a long time
-  end
-
   def with_environment(variables={})
     if block_given?
       old_values = variables.map{ |k,v| [k,ENV[k]] }
