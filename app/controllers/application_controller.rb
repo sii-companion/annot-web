@@ -18,7 +18,7 @@ class ApplicationController < ActionController::Base
         jobs.each do |job|
             if Sidekiq::Status::working?(job[:job_id]) then
                 @n_working = @n_working + 1
-            elsif not Sidekiq::Status::failed?(job[:job_id]) then
+            elsif Sidekiq::Status::queued?(job[:job_id]) then
                 @n_queued = @n_queued + 1
             end
         end
