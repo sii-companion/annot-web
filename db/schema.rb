@@ -142,6 +142,11 @@ ActiveRecord::Schema.define(version: 20230406150056) do
     t.index ["user_id"], name: "index_jobs_on_user_id", using: :btree
   end
 
+  create_table "releases", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb3" do |t|
+    t.string  "species"
+    t.integer "number"
+  end
+
   create_table "result_files", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb3" do |t|
     t.string   "file_uid"
     t.string   "file_name"
