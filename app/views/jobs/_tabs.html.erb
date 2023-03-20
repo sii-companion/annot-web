@@ -212,11 +212,11 @@ var vtable;
         <div id="orthotable">
           <h3 style="display: none" id='vtabledesc'></h3>
           <div style="display: none" id="vtablediv">
-            <table class="table table-condensed compact" style="width: 100%" cellspacing="0" id="vtable">              
+            <table class="table table-condensed compact" style="width: 100%" cellspacing="0" id="vtable">
             </table>
           </div>
           <div style="display: none" id="gltablediv">
-            <table class="table table-condensed compact" style="width: 100%" cellspacing="0" id="gltable">              
+            <table class="table table-condensed compact" style="width: 100%" cellspacing="0" id="gltable">
             </table>
           </div>
         </div>
@@ -376,6 +376,16 @@ var vtable;
                     <% end %>
                 </td>
             </tr>
+            <tr>
+                <td>BRAKER</td>
+                <td>
+                    <% if @job[:run_braker] %>
+                      &#10003;
+                    <% else %>
+                      &#10007;
+                    <% end %>
+                </td>
+            </tr>
             <% if @job[:transfer_tool] == "ratt" || @job[:do_ratt]  %>
             <tr>
                 <td>Transfer tool</td>
@@ -386,7 +396,7 @@ var vtable;
                 <td><%= @job[:ratt_transfer_type] %></td>
             </tr>
             <% else %>
-            <tr>                
+            <tr>
                 <td>Transfer tool</td>
                 <td>Liftoff</td>
             </tr>
