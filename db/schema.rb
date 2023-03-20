@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20221123121838) do
+ActiveRecord::Schema.define(version: 20230320153237) do
 
   create_table "circos_images", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb3" do |t|
     t.string   "file_uid"
@@ -136,6 +136,7 @@ ActiveRecord::Schema.define(version: 20221123121838) do
     t.integer  "abacas_match_sim"
     t.boolean  "do_liftoff"
     t.string   "transfer_tool"
+    t.boolean  "run_braker"
     t.index ["tree_id"], name: "fk_rails_0e6111546c", using: :btree
     t.index ["user_id"], name: "index_jobs_on_user_id", using: :btree
   end

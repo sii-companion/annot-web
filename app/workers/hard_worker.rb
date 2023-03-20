@@ -99,6 +99,7 @@ class HardWorker
       cf.run_liftoff(job[:do_liftoff])
       cf.transfer_tool(job[:transfer_tool])
       cf.do_pseudo(job[:do_pseudo])
+      cf.run_braker(job[:run_braker])
       job[:config_file] = cf.get_file(job).path
       job.save!
 

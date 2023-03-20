@@ -14,6 +14,7 @@ class JobsController < ApplicationController
       @job[:do_contiguate] = true
       @job[:do_exonerate] = false
       @job[:transfer_tool] = "liftoff"
+      @job[:run_braker] = true
       @job[:do_pseudo] = true
       @job[:use_transcriptome_data] = false
       @job[:no_resume] = false
@@ -364,7 +365,7 @@ class JobsController < ApplicationController
   def jobs_params(params)
     params.require(:job).permit(:name, :sequence_file, :transcript_file_id, \
                                 :reference_id, :prefix, :do_pseudo, \
-                                :do_contiguate, :do_exonerate, \
+                                :do_contiguate, :do_exonerate, :run_braker, \
                                 :transfer_tool, :use_transcriptome_data, :organism, \
                                 :max_gene_length, :augustus_score_threshold , \
                                 :abacas_match_size, :abacas_match_sim, \

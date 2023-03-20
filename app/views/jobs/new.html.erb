@@ -59,8 +59,8 @@
        <%= f.fields_for :sequence_file do |s_f| %>
          <%= s_f.file_field :file, required: true %>
        <% end %>
-       
-       <% if (CONFIG['organism_group'] == "parasite") then %>                       
+
+       <% if (CONFIG['organism_group'] == "parasite") then %>
         <p><a href="/examples/PfIT_05.fasta">Here</a> is an example sequence
         input file for a <i>Plasmodium falciparum</i> IT chromosome 5 sequence
         that can be used with the <i>Plasmodium falciparum</i> 3D7 example
@@ -172,6 +172,15 @@
      </div>
      <div class="radio">
        <label><%= f.radio_button :do_pseudo, false, required: true %> No, do not try to call pseudogenes.</label>
+     </div>
+   </div>
+   <div> <p>Do you want to use <a href="https://github.com/Gaius-Augustus/BRAKER" target="_blank">BRAKER</a> with combined OrthoDB and family-wide protein data for accurate gene structure annotation? This will offer improved accuracy for well-assembled genomes at the expense of greater job running time.</p></div>
+   <div class="form-group">
+     <div class="radio">
+      <label><%= f.radio_button :run_braker, true, required: true %> Yes, use BRAKER for structural annotation.</label>
+     </div>
+     <div class="radio">
+      <label><%= f.radio_button :run_braker, false, required: true %> No, use only AUGUSTUS for structural annotation.</label>
      </div>
    </div>
    <div> <p>Do you want to use the <a href="http://nar.oxfordjournals.org/content/39/9/e57" target="_blank">Rapid Annotation Transfer Tool (RATT)</a> to directly map highly conserved genes from the reference to the target genome? This step can result in high quality gene models, but is not guaranteed to work for annotating genomes not closely related to the chosen reference.</p> </div>
