@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20230320153237) do
+ActiveRecord::Schema.define(version: 20230406150056) do
 
   create_table "circos_images", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb3" do |t|
     t.string   "file_uid"
@@ -63,6 +63,7 @@ ActiveRecord::Schema.define(version: 20230320153237) do
     t.string   "genus"
     t.datetime "created_at",               default: -> { "CURRENT_TIMESTAMP" }, null: false
     t.datetime "updated_at",               default: -> { "CURRENT_TIMESTAMP" }, null: false
+    t.index ["gene_id", "job_id", "species"], name: "index_genes_on_gene_id_and_job_id_and_species", unique: true, using: :btree
     t.index ["gene_id"], name: "index_genes_on_gene_id", using: :btree
     t.index ["job_id"], name: "index_genes_on_job_id", using: :btree
   end

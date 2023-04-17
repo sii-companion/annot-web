@@ -207,10 +207,10 @@ class HardWorker
           File.open("#{job.job_directory}/genelist.csv").read.each_line do |l|
             l.chomp!
             id, type, product, seqid, start, stop, strand = l.split("\t")
-            g = Gene.find_or_create_by(:gene_id => id, :product => product, :loc_start => start,
-                         :loc_end => stop, :strand => strand, :job => job,
-                         :seqid => seqid, :gtype => type, :species => job[:prefix],
-                         :section => r[:section], :genus => r[:genus])
+            g = Gene.find_or_initialize_by(:gene_id => id, :species => job[:prefix], :job => job)
+            g.assign_attributes({:product => product, :loc_start => start, :loc_end => stop,
+                      :strand => strand, :seqid => seqid, :gtype => type,
+                      :genus => r[:genus], :section => r[:section]})
             genes << g
           end
           Gene.import genes, on_duplicate_key_ignore: true
