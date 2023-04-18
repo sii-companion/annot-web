@@ -1,5 +1,5 @@
 module JobOutputs
-  def import_clusters(job)
+  def import_clusters(job, ref)
     if File.exist?("#{job.job_directory}/orthomcl_out") then
       clusters = []
       File.open("#{job.job_directory}/orthomcl_out").each_line do |l|
@@ -12,7 +12,7 @@ module JobOutputs
           memb_id = memb[0].gsub(/#{suffix_patterns.join("|")}/,"")
           g = Gene.where([
             "gene_id LIKE ? AND ((job_id = #{job[:id]} AND species = '#{job[:prefix]}')" \
-            "OR (job_id IS NULL AND species = '#{r[:abbr]}'))", "#{memb_id}%"
+            "OR (job_id IS NULL AND species = '#{ref[:abbr]}'))", "#{memb_id}%"
           ]).take
           if g then
             unless g.in?(c.genes)

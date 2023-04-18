@@ -245,7 +245,7 @@ class HardWorker
         #     c.save!
         #   end
         # end
-        import_clusters(job)
+        import_clusters(job, r)
 
         # store tree files
         if File.exist?("#{job.job_directory}/tree_selection.genes") and
