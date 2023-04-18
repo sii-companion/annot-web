@@ -21,6 +21,7 @@
 
 set :output, "#{path}/log/cron.log"
 set :environment, "production"
+env :PATH, ENV['PATH']
 
 every :sunday, at: "1am" do
     rake "expire_old"
