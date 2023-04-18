@@ -1,7 +1,10 @@
+require 'job_outputs'
+
 class HardWorker
   include Sidekiq::Worker
   sidekiq_options :retry => 0
   include Sidekiq::Status::Worker
+  include JobOutputs
 
   def with_environment(variables={})
     if block_given?
@@ -207,41 +210,16 @@ class HardWorker
           File.open("#{job.job_directory}/genelist.csv").read.each_line do |l|
             l.chomp!
             id, type, product, seqid, start, stop, strand = l.split("\t")
-            g = Gene.find_or_create_by(:gene_id => id, :product => product, :loc_start => start,
-                         :loc_end => stop, :strand => strand, :job => job,
-                         :seqid => seqid, :gtype => type, :species => job[:prefix],
-                         :section => r[:section], :genus => r[:genus])
+            g = Gene.find_or_initialize_by(:gene_id => id, :species => job[:prefix], :job => job)
+            g.assign_attributes({:product => product, :loc_start => start, :loc_end => stop,
+                      :strand => strand, :seqid => seqid, :gtype => type,
+                      :genus => r[:genus], :section => r[:section]})
             genes << g
           end
           Gene.import genes, on_duplicate_key_ignore: true
         end
 
-        # import clusters
-        if File.exist?("#{job.job_directory}/orthomcl_out") then
-          clusters = []
-          File.open("#{job.job_directory}/orthomcl_out").each_line do |l|
-            m = l.match(/^(OG[0-9]+):\s+(.+)/)
-            next unless m
-            c = Cluster.find_or_create_by(:cluster_id => m[1], :job => job)
-            tr = m[2].scan(/[^|]+\|([^ )]+)/)
-            suffix_patterns = File.readlines("#{Rails.root.to_s}/config/transcript_suffix_patterns.txt", chomp: true)
-            tr.each do |memb|
-              memb_id = memb[0].gsub(/#{suffix_patterns.join("|")}/,"")
-              g = Gene.where([
-                "gene_id LIKE ? AND ((job_id = #{job[:id]} AND species = '#{job[:prefix]}')" \
-                "OR (job_id IS NULL AND species = '#{r[:abbr]}'))", "#{memb_id}%"
-              ]).take
-              if g then
-                unless g.in?(c.genes)
-                  c.genes << g
-                end
-              else
-                Rails.logger.info("#{memb[0]}: #{memb_id} (with job ID #{job[:id]}) not found!")
-              end
-            end
-            c.save!
-          end
-        end
+        import_clusters(job, r)
 
         # store tree files
         if File.exist?("#{job.job_directory}/tree_selection.genes") and
