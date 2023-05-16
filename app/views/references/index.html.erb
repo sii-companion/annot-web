@@ -39,12 +39,12 @@
 <table class="table table-sm ml-4">
     <tr>
         <th>Reference without metadata</th>
-        <th>Group</th>
+        <th>VEuPathDB Domain</th>
     </tr>
     <% @without_metadata.each do |refs| %>
     <tr>
         <td><%= refs.name %></td>
-        <td><%= refs.genus %></td>
+        <td><a href="<%= refs.url %>" target="_blank"><%= refs.uri_host %></a></td>
     </tr>
     <% end %>
 </table>
