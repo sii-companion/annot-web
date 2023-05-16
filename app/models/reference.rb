@@ -50,6 +50,13 @@ class Reference < ActiveFile::Base
                 newhash[k2] = v2
               end
             end
+            # lift over metadata
+            if newhash.has_key?('metadata') then
+              newhash[:release] = newhash['metadata']['Release'].to_i
+              newhash[:build] = newhash['metadata']['VEuPathDB Build'].to_i
+              newhash[:release_date] = newhash['metadata']["Release Date"]
+              newhash[:dataset_version] = newhash['metadata']["Data Set Version"]
+            end
             # we need at least an AUGUSTUS model to use this species as a
             # direct reference
             if newhash.has_key?('augustus_model') and newhash.has_key?('is_reference_strain') then

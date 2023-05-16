@@ -1,0 +1,49 @@
+<% content_for(:title, "Companion references") %>
+
+<div class="page-header">
+    <h1>References</h1>
+</div>
+
+<p>
+    This table contains <a href="https://veupathdb.org/veupathdb/app" target="_blank">VEuPathDB</a> release metadata for references in Companion.
+</p>
+
+<table class="table table-sm ml-4">
+    <tr>
+        <th><%= sortable "abbr", "Reference" %> </th>
+        <th><%= sortable "release", "Release"%> </th>
+        <th><%= sortable "build", "VEuPathDB Build"%> </th>
+        <th><%= sortable "release_date", "Release Date"%> </th>
+        <th><%= sortable "dataset_version", "Data Set Version"%> </th>
+    </tr>
+    <% @references.each do |refs| %>
+    <tr>
+        <td><%= refs.name %></td>
+        <td><%= refs.release %></td>
+        <td><%= refs.build %></td>
+        <td><%= refs.release_date %></td>
+        <td><%= refs.dataset_version %></td>
+    </tr>
+    <% end %>
+</table>
+
+<% if logged_in? then %>
+<h3>Missing metadata</h3>
+<p>
+    The following table contains references without accompanying metadata
+    (perhaps indicating they haven't been updated recently, or something has
+    gone wrong when parsing their metadata).
+</p>
+<table class="table table-sm ml-4">
+    <tr>
+        <th>Reference without metadata</th>
+        <th>Group</th>
+    </tr>
+    <% @without_metadata.each do |refs| %>
+    <tr>
+        <td><%= refs.name %></td>
+        <td><%= refs.genus %></td>
+    </tr>
+    <% end %>
+</table>
+<% end %>
