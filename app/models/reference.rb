@@ -1,3 +1,5 @@
+require 'uri'
+
 class Reference < ActiveFile::Base
   extend ActiveHash::Associations::ActiveRecordExtensions
 
@@ -14,6 +16,7 @@ class Reference < ActiveFile::Base
           jsondata = File.open("#{groupdir}/references.json").read
           json = JSON.parse(jsondata)
           group = json["groups"].keys.first
+          domain = json["domain"]
           json["species"].keys.sort.each do |k|
             v = json["species"][k]
             newhash = {:id => k, :abbr => k, :section => section, :genus => group,
@@ -56,6 +59,14 @@ class Reference < ActiveFile::Base
               newhash[:build] = newhash['metadata']['VEuPathDB Build'].to_i
               newhash[:release_date] = newhash['metadata']["Release Date"]
               newhash[:dataset_version] = newhash['metadata']["Data Set Version"]
+            end
+            # assign URI information for umbrella domain
+            if domain then
+              newhash[:url] = domain
+              uri = URI(domain)
+              newhash[:uri_host] = uri.host
+            else
+              newhash[:url] = newhash[:uri_host] = ""
             end
             # we need at least an AUGUSTUS model to use this species as a
             # direct reference

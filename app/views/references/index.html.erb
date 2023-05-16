@@ -11,6 +11,7 @@
 <table class="table table-sm ml-4">
     <tr>
         <th><%= sortable "abbr", "Reference" %> </th>
+        <th><%= sortable "uri_host", "VEuPathDB Domain"%> </th>
         <th><%= sortable "release", "Release"%> </th>
         <th><%= sortable "build", "VEuPathDB Build"%> </th>
         <th><%= sortable "release_date", "Release Date"%> </th>
@@ -19,6 +20,7 @@
     <% @references.each do |refs| %>
     <tr>
         <td><%= refs.name %></td>
+        <td><a href="<%= refs.url %>" target="_blank"><%= refs.uri_host %></a></td>
         <td><%= refs.release %></td>
         <td><%= refs.build %></td>
         <td><%= refs.release_date %></td>
