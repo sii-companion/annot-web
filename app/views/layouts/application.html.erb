@@ -65,6 +65,11 @@
       </ul>
       <div class="navbar-right">
         <p class="navbar-text">
+          <span title="Companion version">
+            <%= File.read(File.expand_path("..", CONFIG['nextflowscript']) + "/.version") rescue "" %>
+          </span>
+        </p>
+        <p class="navbar-text">
           <span title="<%= @n_working %> jobs running, <%= @n_queued %> queued">
             <i class="fa fa-server"></i>
             <%= @n_working %>/<%= @n_queued %>
