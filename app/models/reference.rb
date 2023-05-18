@@ -54,11 +54,15 @@ class Reference < ActiveFile::Base
               end
             end
             # lift over metadata
-            if newhash.has_key?('metadata') and not newhash['metadata'].empty? then
+            if newhash.has_key?('metadata') then
+              if not newhash['metadata'].empty? then
               newhash[:release] = newhash['metadata']['Release'].to_i
               newhash[:build] = newhash['metadata']['VEuPathDB Build'].to_i
               newhash[:release_date] = newhash['metadata']["Release Date"]
               newhash[:dataset_version] = newhash['metadata']["Data Set Version"]
+              else
+                newhash.delete('metadata')
+              end
             end
             # assign URI information for umbrella domain
             if domain then
