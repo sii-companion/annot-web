@@ -20,3 +20,21 @@
 @import "jquery.dataTables";
 @import "jobs";
 @import 'cookies_eu';
+
+th a.current {
+    padding-right: 16px;
+    background-repeat: no-repeat;
+    background-position: right center;
+}
+
+th a.asc {
+    background-image: image-url("sort_asc.png");
+}
+
+th a.desc {
+    background-image: image-url("sort_desc.png");
+}
+
+.new-tab {
+    background-color:aquamarine;
+}

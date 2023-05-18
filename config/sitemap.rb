@@ -4,4 +4,5 @@ SitemapGenerator::Sitemap.create do
   add survey2018_path, :priority => 0.7
   add examples_path, :priority => 0.7
   add getting_started_path, :priority => 0.7
+  add references_path, :priority => 0.7
 end
