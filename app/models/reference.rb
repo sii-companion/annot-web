@@ -54,7 +54,7 @@ class Reference < ActiveFile::Base
               end
             end
             # lift over metadata
-            if newhash.has_key?('metadata') then
+            if newhash.has_key?('metadata') and not newhash['metadata'].empty? then
               newhash[:release] = newhash['metadata']['Release'].to_i
               newhash[:build] = newhash['metadata']['VEuPathDB Build'].to_i
               newhash[:release_date] = newhash['metadata']["Release Date"]
