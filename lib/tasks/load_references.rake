@@ -12,7 +12,7 @@ desc 'Load all references from referencedirs in config/companion.yml, or specifi
 task :load_references, [:args_expr] => :environment do |t, args|
     STDERR.puts "Checking for gt..."
     if not system("gt -version > /dev/null") then
-      STDERR.puts "...Not found! Please install GenomeTools in your $PATH."
+      STDERR.puts "   Not found! Please install GenomeTools in your $PATH."
       exit 1
     end
     if not database_exists? then
@@ -36,7 +36,7 @@ task :load_references, [:args_expr] => :environment do |t, args|
         species = nil
         group = json["groups"].keys.first
         json["species"].keys.sort.each do |k|
-          STDERR.puts "...#{k}"
+          STDERR.puts " \u27A1 #{k}"
           r = Release.find_or_create_by(:species => k)
           newRelease = json["species"][k].try(:[], "metadata").try(:[], "Release")
           if not r[:number] or r[:number].to_i < newRelease.to_i then
@@ -52,7 +52,7 @@ task :load_references, [:args_expr] => :environment do |t, args|
             if g[:loc_start] and g[:loc_end] and g[:seqid] and g[:species] and g[:gtype] then
               genes << g
             else
-                STDERR.puts "......Gene #{id} is missing vital part:"
+                STDERR.puts "   \u21AA Gene #{id} is missing vital part:"
               STDERR.puts g.inspect
             end
           end
@@ -60,13 +60,13 @@ task :load_references, [:args_expr] => :environment do |t, args|
             r[:number] = newRelease.to_i
             r.save!
           else
-            STDERR.puts "......Release number #{r[:number]} already present. Skipping."
+            STDERR.puts "   \u21AA Release number #{r[:number]} already present. Skipping."
           end
         end
-        STDERR.puts "Read #{genes.length} genes, importing..."
+        STDERR.puts "   Read #{genes.length} genes, importing."
         Gene.import genes, on_duplicate_key_update: :all
       end.empty?
-        STDERR.puts "...Reference directories not found in #{refdir}."
+        STDERR.puts "   Reference directories not found in #{refdir}."
       end
     end
     STDERR.puts "Done"
