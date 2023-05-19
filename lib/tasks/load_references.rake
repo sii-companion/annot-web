@@ -10,33 +10,33 @@ end
 
 desc 'Load all references from referencedirs in config/companion.yml, or specific sections with query args, e.g. load_references[Section1="/path/to/section1/"&Section2="/path/to/section2/"]'
 task :load_references, [:args_expr] => :environment do |t, args|
-    STDERR.puts "checking for gt..."
+    STDERR.puts "Checking for gt..."
     if not system("gt -version > /dev/null") then
-      STDERR.puts "not found! Please install GenomeTools in your $PATH."
+      STDERR.puts "...Not found! Please install GenomeTools in your $PATH."
       exit 1
     end
     if not database_exists? then
-      STDERR.puts "creating db..."
+      STDERR.puts "Creating db..."
       Rake::Task["db:create"].execute
       Rake::Task["db:migrate"].execute
       Rake::Task["db:seed"].execute
     end
     if args[:args_expr] then
-      STDERR.puts "using specific sections"
+      STDERR.puts "Using specific sections..."
       referencedirs = Rack::Utils.parse_nested_query(args[:args_expr])
     else
       referencedirs = CONFIG['referencedirs']
     end
     referencedirs.each do |section, refdir|
-      STDERR.puts "loading references for #{section}..."
-      Dir["#{refdir}/Ref*"].each do |groupdir|
+      STDERR.puts "Loading references for #{section}..."
+      if Dir["#{refdir}/Ref*"].each do |groupdir|
         genes = []
         jsondata = File.open("#{groupdir}/references.json").read
         json = JSON.parse(jsondata)
         species = nil
         group = json["groups"].keys.first
         json["species"].keys.sort.each do |k|
-          STDERR.puts k
+          STDERR.puts "...#{k}"
           r = Release.find_or_create_by(:species => k)
           newRelease = json["species"][k].try(:[], "metadata").try(:[], "Release")
           if not r[:number] or r[:number] < newRelease.to_i then
@@ -52,7 +52,7 @@ task :load_references, [:args_expr] => :environment do |t, args|
             if g[:loc_start] and g[:loc_end] and g[:seqid] and g[:species] and g[:gtype] then
               genes << g
             else
-              STDERR.puts "gene #{id} is missing vital part:"
+                STDERR.puts "......Gene #{id} is missing vital part:"
               STDERR.puts g.inspect
             end
           end
@@ -60,12 +60,14 @@ task :load_references, [:args_expr] => :environment do |t, args|
             r[:number] = newRelease
             r.save!
           else
-            STDERR.puts "release number #{r[:number]} already present. Skipping."
+            STDERR.puts "......Release number #{r[:number]} already present. Skipping."
           end
         end
-        STDERR.puts "read #{genes.length} genes, importing..."
+        STDERR.puts "Read #{genes.length} genes, importing..."
         Gene.import genes, on_duplicate_key_update: :all
+      end.empty?
+        STDERR.puts "...Reference directories not found in #{refdir}."
       end
     end
-    STDERR.puts "done"
+    STDERR.puts "Done"
 end
