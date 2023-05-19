@@ -40,23 +40,23 @@ task :load_references, [:args_expr] => :environment do |t, args|
           r = Release.find_or_create_by(:species => k)
           newRelease = json["species"][k].try(:[], "metadata").try(:[], "Release")
           if not r[:number] or r[:number].to_i < newRelease.to_i then
-          Kernel.system("#{CONFIG['rootdir']}/bin/genes_gff3_to_csv.lua #{groupdir}/#{k}/annotation.gff3 > 1")
-          species = k
-          File.open("1").read.each_line do |l|
-            l.chomp!
-            id, type, product, seqid, start, stop, strand = l.split("\t")
-            g = Gene.find_or_initialize_by(:gene_id => id, :species => species, :job => nil)
-            g.assign_attributes({:product => product, :loc_start => start, :loc_end => stop,
-                      :strand => strand, :seqid => seqid, :gtype => type,
-                      :genus => group, :section => section})
-            if g[:loc_start] and g[:loc_end] and g[:seqid] and g[:species] and g[:gtype] then
-              genes << g
-            else
+            Kernel.system("#{CONFIG['rootdir']}/bin/genes_gff3_to_csv.lua #{groupdir}/#{k}/annotation.gff3 > 1")
+            species = k
+            File.open("1").read.each_line do |l|
+              l.chomp!
+              id, type, product, seqid, start, stop, strand = l.split("\t")
+              g = Gene.find_or_initialize_by(:gene_id => id, :species => species, :job => nil)
+              g.assign_attributes({:product => product, :loc_start => start, :loc_end => stop,
+                        :strand => strand, :seqid => seqid, :gtype => type,
+                        :genus => group, :section => section})
+              if g[:loc_start] and g[:loc_end] and g[:seqid] and g[:species] and g[:gtype] then
+                genes << g
+              else
                 STDERR.puts "   \u21AA Gene #{id} is missing vital part:"
-              STDERR.puts g.inspect
+                STDERR.puts g.inspect
+              end
             end
-          end
-          File.unlink("1")
+            File.unlink("1")
             r[:number] = newRelease.to_i
             r.save!
           else
@@ -64,8 +64,8 @@ task :load_references, [:args_expr] => :environment do |t, args|
           end
         end
         if genes.length > 0 then
-        STDERR.puts "   Read #{genes.length} genes, importing."
-        Gene.import genes, on_duplicate_key_update: :all
+          STDERR.puts "   Read #{genes.length} genes, importing."
+          Gene.import genes, on_duplicate_key_update: :all
         end
       end.empty?
         STDERR.puts "   Reference directories not found in #{refdir}."
