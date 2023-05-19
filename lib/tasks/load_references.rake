@@ -39,7 +39,7 @@ task :load_references, [:args_expr] => :environment do |t, args|
           STDERR.puts "...#{k}"
           r = Release.find_or_create_by(:species => k)
           newRelease = json["species"][k].try(:[], "metadata").try(:[], "Release")
-          if not r[:number] or r[:number] < newRelease.to_i then
+          if not r[:number] or r[:number].to_i < newRelease.to_i then
           Kernel.system("#{CONFIG['rootdir']}/bin/genes_gff3_to_csv.lua #{groupdir}/#{k}/annotation.gff3 > 1")
           species = k
           File.open("1").read.each_line do |l|
@@ -57,7 +57,7 @@ task :load_references, [:args_expr] => :environment do |t, args|
             end
           end
           File.unlink("1")
-            r[:number] = newRelease
+            r[:number] = newRelease.to_i
             r.save!
           else
             STDERR.puts "......Release number #{r[:number]} already present. Skipping."
