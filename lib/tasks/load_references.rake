@@ -63,8 +63,10 @@ task :load_references, [:args_expr] => :environment do |t, args|
             STDERR.puts "   \u21AA Release number #{r[:number]} already present. Skipping."
           end
         end
+        if genes.length > 0 then
         STDERR.puts "   Read #{genes.length} genes, importing."
         Gene.import genes, on_duplicate_key_update: :all
+        end
       end.empty?
         STDERR.puts "   Reference directories not found in #{refdir}."
       end
