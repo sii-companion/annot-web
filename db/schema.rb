@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20230406150056) do
+ActiveRecord::Schema.define(version: 20230519111506) do
 
   create_table "circos_images", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb3" do |t|
     t.string   "file_uid"
@@ -140,6 +140,11 @@ ActiveRecord::Schema.define(version: 20230406150056) do
     t.boolean  "run_braker"
     t.index ["tree_id"], name: "fk_rails_0e6111546c", using: :btree
     t.index ["user_id"], name: "index_jobs_on_user_id", using: :btree
+  end
+
+  create_table "releases", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb3" do |t|
+    t.string  "species"
+    t.integer "number"
   end
 
   create_table "result_files", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb3" do |t|
