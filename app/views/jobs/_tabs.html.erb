@@ -330,10 +330,7 @@ var vtable;
         <p>
           This is <span id='map-header'></span>. Click and drag in the diagram below to pan around. Use the mouse wheel or the <span class='glyphicon glyphicon-plus'></span>/<span class='glyphicon glyphicon-minus'></span> icons to zoom in and out.
         </p>
-        <p>
-          top: reference chromosome from <i><%= @ref[:name] %></i>, bottom: <i> <%= @job[:name] %></i> contiguated pseudochromosome <br />
-          <span class='fa fa-stop' style='color: #fb6a4a'></span> = forward strand gene  &emsp; <span class='fa fa-stop' style='color: #6aadd5'></span> = reverse strand gene &emsp; <span class='fa fa-stop' style='color: #74c476'></span> = missing core gene &emsp; <span class='fa fa-stop' style='color: #0000000'></span> = singleton gene &emsp; <span class='fa fa-stop' style='color: #fff64a'></span> = gap
-        </p>
+        <%= render partial: 'legend', locals: {:job => @job, :ref => @ref} %>
         <div id="image-map"></div>
       </div>
     <% else %>
