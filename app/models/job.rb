@@ -41,5 +41,4 @@ class Job < ActiveRecord::Base
       end
       "#{CONFIG['workdir']}/#{self[:job_id]}"
     end
-    
 end

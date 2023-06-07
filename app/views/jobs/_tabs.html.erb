@@ -172,6 +172,12 @@ var vtable;
           <% end %>
         </tbody>
       </table>
+      <span class="pull-right">
+        <%= link_to all_result_files_url(id: @job[:job_id]) do %>
+          <i class="glyphicon glyphicon-download-alt"></i>
+          Download all result files (ZIP)
+        <% end %>
+      </span>
     </div>
   <% end %>
 

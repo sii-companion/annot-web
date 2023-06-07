@@ -360,6 +360,25 @@ class JobsController < ApplicationController
     end
   end
 
+  def get_all_result_files
+    job = Job.find_by(:job_id => params[:id])
+    if job then
+      if job.result_files and job.result_files.size > 0 then
+        t = Tempfile.new(job.job_id)
+        Zip::OutputStream.open(t.path) do |zos|
+          job.result_files.sort.each do |rf|
+            zos.put_next_entry("#{rf.file.name}")
+            zos.print IO.read(rf.file.path)
+          end
+        end
+        send_file t.path, :type => 'application/zip',
+                          :disposition => 'attachment',
+                          :filename => "#{job.name.parameterize}_results.zip"
+        t.close
+      end
+    end
+  end
+
   private
 
   def jobs_params(params)
