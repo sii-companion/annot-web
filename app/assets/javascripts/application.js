@@ -21,3 +21,4 @@
 //= require turbolinks
 //= require select2
 //= require bootstrap-slider
+//= require fontawesome/all.min
