@@ -18,3 +18,6 @@
 //= require bootstrap
 //= require_tree .
 //= require cookies_eu
+//= require turbolinks
+//= require select2
+//= require bootstrap-slider

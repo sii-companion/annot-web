@@ -60,6 +60,7 @@ end
 # Bootstrap
 gem 'bootstrap-sass'
 gem 'autoprefixer-rails'
+gem 'bootstrap-slider-rails', '~> 9.8'
 
 # JQuery extensions
 gem 'jquery-ui-rails'
@@ -98,7 +99,7 @@ gem 'figaro'
 gem 'bigdecimal', '1.3.5'
 gem 'execjs', '2.7.0'
 
-# gem 'turbolinks', '~> 5.2.0'
+gem 'turbolinks', '~> 5.2.0'
 
 gem 'concurrent-ruby'
 
@@ -106,3 +107,6 @@ gem 'whenever', require: false
 
 # cookie consent
 gem 'cookies_eu'
+
+# reference select box
+gem 'select2-rails'
