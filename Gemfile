@@ -108,5 +108,9 @@ gem 'whenever', require: false
 # cookie consent
 gem 'cookies_eu'
 
+# html to image (for circos legend)
+gem 'imgkit'
+gem 'wkhtmltoimage-binary'
+
 # reference select box
 gem 'select2-rails'

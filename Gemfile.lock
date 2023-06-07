@@ -92,6 +92,7 @@ GEM
       activesupport (>= 5.0)
     i18n (1.10.0)
       concurrent-ruby (~> 1.0)
+    imgkit (1.6.3)
     jbuilder (2.11.5)
       actionview (>= 5.0.0)
       activesupport (>= 5.0.0)
@@ -220,6 +221,7 @@ GEM
     websocket-extensions (0.1.5)
     whenever (1.0.0)
       chronic (>= 0.6.3)
+    wkhtmltoimage-binary (0.12.5)
 
 PLATFORMS
   ruby
@@ -242,6 +244,7 @@ DEPENDENCIES
   execjs (= 2.7.0)
   figaro
   foreman
+  imgkit
   jbuilder (~> 2.0)
   jquery-rails
   jquery-ui-rails
@@ -267,6 +270,7 @@ DEPENDENCIES
   turbolinks (~> 5.2.0)
   uglifier (>= 2.7.2)
   whenever
+  wkhtmltoimage-binary
 
 BUNDLED WITH
    1.13.6
