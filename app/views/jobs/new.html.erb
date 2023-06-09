@@ -87,7 +87,7 @@
       transcripts in the GTF format as created by Cufflinks.</p> </div>
       <div class="form-group">
         <div class="radio">
-          <label><%= f.radio_button :use_transcriptome_data, true, required: true, onClick: "$('#transcript-selection').slideDown();$('[id^=job_transcript_file_id]').prop('required', true);" %> Yes, use transcript evidence.</label>
+          <label><%= f.radio_button :use_transcriptome_data, true, required: true %> Yes, use transcript evidence.</label>
         </div>
 
         <div id="transcript-selection">
@@ -99,7 +99,7 @@
         </div>
 
         <div class="radio">
-          <label><%= f.radio_button :use_transcriptome_data, false, required: true, onClick: "$('#transcript-selection').slideUp();$('[id^=job_transcript_file_id]').prop('required', false);" %> No, do not use transcript evidence.</label>
+          <label><%= f.radio_button :use_transcriptome_data, false, required: true %> No, do not use transcript evidence.</label>
         </div>
       </div>
     </div>
@@ -278,5 +278,16 @@
         $(this).find('i').removeClass('glyphicon-chevron-up').addClass('glyphicon-chevron-down');
       }
     });
+    $('#job_use_transcriptome_data_true').on("click", function (e) {
+      $('#transcript-selection').slideDown();
+      $('[id^=job_transcript_file_id]').prop('required', true);
+      $('#job_run_braker_true').prop({'disabled': true, 'title': "BRAKER2 currently doesn't accept both transcript and protein evidence."});
+      $('#job_run_braker_false').prop('checked',true);
+    });
+    $('#job_use_transcriptome_data_false').on("click", function (e) {
+      $('#transcript-selection').slideUp();
+      $('[id^=job_transcript_file_id]').prop('required', false);
+      $('#job_run_braker_true').prop({'disabled': false, 'checked': true}).removeAttr('title');
+    })
   });
    </script>
