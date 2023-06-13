@@ -10,12 +10,15 @@
   <table style="white-space:nowrap;" class="table table-striped">
         <thead>
             <tr>
-                <th>Name</th>
-                <th>submitted</th>
-                <th>by (email)</th>
-                <th>started</th>
-                <th>finished</th>
-                <th></th>
+                <th><%= sortable "job_id", "Name" %> </th>
+                <th><%= sortable "created_at", "Submitted" %> </th>
+                <th><%= sortable "email", "By (email)" %> </th>
+                <th><%= sortable "started_at", "Started" %> </th>
+                <th><%= sortable "finished_at", "Finished" %></th>
+                <th><form class="filter_form">
+                  <%= select("status", "type", [["--Status--", nil], ["Working", "working"], ["Failed", "failed"], ["Completed", "completed"], ["Not started yet", "queued"]], {selected: params.try(:[], 'status').try(:[], 'type')}) %>
+                  <input type="submit" value="Filter" />
+                </form></th>
                 <th></th>
            </tr>
         </thead>

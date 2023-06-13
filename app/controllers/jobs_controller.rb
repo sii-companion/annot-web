@@ -1,4 +1,14 @@
 class JobsController < ApplicationController
+  helper_method :sort_column, :sort_direction
+
+  def sort_column
+    params.include?(:sort) ? params[:sort] : "created_at"
+  end
+
+  def sort_direction
+    %w[asc desc].include?(params[:direction]) ? params[:direction] : "desc"
+  end
+
   def new
     flash[:info] = "This is an enhanced release of Companion that includes integration with tools " \
                     "such as BRAKER2 and Liftoff. " \
@@ -37,11 +47,25 @@ class JobsController < ApplicationController
                      "given or by searching for your job ID."
       redirect_to :welcome
     else
-      jobs = Job.all
+      jobs = Job.all.order(sort_column + " " + sort_direction)
       @outjobs = []
       @running = 0
       if jobs then
         jobs.each do |job|
+          if params[:status] then
+            status = params[:status][:type]
+            if !status.empty? then
+              if (Sidekiq::Status::working?(job[:job_id]) && status != "working") then
+                next
+              elsif (Sidekiq::Status::complete?(job[:job_id]) && status != "completed") then
+                next
+              elsif (Sidekiq::Status::failed?(job[:job_id]) && status != "failed") then
+                next
+              elsif (Sidekiq::Status::queued?(job[:job_id]) && status != "queued") then
+                next
+              end
+            end
+          end
           jobname = Sidekiq::Status::get(job[:job_id], :name)
           if not jobname then
             jobname = job[:name]
