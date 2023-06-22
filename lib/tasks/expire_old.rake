@@ -17,8 +17,14 @@ task :expire_old => :environment do |t, args|
     end
     if File.exist?("#{job.work_directory}") then
       FileUtils.rm_rf("#{job.work_directory}")
-    end    
+    end
     job.destroy
     puts "Job #{job[:job_id]} '#{job[:name]}' was deleted."
   end
+  puts "Deleting all genes created by jobs more than 6 months ago."
+  run = "mysql -u#{ENV['COMPANION_DATABASE_USERNAME']} " + \
+        "-p\"#{ENV['COMPANION_DATABASE_PASSWORD']}\" " + \
+        "#{Rails.configuration.database_configuration[Rails.env]["database"]} " + \
+        "-e \"delete from genes where created_at < DATE_SUB(NOW() , INTERVAL 6 MONTH) AND job_id IS NOT NULL\""
+  Kernel.system(run)
 end
