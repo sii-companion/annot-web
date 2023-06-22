@@ -166,28 +166,6 @@ class JobsController < ApplicationController
     end
   end
 
-  def destroy_by_int_id
-    if !logged_in? then
-      flash[:info] = "You do not have permission to delete jobs in the " + \
-                     "queue."
-      redirect_to :welcome
-    else
-      thisjob = Job.find_by(:job_id => params[:id])
-      if thisjob then
-        flash.now[:info] = "Deleted job #{thisjob[:name]}"
-        thisjob.destroy
-        queue = Sidekiq::Queue.new
-        queue.each do |job|
-          job.delete if job.jid == params[:id]
-        end
-        if File.exist?("#{thisjob.job_directory}") then
-          FileUtils.rm_rf("#{thisjob.job_directory}")
-        end
-      end
-      render "welcome/index"
-    end
-  end
-
   def bulk_destroy
     if !logged_in? then
       flash[:info] = "You do not have permission to delete jobs in the " + \
