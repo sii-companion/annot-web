@@ -27,4 +27,8 @@ task :expire_old => :environment do |t, args|
         "#{Rails.configuration.database_configuration[Rails.env]["database"]} " + \
         "-e \"delete from genes where created_at < DATE_SUB(NOW() , INTERVAL 6 MONTH) AND job_id IS NOT NULL\""
   Kernel.system(run)
+  puts "Deleting all dragonfly files older than 6 months."
+  Dir.glob("#{Dragonfly.app.datastore.root_path}/*/*/*/*").
+    select{|f| File.mtime(f) < (Time.now - 6.months)}.
+    each{|f| File.delete(f)}
 end
