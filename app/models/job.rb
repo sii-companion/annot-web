@@ -41,4 +41,24 @@ class Job < ActiveRecord::Base
       end
       "#{CONFIG['workdir']}/#{self[:job_id]}"
     end
+
+    def delete
+      if self.sequence_file then
+        self.sequence_file.destroy
+      end
+      if self.transcript_file then
+        self.transcript_file.destroy
+      end
+      queue = Sidekiq::Queue.new
+      queue.each do |job|
+        job.delete if job.jid == self[:job_id]
+      end
+      if File.exist?("#{self.job_directory}") then
+        FileUtils.rm_rf("#{self.job_directory}")
+      end
+      if File.exist?("#{self.work_directory}") then
+        FileUtils.rm_rf("#{self.work_directory}")
+      end
+      self.destroy
+    end
 end
