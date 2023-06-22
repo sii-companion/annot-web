@@ -194,12 +194,16 @@ class JobsController < ApplicationController
                      "queue."
       redirect_to :welcome
     else
-      jobs = Job.where(id: params[:collection_ids])
-      job_ids_to_delete = jobs.pluck(:job_id)
-      jobs.each do |job|
-        job.delete
+      if params[:collection_ids] then
+        jobs = Job.where(id: params[:collection_ids])
+        job_ids_to_delete = jobs.pluck(:job_id)
+        jobs.each do |job|
+          job.delete
+        end
+        flash[:info] = "Deleted job(s) #{job_ids_to_delete.join(", ")}."
+      else
+        flash[:info] = "No job(s) selected."
       end
-      flash[:info] = "Deleted job(s) #{job_ids_to_delete.join(", ")}."
       redirect_to :jobs
     end
   end
