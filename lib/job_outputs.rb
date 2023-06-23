@@ -7,7 +7,7 @@ module JobOutputs
         next unless m
         c = Cluster.find_or_create_by(:cluster_id => m[1], :job => job)
         tr = m[2].scan(/[^|]+\|([^ )]+)/)
-        suffix_patterns = File.readlines("#{Rails.root.to_s}/config/transcript_suffix_patterns.txt", chomp: true)
+        suffix_patterns = File.readlines("#{Rails.root.to_s}/config/transcript_patterns.txt", chomp: true)
         tr.each do |memb|
           memb_id = memb[0].gsub(/#{suffix_patterns.join("|")}/,"")
           g = Gene.where([
