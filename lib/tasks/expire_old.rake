@@ -12,6 +12,12 @@ task :expire_old => :environment do |t, args|
     if job.transcript_file then
       job.transcript_file.destroy
     end
+    if job.result_files.exists? then
+      job.result_files.destroy_all
+    end
+    if job.genes.exists? then
+      job.genes.destroy_all
+    end
     if File.exist?("#{job.job_directory}") then
       FileUtils.rm_rf("#{job.job_directory}")
     end
@@ -21,14 +27,4 @@ task :expire_old => :environment do |t, args|
     job.destroy
     puts "Job #{job[:job_id]} '#{job[:name]}' was deleted."
   end
-  puts "Deleting all genes created by jobs more than 6 months ago."
-  run = "mysql -u#{ENV['COMPANION_DATABASE_USERNAME']} " + \
-        "-p\"#{ENV['COMPANION_DATABASE_PASSWORD']}\" " + \
-        "#{Rails.configuration.database_configuration[Rails.env]["database"]} " + \
-        "-e \"delete from genes where created_at < DATE_SUB(NOW() , INTERVAL 6 MONTH) AND job_id IS NOT NULL\""
-  Kernel.system(run)
-  puts "Deleting all dragonfly files older than 6 months."
-  Dir.glob("#{Dragonfly.app.datastore.root_path}/*/*/*/*").
-    select{|f| File.mtime(f) < (Time.now - 6.months)}.
-    each{|f| File.delete(f)}
 end

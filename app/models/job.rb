@@ -49,6 +49,12 @@ class Job < ActiveRecord::Base
       if self.transcript_file then
         self.transcript_file.destroy
       end
+      if self.result_files.exists? then
+        self.result_files.destroy_all
+      end
+      if self.genes.exists? then
+        self.genes.destroy_all
+      end
       queue = Sidekiq::Queue.new
       queue.each do |job|
         job.delete if job.jid == self[:job_id]
