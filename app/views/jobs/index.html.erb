@@ -53,12 +53,12 @@
                                             data: { confirm: "Are you sure?" } do %>
                          <i class="glyphicon glyphicon-trash"></i> Delete
                        <% end %>&nbsp;
+                       <%= link_to restart_job_path(id: job[:job_id]),
+                                            data: { confirm: "Are you sure?" } do %>
+                         <i class="glyphicon glyphicon-repeat"></i> Restart
+                       <% end %>
                      <% else %>
                        <span class="text-warning">(Example)</span>
-                     <% end %>
-                     <%= link_to restart_job_path(id: job[:job_id]),
-                                            data: { confirm: "Are you sure?" } do %>
-                       <i class="glyphicon glyphicon-repeat"></i> Restart
                      <% end %>
                    <% end %>
                    </div>
