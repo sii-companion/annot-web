@@ -33,7 +33,7 @@
                 <% else %>
                 <td></td>
                 <% end %>
-                <td width="100%"><%= link_to job_path(id: job[:job_id]) do %><span title="<%= job[:job_id] %>"><%= truncate(job[:name], :length => 40, :omission => '...') %></span><% end %></td>
+                <td width="100%"><%= link_to job_path(id: job[:job_id]) do %><span title="<%= job[:name] %>"><%= truncate(job[:name], :length => 40, :omission => '...') %></span><% end %></td>
                 <td><%= distance_of_time_in_words(Time.now,job[:created_at]) %> ago</td>
                 <td><%= job[:email] %></td>
                 <td>
