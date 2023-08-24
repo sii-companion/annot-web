@@ -118,6 +118,9 @@ module JobsHelper
       if ref[:weightfile] then
         @items["WEIGHT_FILE"] = ref[:weightfile]
       end
+      if ref[:ncrna_models] then
+        @items["NCRNA_MODELS"] = ref[:ncrna_models]
+      end
       if ref[:maxintronlen] then
         @items["AUGUSTUS_HINTS_MAXINTRONLEN"] = ref[:maxintronlen]
       end

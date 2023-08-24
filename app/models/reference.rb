@@ -25,6 +25,10 @@ class Reference < ActiveFile::Base
             if CONFIG['weightfiles'] and CONFIG['weightfiles'][section] then
               newhash[:weightfile] = CONFIG['weightfiles'][section]
             end
+            # assign ncrna_models for this section, if configured
+            if CONFIG['ncrna_models'] and CONFIG['ncrna_models'][section] then
+              newhash[:ncrna_models] = CONFIG['ncrna_models'][section]
+            end
             # assign maxintronlen for this section, if configured
             if CONFIG['maxintronlengths'] and CONFIG['maxintronlengths'][section] then
               newhash[:maxintronlen] = CONFIG['maxintronlengths'][section]

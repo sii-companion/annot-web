@@ -28,13 +28,15 @@ development:
   weightfiles:
     Kinetoplastida: "/home/companion/annot-nf/data/weight/weight_kinetoplastid.lua"
     Plasmodium: "/home/companion/annot-nf/data/weight/weight_plasmodium.lua"
+  ncrna_models:
+    Kinetoplastida: "/home/companion/annot-nf/data/cm/kinetoplastid_rnas.cm"
   maxintronlengths:
     Kinetoplastida: 1
     Plasmodium: 20000
   fix_polycistrons:
     Kinetoplastida: "true"
     Plasmodium: "false"
-  do_circos: 
+  do_circos:
     Kinetoplastida: "true"
     Plasmodium: "true"
 
