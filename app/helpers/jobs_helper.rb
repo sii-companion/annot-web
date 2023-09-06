@@ -162,6 +162,7 @@ module JobsHelper
     def get_file(job)
       add_item("RATT_TRANSFER_TYPE", job[:ratt_transfer_type])
       add_item("MAX_GENE_LENGTH", job[:max_gene_length])
+      add_item("APICOPLAST_OVERLAP", job[:apicoplast_overlap])
       add_item("ABACAS_MATCH_SIZE", job[:abacas_match_size])
       add_item("ABACAS_MATCH_SIM", job[:abacas_match_sim])
       add_item("AUGUSTUS_GENEMODEL", 'partial')

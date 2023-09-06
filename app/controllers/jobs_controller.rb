@@ -29,6 +29,7 @@ class JobsController < ApplicationController
       @job[:use_transcriptome_data] = false
       @job[:no_resume] = false
       @job[:max_gene_length] = 50000
+      @job[:apicoplast_overlap] = 5
       @job[:abacas_match_size] = 500
       @job[:abacas_match_sim] = 85
       @job[:augustus_score_threshold] = 0.4
@@ -392,7 +393,8 @@ class JobsController < ApplicationController
                                 :reference_id, :prefix, :do_pseudo, \
                                 :do_contiguate, :do_exonerate, :run_braker, \
                                 :transfer_tool, :use_transcriptome_data, :organism, \
-                                :max_gene_length, :augustus_score_threshold , \
+                                :max_gene_length, :apicoplast_overlap, \
+                                :augustus_score_threshold , \
                                 :abacas_match_size, :abacas_match_sim, \
                                 :taxon_id, :db_id, :ratt_transfer_type, \
                                 :no_resume, :email, sequence_file_attributes: [:id, :file],
