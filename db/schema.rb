@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20230519111506) do
+ActiveRecord::Schema.define(version: 20230908133758) do
 
   create_table "circos_images", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb3" do |t|
     t.string   "file_uid"
@@ -138,6 +138,7 @@ ActiveRecord::Schema.define(version: 20230519111506) do
     t.boolean  "do_liftoff"
     t.string   "transfer_tool"
     t.boolean  "run_braker"
+    t.integer  "max_overlap"
     t.index ["tree_id"], name: "fk_rails_0e6111546c", using: :btree
     t.index ["user_id"], name: "index_jobs_on_user_id", using: :btree
   end

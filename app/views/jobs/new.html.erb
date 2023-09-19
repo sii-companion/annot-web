@@ -204,6 +204,15 @@
      <span class="input-group-addon" id="sizing-addon2">Maximum gene length</span>
      <%= f.number_field :max_gene_length, class: 'form-control', :aria => {:describedby => "sizing-addon2"}, required: true %>
    </div>
+   <div style="padding-top: 20px;">
+    <p>The value below sets the allowed overlap (in number of base pairs) for adjacent genes in apicoplasts and mitochondria. All predicted genes with an overlap greater than this will be discarded from the result set.
+       Note: Pseudochromosome contiguation must be performed for this to take effect.</p>
+    <p> Example: <i>5</i></p>
+   </div>
+   <div class="input-group">
+    <span class="input-group-addon" id="sizing-addon2">Maximum overlap bases</span>
+    <%= f.number_field :max_overlap, class: 'form-control', :aria => {:describedby => "sizing-addon2"}, required: false %>
+   </div>
    <div style="padding-top: 20px;"><p>The value below sets the AUGUSTUS score inclusion threshold for a gene to be considered as predicted <i>de novo</i>. Lower this value to make gene prediction more sensitive.</p>
      <p> Example: <i>0.4</i></p></div>
      <div class="input-group">
