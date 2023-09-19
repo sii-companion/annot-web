@@ -3,14 +3,16 @@ module JobOutputs
   @@suffix_patterns = File.readlines("#{Rails.root.to_s}/config/transcript_patterns.txt", chomp: true)
 
   def match_gene_id(transcript_id)
+    memb_id = nil
     @@match_patterns.each do |mtch|
       if transcript_id.match?(/#{mtch}/) then
         memb_id = transcript_id.match(/#{mtch}/)[1]
       end
     end
-    unless defined? memb_id
+    if memb_id.nil? then
       memb_id = transcript_id.gsub(/#{@@suffix_patterns.join("|")}/,"")
     end
+    memb_id
   end
 
   def import_clusters(job, ref)
