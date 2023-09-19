@@ -22,7 +22,7 @@
             "program": "${workspaceRoot}/bin/rake",
             "args": [
                 "test",
-                "TEST=test/mailers/job_mailer_test.rb",  // Change this to whatever file you want to test.
+                "TEST=test/job_outputs_test.rb",  // Change this to whatever file you want to test.
             ]
         }
     ]
