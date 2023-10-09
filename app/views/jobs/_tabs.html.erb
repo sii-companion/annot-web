@@ -66,9 +66,14 @@ var vtable;
         </thead>
          <tbody>
             <tr>
-                <td>Number of annotated regions/sequences</td>
+                <td>Total number of regions/sequences</td>
                 <td class="text-right"><%= @ref[:nof_regions]%></td>
                 <td class="text-right"><b><%= @job.genome_stat[:nof_regions]%></b></td>
+            </tr>
+            <tr>
+                <td>Number of annotated regions/sequences</td>
+                <td class="text-right"><%= @ref[:nof_annotated_regions]%></td>
+                <td class="text-right"><b><%= @job.genome_stat[:nof_annotated_regions]%></b></td>
             </tr>
             <tr>
                 <td>Number of genes</td>
