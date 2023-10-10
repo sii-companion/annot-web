@@ -65,6 +65,19 @@ var vtable;
             </tr>
         </thead>
          <tbody>
+            <%# TODO Remove this condition when full reference update has been performed %>
+            <% if @ref[:nof_annotated_regions].nil? then %>
+            <tr>
+                <td>Total number of regions/sequences</td>
+                <td class="text-right"></td>
+                <td class="text-right"><b><%= @job.genome_stat[:nof_regions]%></b></td>
+            </tr>
+            <tr>
+                <td>Number of annotated regions/sequences</td>
+                <td class="text-right"><%= @ref[:nof_regions]%></td>
+                <td class="text-right"><b><%= @job.genome_stat[:nof_annotated_regions]%></b></td>
+            </tr>
+            <% else %>
             <tr>
                 <td>Total number of regions/sequences</td>
                 <td class="text-right"><%= @ref[:nof_regions]%></td>
@@ -75,6 +88,7 @@ var vtable;
                 <td class="text-right"><%= @ref[:nof_annotated_regions]%></td>
                 <td class="text-right"><b><%= @job.genome_stat[:nof_annotated_regions]%></b></td>
             </tr>
+            <% end %>
             <tr>
                 <td>Number of genes</td>
                 <td class="text-right"><%= @ref[:nof_genes]%></td>
