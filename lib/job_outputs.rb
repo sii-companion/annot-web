@@ -41,4 +41,20 @@ module JobOutputs
       end
     end
   end
+
+  def gather_stats(job)
+    if File.exist?("#{job.job_directory}/stats.txt") then
+      gstat = GenomeStat.new
+      File.open("#{job.job_directory}/stats.txt").read.each_line do |l|
+        l.chomp!
+        m = /^([^:]+):\s+(.+)$/.match(l)
+        if m and gstat.has_attribute?(m[1].to_sym)
+          gstat[m[1].to_sym] = m[2]
+        end
+      end
+      gstat.save!
+      job.genome_stat = gstat
+      job.save!
+    end
+  end
 end

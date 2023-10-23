@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20230908133758) do
+ActiveRecord::Schema.define(version: 20231009144847) do
 
   create_table "circos_images", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb3" do |t|
     t.string   "file_uid"
@@ -98,6 +98,7 @@ ActiveRecord::Schema.define(version: 20230908133758) do
     t.integer  "job_id"
     t.integer  "nof_pseudogenes"
     t.integer  "nof_pseudogenes_with_function"
+    t.integer  "nof_annotated_regions"
     t.index ["job_id"], name: "index_genome_stats_on_job_id", using: :btree
   end
 
