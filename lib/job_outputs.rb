@@ -16,9 +16,9 @@ module JobOutputs
   end
 
   def import_clusters(job, ref)
-    if File.exist?("#{job.job_directory}/orthomcl_out") then
+    if File.exist?("#{job.job_directory}/orthofinder_out") then
       clusters = []
-      File.open("#{job.job_directory}/orthomcl_out").each_line do |l|
+      File.open("#{job.job_directory}/orthofinder_out").each_line do |l|
         m = l.match(/^(OG[0-9]+):\s+(.+)/)
         next unless m
         c = Cluster.find_or_create_by(:cluster_id => m[1], :job => job)
