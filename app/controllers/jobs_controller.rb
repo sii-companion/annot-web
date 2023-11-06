@@ -10,10 +10,10 @@ class JobsController < ApplicationController
   end
 
   def new
-    flash[:info] = "This is an enhanced release of Companion that includes integration with tools " \
-                    "such as BRAKER2 and Liftoff. " \
-                    "If you should encounter any issues when running your job, please try again on " \
-                    "<a class=\"alert-link\" href=\"https://companion.ac.uk/\">another server</a>."
+    # flash[:info] = "This is an enhanced release of Companion that includes integration with tools " \
+    #                 "such as BRAKER2 and Liftoff. " \
+    #                 "If you should encounter any issues when running your job, please try again on " \
+    #                 "<a class=\"alert-link\" href=\"https://companion.ac.uk/\">another server</a>."
     if @closed then
       flash[:info] = "New job creation is temporarily closed for technical " + \
                      "reasons."
