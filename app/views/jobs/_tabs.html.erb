@@ -165,15 +165,19 @@ var vtable;
                     <i class="glyphicon glyphicon-download-alt"></i>
                      <%= JobsHelper::file_description(file.file.name)[:title] %>
                 <% end %></td>
+                <% if JobsHelper::format_description(JobsHelper::file_description(file.file.name)[:format]).is_a?(::Hash) then %>
                 <td class="text-right">
                     <a data-toggle="popover"
                        data-placement="left"
                        data-trigger="hover"
                        href="<%= JobsHelper::format_description(JobsHelper::file_description(file.file.name)[:format])[:specurl] %>"
                        data-content="<%= JobsHelper::format_description(JobsHelper::file_description(file.file.name)[:format])[:desc] %>. Click to see the specification.">
-                       <%= JobsHelper::file_description(file.file.name)[:format] %></i>
+                       <%= JobsHelper::file_description(file.file.name)[:format] %>
                     </a>
                   </td>
+                <% else %>
+                  <td class="text-right"><%= JobsHelper::file_description(file.file.name)[:format] %></td>
+                <% end %>
                 <% if file.md5 then %>
                   <td class="text-right">
                     <a data-toggle="popover"

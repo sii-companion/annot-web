@@ -21,7 +21,9 @@ module JobsHelper
             "pseudo.scafs.agp" => { :title => "Scaffold layout", :format => "AGP" },
             "out.gaf" => { :title => "Gene Ontology function assignments", :format => "GAF1" },
             "proteins.fasta" => { :title => "Protein sequences", :format => "FASTA"},
-            "embl.tar.gz" => { :title => "Pseudochromosome level sequence and annotation", :format => "EMBL"} }
+            "embl.tar.gz" => { :title => "Pseudochromosome level sequence and annotation", :format => "EMBL"},
+            "reference_metadata.json" => { :title => "Metadata for selected reference, including release information", :format => "JSON"},
+            "companion_version.txt" => { :title => "Companion version", :format => "TXT"} }
 
   def file_description(fn)
     if @fnmaps[fn] then
