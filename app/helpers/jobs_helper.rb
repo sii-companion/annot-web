@@ -93,8 +93,8 @@ module JobsHelper
       @items["fix_polycistrons"] = val
     end
 
-    def mit_ignore_ratt_report(val = true)
-      @items["mit_ignore_ratt_report"] = val
+    def mit_bypass(val = true)
+      @items["mit_bypass"] = val
     end
 
     def make_embl(val = true)
@@ -133,8 +133,8 @@ module JobsHelper
       if ref[:fix_polycistrons] then
         @items["fix_polycistrons"] = ref[:fix_polycistrons]
       end
-      if ref[:mit_ignore_ratt_report] then
-        @items["mit_ignore_ratt_report"] = ref[:mit_ignore_ratt_report]
+      if ref[:mit_bypass] then
+        @items["mit_bypass"] = ref[:mit_bypass]
       end
       if ref[:do_circos] then
         @items["do_circos"] = ref[:do_circos]
