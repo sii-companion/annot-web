@@ -163,6 +163,8 @@ class HardWorker
         add_result_file(job, "embl.tar.gz") if File.exist?("#{job.job_directory}/embl.tar.gz")
         add_result_file(job, "out.gaf")
         add_result_file(job, "proteins.fasta")
+        add_result_file(job, "reference_metadata.json")
+        add_result_file(job, "companion_version.txt")
         job.save!
 
         if (not status) or status.exitstatus != 0 then

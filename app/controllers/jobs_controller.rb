@@ -10,10 +10,10 @@ class JobsController < ApplicationController
   end
 
   def new
-    flash[:info] = "This is an enhanced release of Companion that includes integration with tools " \
-                    "such as BRAKER2 and Liftoff. " \
-                    "If you should encounter any issues when running your job, please try again on " \
-                    "<a class=\"alert-link\" href=\"https://companion.ac.uk/\">another server</a>."
+    # flash[:info] = "This is an enhanced release of Companion that includes integration with tools " \
+    #                 "such as BRAKER2 and Liftoff. " \
+    #                 "If you should encounter any issues when running your job, please try again on " \
+    #                 "<a class=\"alert-link\" href=\"https://companion.ac.uk/\">another server</a>."
     if @closed then
       flash[:info] = "New job creation is temporarily closed for technical " + \
                      "reasons."
@@ -272,8 +272,8 @@ class JobsController < ApplicationController
   def get_clusters
     job = Job.find_by(:job_id => params[:id])
     expires_in 1.month, :public => true
-    if job and File.exist?("#{job.job_directory}/orthomcl_out") then
-      render file: "#{job.job_directory}/orthomcl_out", layout: false, \
+    if job and File.exist?("#{job.job_directory}/orthofinder_out") then
+      render file: "#{job.job_directory}/orthofinder_out", layout: false, \
         content_type: 'text/plain'
     else
       render plain: "job #{params[:id]} not found", status: 404

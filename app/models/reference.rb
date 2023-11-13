@@ -37,6 +37,10 @@ class Reference < ActiveFile::Base
             if CONFIG['fix_polycistrons'] and CONFIG['fix_polycistrons'][section] then
               newhash[:fix_polycistrons] = CONFIG['fix_polycistrons'][section]
             end
+            # assign mit_bypass for this section, if configured
+            if CONFIG['mit_bypass'] and CONFIG['mit_bypass'][section] then
+              newhash[:mit_bypass] = CONFIG['mit_bypass'][section]
+            end
             # assign do_circos for this section, if configured
             if CONFIG['do_circos'] and CONFIG['do_circos'][section] then
               newhash[:do_circos] = CONFIG['do_circos'][section]

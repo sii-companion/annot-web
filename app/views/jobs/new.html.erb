@@ -298,5 +298,14 @@
       $('[id^=job_transcript_file_id]').prop('required', false);
       $('#job_run_braker_true').prop({'disabled': false, 'checked': true}).removeAttr('title');
     })
+    $('#job_reference_id').on("select2:select", function (e) {
+      var data = e.params.data;
+      if (data.text.includes("chromosome")) {
+        $('#job_do_contiguate_true').prop({'disabled': false}).removeAttr('title');
+      } else {
+        $('#job_do_contiguate_true').prop({'disabled': true, 'title': "ABACAS2 requires a reference with chromosomes."});
+        $('#job_do_contiguate_false').prop('checked', true);
+      }
+    });
   });
    </script>
