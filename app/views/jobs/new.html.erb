@@ -297,7 +297,14 @@
       $('#transcript-selection').slideUp();
       $('[id^=job_transcript_file_id]').prop('required', false);
       $('#job_run_braker_true').prop({'disabled': false, 'checked': true}).removeAttr('title');
-    })
+    });
+    $('#job_do_exonerate_true').on("click", function (e) {
+      $('#job_run_braker_true').prop({'disabled': true, 'title': "BRAKER2 can't accept additional protein hints."});
+      $('#job_run_braker_false').prop('checked',true);
+    });
+    $('#job_do_exonerate_false').on("click", function (e) {
+      $('#job_run_braker_true').prop({'disabled': false, 'checked': true}).removeAttr('title');
+    });
     $('#job_reference_id').on("select2:select", function (e) {
       var data = e.params.data;
       if (data.text.includes("chromosome")) {
