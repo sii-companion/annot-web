@@ -13,10 +13,10 @@ Web interface for the Companion annotation pipeline
 Web interface for Companion: https://companion.ac.uk
  
 ## License
-annot-web is free software, licensed under [GPLv3](https://github.com/iii-companion/annot-web/blob/master/LICENSE).
+annot-web is free software, licensed under [GPLv3](https://github.com/sii-companion/annot-web/blob/master/LICENSE).
 
 ## Feedback/Issues
-Please report any issues to the [issues page](https://github.com/iii-companion/annot-web/issues) or email iii-companion@glasgow.ac.uk.
+Please report any issues to the [issues page](https://github.com/sii-companion/annot-web/issues) or email sii-companion@glasgow.ac.uk.
 
 ## Further Information
-UofG staff should refer to the [wiki](http://toweb1.mvls.gla.ac.uk/index.php/Companion) for further information.
+UofG staff should refer to the [wiki](https://github.com/sii-companion/annot-web/wiki) for further information.
