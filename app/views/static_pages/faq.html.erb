@@ -10,7 +10,7 @@
     genomes larger than that, it makes sense to run a stand-alone version of
     <i>Companion</i> on a sufficiently powerful machine, as it hits the limit
     of this web server. You can find the standalone version of <i>Companion</i>
-    on <a href="https://github.com/iii-companion/companion">GitHub</a>.
+    on <a href="https://github.com/sii-companion/companion">GitHub</a>.
     Please follow the instructions there to set up your stand-alone instance.
   </p>
 </div>
@@ -18,15 +18,9 @@
 <div class="row">
   <h4 id="references">What species are offered as references?</h4>
   <p>We import annotated parasite genomes from external sources like
-   <a href="http://www.genedb.org">GeneDB</a> and
-   <a href="http://www.eupathdb.org">EuPathDB</a> and preprocess them for use
-   as references. Currently, we are offering the following
-   <%= Reference.count %> reference species:
-   <ul>
-    <% Reference.all.sort {|a,b| a[:name] <=> b[:name]}.each do |ref| %>
-    <li><i><%= ref[:name] %></i></li>
-    <% end %>
-  </ul>
+   <a href="https://veupathdb.org/">VEuPathDB</a> and preprocess them for use
+   as references. Currently, we are offering <%= Reference.count %> reference species, which can be seen
+   <a href="/references">here</a>.
 </p>
 </div>
 
@@ -76,5 +70,5 @@
 
       <div class="row">
         <h4 id="question">I have a question but it is not here on this list!</h4>
-        <p>Please send an email to <a href="mailto:iii-companion@glasgow.ac.uk">us</a> with your inquiry, we will get back to you shortly.</p>
+        <p>Please send an email to <a href="mailto:sii-companion@glasgow.ac.uk">us</a> with your inquiry, we will get back to you shortly.</p>
       </div>
