@@ -20,7 +20,7 @@
 
 <% if @job_hash[:complete] then %>
   <p>
-    Please cite Companion: https://doi.org/10.1093/nar/gkae378
+    Please cite Companion: <%= raw(urlify('https://doi.org/10.1093/nar/gkae378')) %>
   </p>
   <%= render "tabs" %>
 <% else %>
