@@ -346,6 +346,9 @@ class JobsController < ApplicationController
 
   def get_all_synteny_images
     job = Job.find_by(:job_id => params[:id])
+    ref = Reference.find(job[:reference_id])
+    kit = IMGKit.new(render_to_string partial: 'legend.html.erb', locals: {:job => job, :ref => ref})
+    kit.stylesheets << "#{Rails.root}/vendor/assets/stylesheets/fontawesome/all.min.css"
     if job then
       if job.circos_images and job.circos_images.size > 0 then
         t = Tempfile.new(job.job_id)
@@ -354,6 +357,8 @@ class JobsController < ApplicationController
             zos.put_next_entry("#{image.chromosome}.png")
             zos.print IO.read(image.file.path)
           end
+          zos.put_next_entry("circos_legend.png")
+          zos.print kit.to_png
         end
         send_file t.path, :type => 'application/zip',
                           :disposition => 'attachment',
